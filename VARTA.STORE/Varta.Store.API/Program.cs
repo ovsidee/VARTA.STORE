@@ -1,5 +1,7 @@
 using Varta.Store.API.Data; 
 using Microsoft.EntityFrameworkCore;
+using Varta.Store.API.Services.Implementation;
+using Varta.Store.API.Services.Interfaces;
 
 namespace Varta.Store.API;
 
@@ -9,16 +11,22 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // 1. Register the Database 
+        // add db (postgresql)
         builder.Services.AddDbContext<StoreDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
-
+        
+        // DI for services
+        builder.Services.AddScoped<IProductService, ProductService>();
+        
+        // add controllers
         builder.Services.AddControllers();
+        
         builder.Services.AddEndpointsApiExplorer(); 
+        
         builder.Services.AddOpenApi();
 
-        // 2. Add CORS
+        // cors
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowBlazorClient",
@@ -32,7 +40,7 @@ public class Program
 
         var app = builder.Build();
 
-        // 3. DATABASE MIGRATION & RETRY LOGIC (Crucial for Docker)
+        // db migration for docker
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
@@ -42,14 +50,13 @@ public class Program
             {
                 var context = services.GetRequiredService<StoreDbContext>();
                 
-                // Retry loop to wait for Postgres to wake up
+                // retry loop to wait for Postgres to wake up
                 int retries = 5;
                 while (retries > 0)
                 {
                     try
                     {
                         context.Database.EnsureCreated(); // Creates DB if not exists
-                        // DbSeeder.Seed(context); // Uncomment if you created the Seeder class
                         logger.LogInformation("✅ Database connected!");
                         break;
                     }
@@ -67,11 +74,10 @@ public class Program
                 logger.LogError(ex, "❌ Database migration failed.");
             }
         }
-
-        // 4. Configure Pipeline
+        
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi(); // or UseSwagger()
+            app.MapOpenApi(); 
         }
         
         app.UseCors("AllowBlazorClient");
