@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Varta.Store.API", "Varta.Store.API\Varta.Store.API.csproj", "{82132A01-178B-4A5D-80A5-194BE61A851F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Varta.Store.Shared", "Varta.Store.Shared\Varta.Store.Shared.csproj", "{1C2B8676-FDE2-4870-9D2E-311FE3630405}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Varta.Store.Client", "Varta.Store.Client\Varta.Store.Client.csproj", "{7A5EB8C2-791A-4A4B-86DE-0023A5F8F4A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82132A01-178B-4A5D-80A5-194BE61A851F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82132A01-178B-4A5D-80A5-194BE61A851F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82132A01-178B-4A5D-80A5-194BE61A851F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82132A01-178B-4A5D-80A5-194BE61A851F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C2B8676-FDE2-4870-9D2E-311FE3630405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2B8676-FDE2-4870-9D2E-311FE3630405}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2B8676-FDE2-4870-9D2E-311FE3630405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2B8676-FDE2-4870-9D2E-311FE3630405}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A5EB8C2-791A-4A4B-86DE-0023A5F8F4A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A5EB8C2-791A-4A4B-86DE-0023A5F8F4A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A5EB8C2-791A-4A4B-86DE-0023A5F8F4A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A5EB8C2-791A-4A4B-86DE-0023A5F8F4A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

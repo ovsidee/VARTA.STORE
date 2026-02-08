@@ -416,3 +416,19 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+
+# Ignore IDE settings
+.idea/
+.vs/
+*.user
+
+# Ignore Build results
+[Bb]in/
+[Oo]bj/
+
+# Ignore Keys/Secrets
+*.pfx
+
+# Ignore environment variables
+.env

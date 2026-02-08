@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database
+  db:
+    image: postgres:15
+    container_name: varta_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}       
+      POSTGRES_PASSWORD: ${DB_PASSWORD} 
+      POSTGRES_DB: ${DB_NAME}         
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # 2. Backend API
+  api:
+    build:
+      context: .
+      dockerfile: Varta.Store.API/Dockerfile
+    container_name: varta_api
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "5000:8080"
+    environment:
+      # We construct the connection string using the variables
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}"
+
+  # 3. Frontend Client
+  client:
+    build:
+      context: .
+      dockerfile: Varta.Store.Client/Dockerfile
+    container_name: varta_client
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
