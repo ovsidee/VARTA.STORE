@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Varta.Store.API.Services.Interfaces;
-using Varta.Store.Shared.DTOs;
+using Varta.Store.Shared.DTO;
 
 namespace Varta.Store.API.Controllers;
 

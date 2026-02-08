@@ -1,4 +1,4 @@
-﻿using Varta.Store.Shared.DTOs;
+﻿using Varta.Store.Shared.DTO;
 
 namespace Varta.Store.API.Services.Interfaces;
 

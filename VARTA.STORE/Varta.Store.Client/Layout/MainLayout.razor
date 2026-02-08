@@ -1,16 +1,60 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
+@inject NavigationManager NavManager
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+<MudThemeProvider IsDarkMode="true" />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<MudLayout>
+    <MudAppBar Elevation="0" Fixed="true" Class="blur-navbar px-8" Style="z-index: 2000;">
+
+        <MudIcon Icon="@Icons.Material.Filled.Shield" Color="Color.Warning" Size="Size.Large" Class="mr-2"/>
+        <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px; cursor: pointer;"
+                 @onclick='() => NavManager.NavigateTo("/")'>
+            VARTA
+        </MudText>
+
+        <MudSpacer />
+
+        <MudHidden Breakpoint="Breakpoint.MdAndDown">
+            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
+                       OnClick='() => NavManager.NavigateTo("/")'>
+                ГОЛОВНА
+            </MudButton>
+
+            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
+                       OnClick='() => NavManager.NavigateTo("/store")'>
+                МАГАЗИН
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small"
+                       Class="ml-6 px-4 rounded-pill" StartIcon="@Icons.Custom.Brands.Steam">
+                ВХІД ЧЕРЕЗ STEAM
+            </MudButton>
+        </MudHidden>
+
+        <MudHidden Breakpoint="Breakpoint.LgAndUp">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.End" />
+        </MudHidden>
+    </MudAppBar>
+
+    <MudMainContent Class="pt-0">
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+<style>
+    .blur-navbar {
+        background-color: rgba(30, 30, 45, 0.9) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        transition: background-color 0.3s;
+    }
+    .nav-link {
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    body {
+        background-color: #121212;
+    }
+</style>

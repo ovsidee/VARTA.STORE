@@ -26,16 +26,29 @@ public class Program
         
         builder.Services.AddOpenApi();
 
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+        
         // cors
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowBlazorClient",
-                policy =>
+            options.AddPolicy("StrictPolicy", policy =>
+            {
+                if (allowedOrigins != null && allowedOrigins.Length > 0)
                 {
-                    policy.WithOrigins("http://localhost", "http://localhost:80") 
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
+                    policy.WithOrigins(allowedOrigins)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
+                else
+                {
+                    // block everything if config is missing
+                    // or allow all ONLY in Dev mode
+                    if (builder.Environment.IsDevelopment())
+                    {
+                        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    }
+                }
+            });
         });
 
         var app = builder.Build();
@@ -57,21 +70,21 @@ public class Program
                     try
                     {
                         context.Database.EnsureCreated(); // Creates DB if not exists
-                        logger.LogInformation("✅ Database connected!");
+                        logger.LogInformation("Database connected!");
                         break;
                     }
                     catch (Exception)
                     {
                         retries--;
                         if (retries == 0) throw;
-                        logger.LogWarning("⏳ Waiting for Database...");
+                        logger.LogWarning("Waiting for Database...");
                         Thread.Sleep(2000);
                     }
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "❌ Database migration failed.");
+                logger.LogError(ex, "Database migration failed.");
             }
         }
         
@@ -80,7 +93,7 @@ public class Program
             app.MapOpenApi(); 
         }
         
-        app.UseCors("AllowBlazorClient");
+        app.UseCors("StrictPolicy");        
         
         app.UseAuthorization();
         

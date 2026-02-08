@@ -1,4 +1,4 @@
-﻿namespace Varta.Store.Shared.DTOs;
+﻿namespace Varta.Store.Shared.DTO;
 
 public class ProductDto
 {

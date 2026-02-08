@@ -1,0 +1,87 @@
+﻿
+
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudCard Elevation="4" Class="product-card d-flex flex-column hover-effect" Style="height: 100%; background-color: #1e1e2d; border: 1px solid #333;">
+    
+    <div style="cursor: pointer; overflow: hidden;" @onclick="OpenDetails">
+        <MudCardMedia Image="@($"images/{Product.ImageUrl}")" Height="180" Class="zoom-image" />
+    </div>
+
+    <MudCardContent Class="flex-grow-1 px-4 pt-4">
+        <div class="d-flex justify-space-between align-center">
+            <MudText Typo="Typo.h6" Style="font-weight: 800; font-size: 1.1rem; line-height: 1.2;">
+                @Product.Name
+            </MudText>
+        </div>
+        
+        <MudText Typo="Typo.caption" Color="Color.Primary">@Product.CategoryName</MudText>
+
+        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-2 description-truncate">
+            @Product.Description
+        </MudText>
+    </MudCardContent>
+
+    <MudCardActions Class="d-flex justify-space-between align-center px-4 pb-4">
+        <MudText Typo="Typo.h6" Color="Color.Warning" Style="font-weight: bold;">
+            @Product.Price ₴
+        </MudText>
+
+        <div class="d-flex gap-2">
+            <MudTooltip Text="Детальніше">
+                <MudIconButton Icon="@Icons.Material.Filled.Visibility" Variant="Variant.Outlined" 
+                               Color="Color.Info" Size="Size.Small" OnClick="OpenDetails" />
+            </MudTooltip>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small" 
+                       Style="font-weight:bold; color: black;" OnClick="AddToCart">
+                КУПИТИ
+            </MudButton>
+        </div>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter] public ProductDto Product { get; set; } = new();
+
+    private void OpenDetails()
+    {
+        var parameters = new DialogParameters { ["Product"] = Product };
+        
+        var options = new DialogOptions 
+        { 
+            CloseButton = true, 
+            MaxWidth = MaxWidth.Medium, 
+            FullWidth = true,
+            BackgroundClass = "blur-dialog"
+        };
+
+        // This line will stop being red once you Build the solution
+        DialogService.Show<ProductDetailsDialog>(Product.Name, parameters, options);
+    }
+
+    private void AddToCart()
+    {
+        Snackbar.Add($"{Product.Name} додано до кошика!", Severity.Success);
+    }
+}
+
+<style>
+    .description-truncate {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 40px;
+    }
+    .zoom-image { transition: transform 0.3s ease; }
+    .hover-effect:hover .zoom-image { transform: scale(1.05); }
+    .hover-effect { transition: box-shadow 0.3s ease, transform 0.3s ease; }
+    .hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5) !important;
+        border-color: #ff9800 !important;
+    }
+</style>

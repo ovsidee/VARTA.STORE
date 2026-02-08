@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Varta.Store.API.Data;
 using Varta.Store.API.Services.Interfaces;
-using Varta.Store.Shared.DTOs;
+using Varta.Store.Shared.DTO;
 
 namespace Varta.Store.API.Services.Implementation;
 

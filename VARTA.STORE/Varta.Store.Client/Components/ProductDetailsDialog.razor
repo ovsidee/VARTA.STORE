@@ -1,0 +1,50 @@
+﻿@using MudBlazor
+@using Varta.Store.Shared.DTO
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="6">
+                <MudImage Src="@($"images/{Product.ImageUrl}")" ObjectFit="ObjectFit.Cover" Height="300" Fluid="true" Class="rounded-lg"/>
+            </MudItem>
+            <MudItem xs="12" sm="6" Class="d-flex flex-column gap-2">
+                <MudText Typo="Typo.h5" Style="font-weight: 900; text-transform: uppercase;">@Product.Name</MudText>
+                
+                <MudChip T="string" Color="Color.Primary" Size="Size.Small" Variant="Variant.Outlined" Class="mb-2">
+                    @Product.CategoryName
+                </MudChip>
+
+                <MudText Typo="Typo.body1" Class="mt-2" Style="color: #bdbdbd; max-height: 200px; overflow-y: auto;">
+                    @Product.Description
+                </MudText>
+                
+                <MudSpacer />
+
+                <MudText Typo="Typo.h4" Color="Color.Warning" Style="font-weight: bold;" Class="mt-4">
+                    @Product.Price ₴
+                </MudText>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    
+    <DialogActions>
+        <MudButton OnClick="Cancel">Закрити</MudButton>
+        <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="Buy">КУПИТИ</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialogInstance { get; set; } = default!;
+    
+    [Parameter] public ProductDto Product { get; set; } = new();
+    
+    [Inject] ISnackbar Snackbar { get; set; } = default!;
+
+    private void Cancel() => MudDialogInstance.Cancel();
+
+    private void Buy()
+    {
+        Snackbar.Add($"{Product.Name} додано до кошика!", Severity.Success);
+        MudDialogInstance.Close(DialogResult.Ok(true));
+    }
+}
