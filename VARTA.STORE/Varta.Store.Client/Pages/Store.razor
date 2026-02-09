@@ -1,7 +1,8 @@
 ﻿@page "/store"
 @using Varta.Store.Client.Services
 @inject IProductService ProductService
-
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
 
 <PageTitle>Магазин - VARTA</PageTitle>
 

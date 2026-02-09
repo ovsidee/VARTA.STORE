@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Varta.Store.API.Data; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,7 +33,7 @@ public class Program
         
         builder.Services.AddOpenApi();
 
-        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();     
         
         // cors
         builder.Services.AddCors(options =>
@@ -43,16 +44,16 @@ public class Program
                 {
                     policy.WithOrigins(allowedOrigins)
                         .AllowAnyMethod()
-                        .AllowAnyHeader();
+                        .AllowAnyHeader()
+                        .AllowCredentials(); 
                 }
                 else
                 {
-                    // block everything if config is missing
-                    // or allow all ONLY in Dev mode
-                    if (builder.Environment.IsDevelopment())
-                    {
-                        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    }
+                    // Fallback for development if config is missing
+                    policy.SetIsOriginAllowed(origin => true) // Allow any origin
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
                 }
             });
         });
@@ -81,13 +82,27 @@ public class Program
             })
             .AddSteam(options =>
             {
-                // the temporary cookie with the Steam login
                 options.SignInScheme = "Cookies"; 
                 options.ApplicationKey = builder.Configuration["Authentication:Steam:ApplicationKey"];
+    
+                // --- ДОДАЙТЕ ЦЕЙ РЯДОК ---
+                // Це змусить Steam повертати юзера на /api/signin-steam
+                // І Nginx перенаправить цей запит на бекенд!
+                options.CallbackPath = "/api/signin-steam";
+                // -------------------------
+
+                options.Events.OnAuthenticated = context => {
+                    return Task.CompletedTask;
+                };
             });
 
         var app = builder.Build();
 
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        });
+        
         // db migration for docker
         using (var scope = app.Services.CreateScope())
         {

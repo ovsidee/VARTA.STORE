@@ -1,12 +1,39 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <MudAlert Severity="Severity.Error">Сторінку не знайдено.</MudAlert>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    @* Shown while checking local storage *@
+                    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-32 d-flex flex-column align-center">
+                        <MudProgressCircular Color="Color.Warning" Indeterminate="true" />
+                        <MudText Typo="Typo.h6" Class="mt-4">Verifying session...</MudText>
+                    </MudContainer>
+                </Authorizing>
+                <NotAuthorized>
+                    @* Only shown if the page specifically has [Authorize] *@
+                    <MudLayout>
+                        <MudMainContent>
+                            <MudContainer MaxWidth="MaxWidth.Small" Class="mt-16 d-flex flex-column align-center">
+                                <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" Color="Color.Error" />
+                                <MudText Typo="Typo.h4" Class="mt-4" Align="Align.Center">Private Area</MudText>
+                                <MudButton Variant="Variant.Filled" Color="Color.Warning" Class="mt-6"
+                                           Href="@($"{Http.BaseAddress}api/auth/login")"> Login with Steam
+                                </MudButton>
+                            </MudContainer>
+                        </MudMainContent>
+                    </MudLayout>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <MudAlert Severity="Severity.Error">Page not found.</MudAlert>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

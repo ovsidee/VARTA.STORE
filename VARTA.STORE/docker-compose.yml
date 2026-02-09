@@ -1,21 +1,19 @@
 version: '3.8'
 
 services:
-  # 1. PostgreSQL Database
   db:
     image: postgres:15
     container_name: varta_db
     restart: always
     environment:
-      POSTGRES_USER: ${DB_USER}       
-      POSTGRES_PASSWORD: ${DB_PASSWORD} 
-      POSTGRES_DB: ${DB_NAME}         
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  # 2. Backend API
   api:
     build:
       context: .
@@ -24,13 +22,19 @@ services:
     restart: always
     depends_on:
       - db
-    ports:
-      - "5000:8080"
+    expose:
+      - "8080"
     environment:
-      # We construct the connection string using the variables
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}"
+      Authentication__Steam__ApplicationKey: ${STEAM_API_KEY}
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: "VartaStore"
+      Jwt__Audience: "VartaClient"
+      
+      # == УНІВЕРСАЛЬНА ЗМІННА ==
+      AppUrl: ${PUBLIC_URL}
+      AllowedOrigins__0: ${PUBLIC_URL}
 
-  # 3. Frontend Client
   client:
     build:
       context: .
@@ -38,7 +42,9 @@ services:
     container_name: varta_client
     restart: always
     ports:
-      - "80:80"
+      # Локально: 7120
+      # На проді поміняєте на "80:80" або "443:443"
+      - "7120:80"
     depends_on:
       - api
 

@@ -1,0 +1,38 @@
+﻿@page "/login-success"
+@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using Varta.Store.Client.Auth
+@using Microsoft.AspNetCore.WebUtilities
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-32 d-flex flex-column align-center">
+    <MudProgressCircular Color="Color.Warning" Indeterminate="true" Size="Size.Large" />
+    <MudText Typo="Typo.h5" Class="mt-4">Finalizing login...</MudText>
+</MudContainer>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        
+        // Extract the token from the query string (?token=...)
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("token", out var token))
+        {
+            var jwt = token.ToString();
+
+            // Save token to browser storage
+            await LocalStorage.SetItemAsync("authToken", jwt);
+            
+            // Notify the provider to refresh UI state
+            if (AuthStateProvider is CustomAuthStateProvider customProvider)
+            {
+                customProvider.NotifyUserLogin(jwt);
+            }
+            
+            // Redirect to home page
+            NavManager.NavigateTo("/"); 
+        }
+    }
+}

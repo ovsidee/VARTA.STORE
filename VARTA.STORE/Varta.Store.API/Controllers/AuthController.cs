@@ -26,6 +26,7 @@ public class AuthController : ControllerBase
     [HttpGet("login")]
     public IActionResult Login()
     {
+        // Бібліотека сама побудує правильний Realm завдяки налаштуванням Nginx
         return Challenge(new AuthenticationProperties
         {
             RedirectUri = "/api/auth/callback"
@@ -35,51 +36,65 @@ public class AuthController : ControllerBase
     [HttpGet("callback")]
     public async Task<IActionResult> Callback()
     {
-        //data from steam
+        // Отримуємо дані від Steam через бібліотеку
         var result = await HttpContext.AuthenticateAsync("Cookies");
-        if (!result.Succeeded) return BadRequest("Steam auth failed");
-
-        var claims = result.Principal.Claims;
-
-        //getting steamId (after link steam id present)
-        var steamIdClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        var steamId = steamIdClaim?.Split('/').Last();
         
-        var username = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? "Survivor";
-        var avatarUrl = claims.FirstOrDefault(c => c.Type == "urn:steam:avatar:full")?.Value ?? "";
+        if (!result.Succeeded) 
+            return BadRequest("Steam auth failed. Result was not succeeded.");
+
+        // Отримуємо Claims
+        var claims = result.Principal.Claims;
+        var steamIdClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        
+        // Steam повертає ID у форматі: https://steamcommunity.com/openid/id/76561198...
+        var steamId = steamIdClaim?.Split('/').Last();
 
         if (string.IsNullOrEmpty(steamId)) return BadRequest("Steam ID not found");
 
-        // creating user in db
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.SteamID == steamId);
+        // --- ДАЛЕЕ ВАШ СТАНДАРТНЫЙ КОД ПОЛУЧЕНИЯ АВАТАРА ---
+        var apiKey = _configuration["Authentication:Steam:ApplicationKey"];
+        var username = "Survivor";
+        var avatarUrl = "";
 
+        using (var httpClient = new HttpClient())
+        {
+            try 
+            {
+                var response = await httpClient.GetFromJsonAsync<SteamWebApiResponse>(
+                    $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={steamId}");
+                var player = response?.Response?.Players?.FirstOrDefault();
+                if (player != null) { username = player.PersonaName; avatarUrl = player.AvatarFull; }
+            }
+            catch {}
+        }
+        
+        // --- РАБОТА С БАЗОЙ ДАННЫХ ---
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.SteamID == steamId);
         if (user == null)
         {
             user = new AppUser
             {
-                SteamID = steamId,
-                Username = username,
-                AvatarUrl = avatarUrl,
-                ProfileUrl = steamIdClaim ?? "",
-                Balance = 0,
-                DateCreated = DateTime.UtcNow
+                SteamID = steamId, Username = username, AvatarUrl = avatarUrl,
+                ProfileUrl = $"https://steamcommunity.com/profiles/{steamId}",
+                Balance = 0, DateCreated = DateTime.UtcNow
             };
             _context.Users.Add(user);
         }
         else
         {
-            // if user already exists update data
             user.Username = username;
             user.AvatarUrl = avatarUrl;
         }
-
         await _context.SaveChangesAsync();
 
-        // jwt
+        // --- ГЕНЕРАЦИЯ JWT ---
         var token = GenerateJwtToken(user);
 
-        // redirect to home page
-        return Redirect($"https://localhost:7120/login-success?token={token}");
+        // Редирект на фронтенд
+        var clientUrl = _configuration["AppUrl"] ?? "http://localhost:7120";
+        clientUrl = clientUrl.TrimEnd('/');
+        
+        return Redirect($"{clientUrl}/login-success?token={token}");
     }
 
     private string GenerateJwtToken(AppUser user)
@@ -107,4 +122,14 @@ public class AuthController : ControllerBase
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+}
+
+public class SteamWebApiResponse { public SteamResponse Response { get; set; } }
+public class SteamResponse { public List<SteamPlayer> Players { get; set; } }
+public class SteamPlayer 
+{ 
+    [System.Text.Json.Serialization.JsonPropertyName("personaname")]
+    public string PersonaName { get; set; } 
+    [System.Text.Json.Serialization.JsonPropertyName("avatarfull")]
+    public string AvatarFull { get; set; } 
 }

@@ -1,5 +1,12 @@
 ﻿@inherits LayoutComponentBase
+@using Blazored.LocalStorage
+@using Varta.Store.Client.Auth
+@using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager NavManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ISnackbar Snackbar
+@inject HttpClient Http
 
 <MudThemeProvider IsDarkMode="true" />
 <MudDialogProvider />
@@ -25,7 +32,47 @@
                        OnClick='() => NavManager.NavigateTo("/store")'>
                 МАГАЗИН
             </MudButton>
-            
+
+            @* Authentication Section *@
+            <AuthorizeView Context="auth">
+                <Authorized>
+                    <div class="d-flex align-center gap-4 ml-4">
+                        @* 1. Balance Display *@
+                        <div class="d-flex flex-column align-end">
+                            <MudText Typo="Typo.caption" Style="color: #9e9eae; line-height: 1;">Баланс</MudText>
+                            <MudText Typo="Typo.body1" Color="Color.Warning" Style="font-weight: 900;">
+                                @auth.User.FindFirst("Balance")?.Value ₴
+                            </MudText>
+                        </div>
+
+                        @* 2. User Avatar (without menu now, just display) *@
+                        <MudBadge Overlap="true" Color="Color.Success" Dot="true" Bordered="true">
+                            <MudAvatar Style="border: 2px solid #ff9800;">
+                                <MudImage Src="@auth.User.FindFirst("AvatarUrl")?.Value" Alt="Avatar" />
+                            </MudAvatar>
+                        </MudBadge>
+
+                        @* 3. Logout Button to the right of avatar *@
+                        <MudButton Variant="Variant.Outlined" 
+                                   Color="Color.Error" 
+                                   Size="Size.Small"
+                                   OnClick="Logout"
+                                   StartIcon="@Icons.Material.Filled.Logout"
+                                   Style="text-transform: uppercase; font-weight: bold;">
+                            Вийти
+                        </MudButton>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Warning"
+                               Size="Size.Small"
+                               Class="ml-6 px-4 rounded-pill"
+                               StartIcon="@Icons.Custom.Brands.Steam"
+                               Href="@($"{Http.BaseAddress}api/auth/login")"> LOGIN VIA STEAM
+                    </MudButton>
+                </NotAuthorized>
+            </AuthorizeView>
         </MudHidden>
 
         <MudHidden Breakpoint="Breakpoint.LgAndUp">
@@ -42,6 +89,21 @@
         </div>
     </MudMainContent>
 </MudLayout>
+
+@code {
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+
+        if (AuthStateProvider is CustomAuthStateProvider customProvider)
+        {
+            customProvider.NotifyUserLogout();
+        }
+
+        Snackbar.Add("Ви вийшли з аккаунту", Severity.Info);
+        NavManager.NavigateTo("/", true);
+    }
+}
 
 <style>
     .blur-navbar {
