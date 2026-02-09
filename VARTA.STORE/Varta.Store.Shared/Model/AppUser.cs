@@ -11,19 +11,25 @@ public class AppUser
     
     [Column(TypeName = "decimal(10,2)")]
     public decimal Balance { get; set; }
+        
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
     [Required]
-    [MaxLength(30)]
+    [MaxLength(32)]
     public string Username { get; set; }
-    
+
     [Required]
-    [MaxLength(30)]
+    [MaxLength(20)]
     public string SteamID { get; set; }
+
+    [Required]
+    [MaxLength(250)]
+    public string AvatarUrl { get; set; }  
     
     [Required]
     [MaxLength(250)]
-    public string AvatarUrl { get; set; }
-    
+    public string ProfileUrl { get; set; }
+
     // nvg property for easier appuser.Orders...
     public List<Order> Orders { get; set; } = new();
 }

@@ -1,44 +1,49 @@
-﻿
+﻿@using MudBlazor
+@using Varta.Store.Shared.DTO
+@using Varta.Store.Client.Components
 
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<MudCard Elevation="4" Class="product-card d-flex flex-column hover-effect" Style="height: 100%; background-color: #1e1e2d; border: 1px solid #333;">
+<MudCard Elevation="0" Class="product-card d-flex flex-column" 
+         Style="height: 100%; background-color: #1e1e2d; border: 1px solid #333; transition: all 0.3s;">
     
-    <div style="cursor: pointer; overflow: hidden;" @onclick="OpenDetails">
-        <MudCardMedia Image="@($"images/{Product.ImageUrl}")" Height="180" Class="zoom-image" />
+    <div style="cursor: pointer; overflow: hidden; position: relative;" @onclick="OpenDetails">
+        <MudCardMedia Image="@($"images/{Product.ImageUrl}")" Height="200" Class="zoom-image" />
+        
+        <div class="card-overlay">
+            <MudIcon Icon="@Icons.Material.Filled.Visibility" Style="color: white;" Size="Size.Large" />
+        </div>
     </div>
 
-    <MudCardContent Class="flex-grow-1 px-4 pt-4">
-        <div class="d-flex justify-space-between align-center">
-            <MudText Typo="Typo.h6" Style="font-weight: 800; font-size: 1.1rem; line-height: 1.2;">
-                @Product.Name
-            </MudText>
-        </div>
+    <MudCardContent Class="flex-grow-1 px-5 pt-4">
+        <MudText Typo="Typo.h6" Style="font-weight: 800; font-size: 1.1rem; line-height: 1.3;">
+            @Product.Name
+        </MudText>
         
-        <MudText Typo="Typo.caption" Color="Color.Primary">@Product.CategoryName</MudText>
+        <MudText Typo="Typo.caption" Style="color: #ff9800; font-weight: bold; letter-spacing: 0.5px;">
+            @Product.CategoryName.ToUpper()
+        </MudText>
 
-        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-2 description-truncate">
+        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-3 description-truncate" Style="color: #9e9eaeb3;">
             @Product.Description
         </MudText>
     </MudCardContent>
 
-    <MudCardActions Class="d-flex justify-space-between align-center px-4 pb-4">
-        <MudText Typo="Typo.h6" Color="Color.Warning" Style="font-weight: bold;">
+    <MudCardActions Class="px-5 pb-5 pt-2 d-flex align-center gap-3">
+        
+        <MudText Typo="Typo.h5" Color="Color.Warning" Style="font-weight: 900; white-space: nowrap;">
             @Product.Price ₴
         </MudText>
+        
+        <MudSpacer />
 
-        <div class="d-flex gap-2">
-            <MudTooltip Text="Детальніше">
-                <MudIconButton Icon="@Icons.Material.Filled.Visibility" Variant="Variant.Outlined" 
-                               Color="Color.Info" Size="Size.Small" OnClick="OpenDetails" />
-            </MudTooltip>
+        <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Medium" 
+                   Style="font-weight: 800; color: #121212; flex-grow: 1;" 
+                   OnClick="AddToCart" StartIcon="@Icons.Material.Filled.ShoppingCart">
+            КУПИТИ
+        </MudButton>
 
-            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small" 
-                       Style="font-weight:bold; color: black;" OnClick="AddToCart">
-                КУПИТИ
-            </MudButton>
-        </div>
     </MudCardActions>
 </MudCard>
 
@@ -48,40 +53,46 @@
     private void OpenDetails()
     {
         var parameters = new DialogParameters { ["Product"] = Product };
-        
+        // We do NOT set 'Class' here. We handle it inside the dialog file above.
         var options = new DialogOptions 
         { 
             CloseButton = true, 
             MaxWidth = MaxWidth.Medium, 
-            FullWidth = true,
-            BackgroundClass = "blur-dialog"
+            FullWidth = true, 
+            BackgroundClass = "blur-dialog" 
         };
-
-        // This line will stop being red once you Build the solution
         DialogService.Show<ProductDetailsDialog>(Product.Name, parameters, options);
     }
 
-    private void AddToCart()
-    {
-        Snackbar.Add($"{Product.Name} додано до кошика!", Severity.Success);
-    }
+    private void AddToCart() => Snackbar.Add($"{Product.Name} додано до кошика!", Severity.Success);
 }
 
 <style>
+    .product-card:hover {
+        transform: translateY(-6px);
+        border-color: #ff9800 !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
     .description-truncate {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
         height: 40px;
     }
-    .zoom-image { transition: transform 0.3s ease; }
-    .hover-effect:hover .zoom-image { transform: scale(1.05); }
-    .hover-effect { transition: box-shadow 0.3s ease, transform 0.3s ease; }
-    .hover-effect:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.5) !important;
-        border-color: #ff9800 !important;
+    .zoom-image { transition: transform 0.4s ease; }
+    .product-card:hover .zoom-image { transform: scale(1.08); }
+
+    /* Overlay on hover */
+    .card-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s;
     }
+    .product-card:hover .card-overlay { opacity: 1; }
 </style>

@@ -7,7 +7,6 @@
 
 <MudLayout>
     <MudAppBar Elevation="0" Fixed="true" Class="blur-navbar px-8" Style="z-index: 2000;">
-
         <MudIcon Icon="@Icons.Material.Filled.Shield" Color="Color.Warning" Size="Size.Large" Class="mr-2"/>
         <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px; cursor: pointer;"
                  @onclick='() => NavManager.NavigateTo("/")'>
@@ -26,11 +25,7 @@
                        OnClick='() => NavManager.NavigateTo("/store")'>
                 МАГАЗИН
             </MudButton>
-
-            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small"
-                       Class="ml-6 px-4 rounded-pill" StartIcon="@Icons.Custom.Brands.Steam">
-                ВХІД ЧЕРЕЗ STEAM
-            </MudButton>
+            
         </MudHidden>
 
         <MudHidden Breakpoint="Breakpoint.LgAndUp">
@@ -39,7 +34,12 @@
     </MudAppBar>
 
     <MudMainContent Class="pt-0">
-        @Body
+        <div class="d-flex flex-column" style="min-height: 100vh;">
+            <div class="flex-grow-1">
+                @Body
+            </div>
+            <Varta.Store.Client.Layout.MainFooter />
+        </div>
     </MudMainContent>
 </MudLayout>
 
@@ -50,11 +50,6 @@
         border-bottom: 1px solid rgba(255,255,255,0.05);
         transition: background-color 0.3s;
     }
-    .nav-link {
-        font-weight: bold;
-        letter-spacing: 1px;
-    }
-    body {
-        background-color: #121212;
-    }
+    .nav-link { font-weight: bold; letter-spacing: 1px; }
+    body { background-color: #121212; margin: 0; }
 </style>

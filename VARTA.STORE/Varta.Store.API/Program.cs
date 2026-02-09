@@ -1,5 +1,8 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Varta.Store.API.Data; 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Varta.Store.API.Services.Implementation;
 using Varta.Store.API.Services.Interfaces;
 
@@ -15,6 +18,9 @@ public class Program
         builder.Services.AddDbContext<StoreDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
+        
+        var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
         
         // DI for services
         builder.Services.AddScoped<IProductService, ProductService>();
@@ -50,6 +56,35 @@ public class Program
                 }
             });
         });
+        
+        builder.Services.AddAuthentication(options =>
+            {
+                // for protecting API endpoints
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddCookie("Cookies") // Needed temporarily for the Steam handshake
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ClockSkew = TimeSpan.Zero
+                };
+            })
+            .AddSteam(options =>
+            {
+                // the temporary cookie with the Steam login
+                options.SignInScheme = "Cookies"; 
+                options.ApplicationKey = builder.Configuration["Authentication:Steam:ApplicationKey"];
+            });
 
         var app = builder.Build();
 
@@ -94,6 +129,8 @@ public class Program
         }
         
         app.UseCors("StrictPolicy");        
+        
+        app.UseAuthentication();
         
         app.UseAuthorization();
         

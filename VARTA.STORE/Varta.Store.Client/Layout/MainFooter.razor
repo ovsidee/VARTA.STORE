@@ -1,0 +1,94 @@
+﻿@inject NavigationManager NavManager
+
+<MudPaper Class="footer-section py-12" Elevation="0" Square="true">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudGrid>
+            
+            <MudItem xs="12" md="4">
+                <div class="d-flex align-center mb-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Shield" Color="Color.Warning" Size="Size.Large" Class="mr-2"/>
+                    <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px;">VARTA</MudText>
+                </div>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary mb-4" Style="max-width: 300px;">
+                    Найкращий DayZ сервер для виживання. Стабільна економіка, активна адміністрація та унікальні ігрові механіки.
+                </MudText>
+                
+                <div class="d-flex gap-2">
+                    <MudIconButton Icon="@Icons.Custom.Brands.Discord" Color="Color.Inherit" 
+                                   Href="https://discord.gg/mkQbaxmuUS" Target="_blank" Class="social-btn"/>
+                    
+                    <MudIconButton Icon="@Icons.Custom.Brands.TikTok" Color="Color.Inherit" 
+                                   Href="@TikTokUrl" Target="_blank" Class="social-btn"/>
+                </div>
+            </MudItem>
+
+            <MudItem xs="6" md="4">
+                <MudText Typo="Typo.h6" Class="mb-4" Style="font-weight: 800; color: white;">НАВІГАЦІЯ</MudText>
+                <div class="d-flex flex-column gap-2">
+                    <MudLink OnClick='() => NavManager.NavigateTo("/")' Color="Color.Inherit" Class="footer-link">Головна</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/store")' Color="Color.Inherit" Class="footer-link">Магазин</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/rules")' Color="Color.Inherit" Class="footer-link">Правила сервера</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/support")' Color="Color.Inherit" Class="footer-link">Підтримка</MudLink>
+                </div>
+            </MudItem>
+
+            <MudItem xs="6" md="4">
+                <MudText Typo="Typo.h6" Class="mb-4" Style="font-weight: 800; color: white;">КОНТАКТИ</MudText>
+                <div class="d-flex align-center mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" Color="Color.Warning" Class="mr-2"/>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">varta.dayz@gmail.com</MudText>
+                </div>
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@Icons.Material.Filled.AccessTime" Size="Size.Small" Color="Color.Warning" Class="mr-2"/>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">Працюємо 24/7</MudText>
+                </div>
+            </MudItem>
+        </MudGrid>
+
+        <MudDivider Class="my-8" Style="border-color: rgba(255,255,255,0.1);" />
+
+        <div class="d-flex justify-space-between flex-wrap align-center">
+            <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                © @DateTime.Now.Year VARTA SERVER. Всі права захищено.
+            </MudText>
+            <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                Створено з <MudIcon Icon="@Icons.Material.Filled.Favorite" Size="Size.Small" Color="Color.Error" Style="vertical-align: middle;"/> для дейзерів.
+            </MudText>
+        </div>
+    </MudContainer>
+</MudPaper>
+
+@code {
+    // Defining the URL here solves the issue because the @ string is perfectly valid in C# code
+    private const string TikTokUrl = "https://www.tiktok.com/@varta_dayz";
+}
+
+<style>
+    .footer-section {
+        background-color: #151521 !important;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        color: #bdbdbd;
+        margin-top: auto;
+    }
+
+    .footer-link {
+        font-size: 0.9rem;
+        transition: color 0.3s ease, padding-left 0.3s ease;
+        text-decoration: none !important;
+        cursor: pointer;
+    }
+
+    .footer-link:hover {
+        color: #ff9800 !important;
+        padding-left: 5px;
+    }
+
+    .social-btn {
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-btn:hover {
+        color: #ff9800 !important;
+        transform: translateY(-3px);
+    }
+</style>

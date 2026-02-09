@@ -1,0 +1,198 @@
+﻿@page "/rules"
+
+
+<PageTitle>Правила - VARTA</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mb-16 animate-fade-in" Style="padding-top: 100px;">
+    
+    <div class="d-flex flex-column align-center mb-8">
+        <MudIcon Icon="@Icons.Material.Filled.Gavel" Size="Size.Large" Color="Color.Warning" Class="mb-4 icon-glow"/>
+        <MudText Typo="Typo.h3" Align="Align.Center" Style="font-weight: 900; text-transform: uppercase; letter-spacing: 2px;">
+            ПРАВИЛА СЕРВЕРА
+        </MudText>
+        <MudText Typo="Typo.subtitle1" Align="Align.Center" Class="mud-text-secondary mt-2">
+            Незнання правил не звільняє від відповідальності.
+        </MudText>
+    </div>
+
+    <MudAlert Severity="Severity.Info" Variant="Variant.Filled" Class="mb-8 rounded-lg" Icon="@Icons.Material.Filled.Videocam">
+        <MudText Typo="Typo.subtitle2" Style="font-weight: bold;">ВАЖЛИВО: ЗАПИСУЙТЕ ГРУ!</MudText>
+        <MudText Typo="Typo.body2">
+            Ми дбаємо про чесну гру. Наполегливо радимо записувати відео ігрового процесу (вбивства, рейди, спірні моменти). 
+            Це ваш єдиний захист від неправдивих звинувачень. Адміністрація має право запросити відеозапис. 
+            Використовуйте NVIDIA Experience, AMD ReLive або OBS.
+        </MudText>
+    </MudAlert>
+
+    <MudExpansionPanels MultiExpansion="true" Class="rules-accordion">
+        
+        <MudExpansionPanel Text="1. ЗАГАЛЬНІ ПРАВИЛА" Expanded="true">
+            <TitleContent>
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@Icons.Material.Filled.Public" Color="Color.Info" Class="mr-3"/>
+                    <MudText Style="font-weight:bold; font-size: 1.1rem;">1. ЗАГАЛЬНІ ПРАВИЛА</MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <MudList T="string" Dense="true" Class="rule-list">
+                    <MudListItem>
+                        <MudText><b>1.1.</b> Забороняється використання будь-яких сторонніх програм або модифікацій (чіти, WH, ReShade тощо). NVIDIA Experience дозволено. <span class="punishment">(Бан: 7 днів — назавжди)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.2.</b> Заборонено багоюз: moonwalk, голограми для рейдів, підглядання крізь стіни, блокування проходів наметами. <span class="punishment">(Бан: 7 днів — назавжди)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.3.</b> Надання неправдивої інформації або введення в оману адміністрації заборонене. <span class="punishment">(Попередження — Бан назавжди)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.4.</b> Ліміт транспорту: 5 одиниць на базу. Додаткове місце зберігання має бути не ближче 150м. <span class="punishment">(Видалення всього транспорту)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.5.</b> Стрім-снайпінг заборонений. <span class="punishment">(Попередження — Бан 24 год)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.6.</b> Заборонено публічно або приватно висловлюватись про адміністрацію в негативному ключі. <span class="punishment">(Бан: 1 — 7 днів)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.7.</b> Втручання або перешкоджання роботі адміністрації заборонене. <span class="punishment">(Бан: 1 — 7 днів)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.8.</b> Заборонено кемпінг або вбивство гравців у місцях їх появи (спавн-кіл). <span class="punishment">(Бан: 1 — 7 днів)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.9.</b> Мультиакаунтинг заборонений. <span class="punishment">(Бан твінка назавжди + основи до 7 днів)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>1.10.</b> Головний адміністратор має право втручатися в ігровий процес та змінювати покарання.</MudText>
+                    </MudListItem>
+                </MudList>
+            </ChildContent>
+        </MudExpansionPanel>
+
+        <MudExpansionPanel Text="2. ПРАВИЛА БУДІВНИЦТВА">
+            <TitleContent>
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@Icons.Material.Filled.HomeWork" Color="Color.Success" Class="mr-3"/>
+                    <MudText Style="font-weight:bold; font-size: 1.1rem;">2. ПРАВИЛА БУДІВНИЦТВА</MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <MudList T="string" Dense="true" Class="rule-list">
+                    <MudListItem>
+                        <MudText><b>2.1.</b> Заборонено забудовувати військові бази, лікарні, хелікраші, колонки. (Винятки: Prison Island, трактири, мисливські будиночки). <span class="punishment">(Знесення)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.2.</b> Заборонено будувати в радіусі 200м від військових баз (Тіси, СЗ, VMC тощо - червоні зони на карті). <MudLink Href="https://ibb.co/6cXw2KCd" Target="_blank" Color="Color.Warning">Дивитись карту</MudLink>. <span class="punishment">(Знесення без попередження)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.3.</b> Заборонено розміщення предметів з колізією на дорогах. <span class="punishment">(Бан 24 год)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.4.</b> Заборонено будівництво на дорогах (крім ґрунтових та глухих кутів). <span class="punishment">(Знесення)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.5.</b> Максимальна висота бази — 3 поверхи. Всі опори повинні торкатися поверхні (крім води). Будівництво в повітрі заборонено. <span class="punishment">(Знесення)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.6.</b> Заборонено блокувати статичні двері текстурами. <span class="punishment">(Знесення)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.7.</b> Заборонено перекривати прохід фундаментом, будувати "паркан у паркані", віялом або хрестоподібно. Нахльост дозволений до половини. <span class="punishment">(Знесення)</span></MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.8.</b> Забудова після рейду: Можна поставити 1 свою стіну, якщо знищили 5 елементів ворожої бази. Час на забудову — 1 година. База стає вашою, якщо знято всі замки.</MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.9.</b> Намети дозволено стакати тільки: Автомобільний -> Військовий -> Малий. Максимум 3 в одному.</MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>2.10.</b> Заборонено розміщувати будь-які розмітки, що блокують сходи. <span class="punishment">(Бан 24 год)</span></MudText>
+                    </MudListItem>
+                </MudList>
+            </ChildContent>
+        </MudExpansionPanel>
+
+        <MudExpansionPanel Text="3. ПРАВИЛА РЕЙДУ">
+            <TitleContent>
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" Color="Color.Error" Class="mr-3"/>
+                    <MudText Style="font-weight:bold; font-size: 1.1rem;">3. ПРАВИЛА РЕЙДУ</MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <MudList T="string" Dense="true" Class="rule-list">
+                    <MudListItem>
+                        <MudText><b>3.1.</b> Заборонено рейдити за допомогою розміщення предметів у повітрі (бочки, вежі, намети одна на одній). Всі опори мають стояти на землі.</MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>3.2.</b> Заборонено рейдити багом (багаття, грядки, частини авто).</MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>3.3.</b> Заборонено виходити з сервера (Combat Log) на своїй базі під час рейду.</MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>3.4.</b> Заборонено будувати або лагодити базу під час активного рейду. (Вішати дроти/замки дозволено).</MudText>
+                    </MudListItem>
+                    <MudListItem>
+                        <MudText><b>3.5.</b> <span style="color:#ff9800; font-weight:bold;">ОБОВ'ЯЗКОВО:</span> Ви повинні мати відеозапис рейду. Зберігати запис 5 днів (120 годин). Без відео адміністрація може заблокувати учасників рейду у спірних ситуаціях.</MudText>
+                    </MudListItem>
+                </MudList>
+            </ChildContent>
+        </MudExpansionPanel>
+
+    </MudExpansionPanels>
+    
+    <div class="d-flex justify-center mt-8 gap-4 flex-wrap">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Href="https://discord.gg/mkQbaxmuUS" Target="_blank" StartIcon="@Icons.Custom.Brands.Discord">
+            ВІДКРИТИ ТІКЕТ
+        </MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Large" Href="/support">
+            ПІДТРИМКА
+        </MudButton>
+    </div>
+
+    <MudText Typo="Typo.caption" Align="Align.Center" Class="mud-text-secondary mt-8 d-block">
+        Сервер є приватним. Власник має право відмовити у грі без пояснення причин. 
+        Граючи на сервері, ви автоматично погоджуєтесь з цими правилами.
+    </MudText>
+
+</MudContainer>
+
+<style>
+    .rules-accordion .mud-expand-panel {
+        background-color: #1e1e2d;
+        border: 1px solid #333;
+        margin-bottom: 12px;
+        border-radius: 8px !important;
+        transition: border-color 0.3s;
+    }
+    
+    .rules-accordion .mud-expand-panel-header {
+        font-size: 1.1rem;
+        padding: 16px 24px;
+    }
+
+    .rules-accordion .mud-expand-panel:hover {
+        border-color: #ff9800;
+    }
+
+    .rule-list .mud-list-item {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 12px 0;
+    }
+
+    .punishment {
+        color: #ff5252; /* Red color for punishments */
+        font-weight: bold;
+        font-size: 0.9em;
+        margin-left: 6px;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

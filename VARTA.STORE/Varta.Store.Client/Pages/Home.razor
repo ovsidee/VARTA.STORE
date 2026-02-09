@@ -1,28 +1,31 @@
 ﻿@page "/"
 @inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime 
+@inject ISnackbar Snackbar
 
 <PageTitle>VARTA - Головна</PageTitle>
 
 <div class="hero-container">
     <div class="hero-overlay"></div>
     <div class="hero-content d-flex flex-column justify-center align-center">
-        
+
         <MudText Typo="Typo.h1" Class="hero-title mb-2 animate-fade-in">
             VARTA SERVER
         </MudText>
-        
+
         <MudText Typo="Typo.h5" Class="hero-subtitle mb-8 animate-slide-up">
             Твоя історія виживання починається тут.
         </MudText>
 
         <div class="d-flex gap-4 animate-slide-up delay-1">
-            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" 
+            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large"
                        Class="px-10 py-3 hero-btn" OnClick="@(() => NavManager.NavigateTo("/store"))">
                 <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Class="mr-2"/> МАГАЗИН
             </MudButton>
-            
-            <MudButton Variant="Variant.Outlined" Color="Color.Inherit" Size="Size.Large" 
-                       Class="px-10 py-3 hero-btn-outline" OnClick="@(() => NavManager.NavigateTo("/discord"))">
+
+            <MudButton Variant="Variant.Outlined" Color="Color.Inherit" Size="Size.Large"
+                       Class="px-10 py-3 hero-btn-outline"
+                       Href="https://discord.gg/mkQbaxmuUS" Target="_blank">
                 <MudIcon Icon="@Icons.Custom.Brands.Discord" Class="mr-2"/> DISCORD
             </MudButton>
         </div>
@@ -63,19 +66,68 @@
     </MudGrid>
 </MudContainer>
 
+
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16">
-    <MudAlert Severity="Severity.Info" Variant="Variant.Filled" Class="rounded-lg">
-        Сервер онлайн: [UA/EU] VARTA SURVIVAL | 3PP | LOOT+ |
-    </MudAlert>
+    
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8" Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
+        SERVERS
+    </MudText>
+
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" md="8">
+            
+            <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden" Style="background-color: #1e1e2d;">
+                
+                <div class="relative" style="line-height: 0;">
+                    <MudCardMedia Image="images/server1.png" Height="300" Class="server-image"/>
+                    
+                    <div class="server-overlay"></div>
+                    
+                </div>
+
+                <MudCardContent Class="pa-6" Style="background-color: #1e1e2d;">
+                    <div class="d-flex justify-space-between align-center">
+                        
+                        <div @onclick="CopyToServerClipboard" style="cursor: pointer;" title="Click to copy IP">
+                            <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">
+                                [UA|EU] VARTA | 3pp | Loot +
+                            </MudText>
+                            
+                            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
+                                IP: @ServerIp (Натисни щоб скопіювати)
+                            </MudText>
+                        </div>
+                        
+                        <MudIconButton OnClick="CopyToServerClipboard" Icon="@Icons.Material.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" Class="ml-4" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+
+        </MudItem>
+    </MudGrid>
 </MudContainer>
 
+@code {
+    // Defined IP here so we can use it in logic and HTML
+    private const string ServerIp = "178.150.251.247:2307";
+
+    private async Task CopyToServerClipboard()
+    {
+        // This Javascript function copies text to clipboard
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ServerIp);
+        
+        // Show success message
+        Snackbar.Add($"IP {ServerIp} скопійовано!", Severity.Success);
+    }
+}
+
 <style>
-    /* Custom Styles for that "Cinematic" feel */
+    /* ... Existing styles ... */
     .hero-container {
         position: relative;
-        height: 85vh; /* Takes up most of the screen */
+        height: 85vh;
         width: 100%;
-        background-image: url('images/hero_bg.jpg'); /* YOUR IMAGE HERE */
+        background-image: url('images/hero_bg.jpg');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -86,8 +138,7 @@
     .hero-overlay {
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        /* Dark gradient to make text readable */
-        background: linear-gradient(180deg, rgba(20,20,31,0.7) 0%, rgba(20,20,31,0.9) 100%);
+        background: linear-gradient(180deg, rgba(20,20,31,0.7) 0%, rgba(20,20,31,0.95) 100%);
     }
 
     .hero-content {
@@ -115,13 +166,44 @@
         border: 1px solid #333;
         transition: transform 0.3s ease;
     }
-    
     .feature-card:hover {
-        transform: translateY(-10px); /* Hover effect */
+        transform: translateY(-10px);
         border-color: #ff9800;
     }
 
+    /* server card style  */
+    .server-card {
+        border: 1px solid #333;
+        transition: all 0.3s ease;
+    }
+    .server-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border-color: #ff9800;
+    }
+
+    .server-image {
+        transition: transform 0.5s ease;
+    }
+    .server-card:hover .server-image {
+        transform: scale(1.05);
+    }
+
+ 
+    
+    /* Hover effect for the copy text */
+    .copy-hover {
+        transition: color 0.3s;
+    }
+    .server-card:hover .copy-hover {
+        color: #ff9800 !important; /* Turns orange when hovering the card */
+    }
+
+    /* Helper Utilities */
     .relative { position: relative; }
+    .absolute { position: absolute; }
+    .top-4 { top: 16px; }
+    .right-4 { right: 16px; }
     .z-10 { z-index: 10; }
-    .mt-n16 { margin-top: -4rem; } /* Pulls cards up over the hero image */
+    .mt-n16 { margin-top: -4rem; }
 </style>
