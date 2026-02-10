@@ -23,6 +23,13 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    // Hardcoded Admins list
+    private readonly List<string> _adminSteamIds = new()
+    {
+        "76561199012487881",
+        "76561198807796041"
+    };
+
     [HttpGet("login")]
     public IActionResult Login()
     {
@@ -38,14 +45,14 @@ public class AuthController : ControllerBase
     {
         // Отримуємо дані від Steam через бібліотеку
         var result = await HttpContext.AuthenticateAsync("Cookies");
-        
-        if (!result.Succeeded) 
+
+        if (!result.Succeeded)
             return BadRequest("Steam auth failed. Result was not succeeded.");
 
         // Отримуємо Claims
         var claims = result.Principal.Claims;
         var steamIdClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        
+
         // Steam повертає ID у форматі: https://steamcommunity.com/openid/id/76561198...
         var steamId = steamIdClaim?.Split('/').Last();
 
@@ -58,25 +65,29 @@ public class AuthController : ControllerBase
 
         using (var httpClient = new HttpClient())
         {
-            try 
+            try
             {
                 var response = await httpClient.GetFromJsonAsync<SteamWebApiResponse>(
                     $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={steamId}");
                 var player = response?.Response?.Players?.FirstOrDefault();
                 if (player != null) { username = player.PersonaName; avatarUrl = player.AvatarFull; }
             }
-            catch {}
+            catch { }
         }
-        
+
         // --- РАБОТА С БАЗОЙ ДАННЫХ ---
         var user = await _context.Users.FirstOrDefaultAsync(u => u.SteamID == steamId);
         if (user == null)
         {
             user = new AppUser
             {
-                SteamID = steamId, Username = username, AvatarUrl = avatarUrl,
+                SteamID = steamId,
+                Username = username,
+                AvatarUrl = avatarUrl,
                 ProfileUrl = $"https://steamcommunity.com/profiles/{steamId}",
-                Balance = 0, DateCreated = DateTime.UtcNow
+                Balance = 0,
+                DateCreated = DateTime.UtcNow,
+                Role = _adminSteamIds.Contains(steamId) ? "Admin" : "User"
             };
             _context.Users.Add(user);
         }
@@ -84,6 +95,12 @@ public class AuthController : ControllerBase
         {
             user.Username = username;
             user.AvatarUrl = avatarUrl;
+
+            // Allow promotion of existing users if they are in the list but stored as "User"
+            if (_adminSteamIds.Contains(steamId) && user.Role != "Admin")
+            {
+                user.Role = "Admin";
+            }
         }
         await _context.SaveChangesAsync();
 
@@ -93,7 +110,7 @@ public class AuthController : ControllerBase
         // Редирект на фронтенд
         var clientUrl = _configuration["AppUrl"] ?? "http://localhost:7120";
         clientUrl = clientUrl.TrimEnd('/');
-        
+
         return Redirect($"{clientUrl}/login-success?token={token}");
     }
 
@@ -106,7 +123,8 @@ public class AuthController : ControllerBase
             new Claim("SteamId", user.SteamID),
             new Claim("AvatarUrl", user.AvatarUrl),
             new Claim("Balance", user.Balance.ToString("F2")),
-            new Claim(ClaimTypes.Role, "User")
+            new Claim("Balance", user.Balance.ToString("F2")),
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -126,10 +144,10 @@ public class AuthController : ControllerBase
 
 public class SteamWebApiResponse { public SteamResponse Response { get; set; } }
 public class SteamResponse { public List<SteamPlayer> Players { get; set; } }
-public class SteamPlayer 
-{ 
+public class SteamPlayer
+{
     [System.Text.Json.Serialization.JsonPropertyName("personaname")]
-    public string PersonaName { get; set; } 
+    public string PersonaName { get; set; }
     [System.Text.Json.Serialization.JsonPropertyName("avatarfull")]
-    public string AvatarFull { get; set; } 
+    public string AvatarFull { get; set; }
 }

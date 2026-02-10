@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Varta.Store.API.Data;
@@ -11,9 +12,11 @@ using Varta.Store.API.Data;
 namespace Varta.Store.API.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260210180845_AddRoleColumnToAppUser")]
+    partial class AddRoleColumnToAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -577,10 +580,6 @@ namespace Varta.Store.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IpAddress")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(40)
@@ -594,7 +593,6 @@ namespace Varta.Store.API.Migrations
                         new
                         {
                             Id = 1,
-                            IpAddress = "178.150.251.247:2307",
                             Name = "Chernarus 3PP"
                         });
                 });

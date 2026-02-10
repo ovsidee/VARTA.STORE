@@ -1,0 +1,275 @@
+@page "/admin/users/{UserId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using Varta.Store.Shared.DTO
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@inject ISnackbar Snackbar
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Деталі Користувача</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16 mb-16 pt-4">
+    
+    <MudButton Variant="Variant.Text" 
+               StartIcon="@Icons.Material.Filled.ArrowBack" 
+               Color="Color.Default"
+               OnClick="GoBack"
+               Class="mb-6">
+        Назад до списку
+    </MudButton>
+
+    @if (_isLoading)
+    {
+        <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="mb-4" />
+        <MudSkeleton Height="200px" Class="mb-4" />
+        <MudSkeleton Height="400px" />
+    }
+    else if (user == null)
+    {
+        <MudPaper Elevation="0" Class="pa-8 text-center" Style="background: rgba(30, 30, 45, 0.5);">
+            <MudIcon Icon="@Icons.Material.Filled.PersonOff" Size="Size.Large" Color="Color.Error" Class="mb-4" />
+            <MudText Typo="Typo.h6">Користувача не знайдено.</MudText>
+        </MudPaper>
+    }
+    else
+    {
+        @* User Info Card *@
+        <MudPaper Elevation="25" Class="pa-8 mb-6 user-info-card mud-theme-dark">
+            <MudGrid>
+                <MudItem xs="12" md="2" Class="d-flex justify-center align-center">
+                    <MudAvatar Size="Size.Large" Style="width: 120px; height: 120px; border: 3px solid #ff9800;">
+                        <MudImage Src="@user.AvatarUrl" Alt="Avatar" />
+                    </MudAvatar>
+                </MudItem>
+                <MudItem xs="12" md="10">
+                    <MudText Typo="Typo.h4" Class="mb-3" Style="font-weight: 700;">@user.Username</MudText>
+                    <MudGrid>
+                        <MudItem xs="12" sm="6">
+                            <div class="d-flex align-center mb-2">
+                                <MudIcon Icon="@Icons.Custom.Brands.Steam" Color="Color.Info" Size="Size.Small" Class="mr-2" />
+                                <MudText Typo="Typo.body2" Style="color: #9e9eae;">SteamID:</MudText>
+                                <MudText Typo="Typo.body1" Class="ml-2">@user.SteamID</MudText>
+                            </div>
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <div class="d-flex align-center mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" Color="Color.Warning" Size="Size.Small" Class="mr-2" />
+                                <MudText Typo="Typo.body2" Style="color: #9e9eae;">Баланс:</MudText>
+                                <MudChip T="string" Color="Color.Warning" Size="Size.Small" Class="ml-2">@user.Balance.ToString("F2") ₴</MudChip>
+                            </div>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        @* Transactions Section *@
+        <MudText Typo="Typo.h5" Class="mb-4 mt-8" Style="font-weight: 700; letter-spacing: 1px;">
+            <MudIcon Icon="@Icons.Material.Filled.Receipt" Class="mr-2" />
+            ТРАНЗАКЦІЇ ГАМАНЦЯ
+        </MudText>
+
+        @if (user.Transactions.Count == 0)
+        {
+            <MudPaper Elevation="0" Class="pa-6 mb-6 text-center" Style="background: rgba(30, 30, 45, 0.5);">
+                <MudText Color="Color.Default">Транзакцій не знайдено.</MudText>
+            </MudPaper>
+        }
+        else
+        {
+            <MudPaper Elevation="25" Class="pa-6 mb-6 admin-table-paper mud-theme-dark">
+                <MudDataGrid T="WalletTransactionDto" 
+                             Items="@user.Transactions" 
+                             Hover="true" 
+                             Dense="true"
+                             Elevation="0"
+                             Class="admin-data-grid">
+                    <Columns>
+                        <PropertyColumn Property="x => x.Id" Title="ID" />
+                        <TemplateColumn Title="Сума">
+                            <CellTemplate>
+                                <MudChip Color="Color.Success" Size="Size.Small" Variant="Variant.Text">
+                                    +@context.Item.Amount.ToString("F2") ₴
+                                </MudChip>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Дата">
+                            <CellTemplate>
+                                @context.Item.Date.ToString("dd.MM.yyyy HH:mm")
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <TemplateColumn Title="Статус">
+                            <CellTemplate>
+                                <MudChip T="string" Color="@GetStatusColor(context.Item.Status)" Size="Size.Small">
+                                    @context.Item.Status
+                                </MudChip>
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <PropertyColumn Property="x => x.ExternalTransactionId" Title="Зовнішній ID" />
+                    </Columns>
+                </MudDataGrid>
+            </MudPaper>
+        }
+
+        @* Orders Section *@
+        <MudText Typo="Typo.h5" Class="mb-4 mt-8" Style="font-weight: 700; letter-spacing: 1px;">
+            <MudIcon Icon="@Icons.Material.Filled.ShoppingBag" Class="mr-2" />
+            ІСТОРІЯ ЗАМОВЛЕНЬ
+        </MudText>
+
+        @if (user.Orders.Count == 0)
+        {
+            <MudPaper Elevation="0" Class="pa-6 text-center" Style="background: rgba(30, 30, 45, 0.5);">
+                <MudText Color="Color.Default">Замовлень не знайдено.</MudText>
+            </MudPaper>
+        }
+        else
+        {
+            @foreach (var order in user.Orders)
+            {
+                <MudPaper Elevation="25" Class="mb-4 order-card mud-theme-dark">
+                    <div class="pa-4" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <MudGrid>
+                            <MudItem xs="12" sm="6">
+                                <MudText Typo="Typo.h6" Style="font-weight: 700;">
+                                    Замовлення #@order.Id
+                                </MudText>
+                                <MudText Typo="Typo.caption" Style="color: #9e9eae;">
+                                    @order.DateCreated.ToString("dd.MM.yyyy HH:mm")
+                                </MudText>
+                            </MudItem>
+                            <MudItem xs="12" sm="6" Class="d-flex justify-end align-center">
+                                <MudChip T="string" Color="Color.Info" Size="Size.Small">@order.StatusName</MudChip>
+                            </MudItem>
+                        </MudGrid>
+                    </div>
+                    <div class="pa-4">
+                        <MudDataGrid T="OrderProductDto" 
+                                     Items="@order.Items" 
+                                     Hover="true" 
+                                     Dense="true"
+                                     Elevation="0"
+                                     Class="admin-data-grid">
+                            <Columns>
+                                <TemplateColumn Title="Зображення" Sortable="false">
+                                    <CellTemplate>
+                                        <MudImage Src="@($"/images/products/{context.Item.ImageUrl}")" 
+                                                  Alt="@context.Item.ProductName" 
+                                                  Height="40" 
+                                                  Width="40" 
+                                                  ObjectFit="ObjectFit.Cover"
+                                                  Class="rounded" />
+                                    </CellTemplate>
+                                </TemplateColumn>
+                                <PropertyColumn Property="x => x.ProductName" Title="Продукт" />
+                                <TemplateColumn Title="Ціна">
+                                    <CellTemplate>
+                                        @context.Item.PriceAtPurchase.ToString("F2") ₴
+                                    </CellTemplate>
+                                </TemplateColumn>
+                                <PropertyColumn Property="x => x.Quantity" Title="Кількість" />
+                                <TemplateColumn Title="Сума">
+                                    <CellTemplate>
+                                        <MudText Style="font-weight: 700; color: #ff9800;">
+                                            @((context.Item.PriceAtPurchase * context.Item.Quantity).ToString("F2")) ₴
+                                        </MudText>
+                                    </CellTemplate>
+                                </TemplateColumn>
+                            </Columns>
+                        </MudDataGrid>
+                        <MudDivider Class="my-4" />
+                        <div class="d-flex justify-end">
+                            <MudText Typo="Typo.h6" Style="font-weight: 700; color: #ff9800;">
+                                Загальна сума: @order.TotalAmount.ToString("F2") ₴
+                            </MudText>
+                        </div>
+                    </div>
+                </MudPaper>
+            }
+        }
+    }
+
+</MudContainer>
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+    
+    private UserProfileDto? user;
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserDetails();
+    }
+
+    private async Task LoadUserDetails()
+    {
+        _isLoading = true;
+        try
+        {
+            user = await Http.GetFromJsonAsync<UserProfileDto>($"api/admin/users/{UserId}");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Помилка завантаження: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/admin/users");
+    }
+
+    private Color GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Completed" => Color.Success,
+            "Pending" => Color.Warning,
+            _ => Color.Error
+        };
+    }
+}
+
+<style>
+    .user-info-card {
+        background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+        border: 1px solid rgba(255,152,0,0.1);
+        backdrop-filter: blur(12px);
+    }
+
+    .admin-table-paper {
+        background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+        border: 1px solid rgba(255,152,0,0.1);
+        backdrop-filter: blur(12px);
+    }
+
+    .order-card {
+        background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+        border: 1px solid rgba(255,152,0,0.1);
+        backdrop-filter: blur(12px);
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+        border-color: rgba(255,152,0,0.3);
+        transform: translateY(-2px);
+    }
+
+    .admin-data-grid {
+        background: transparent !important;
+    }
+
+    ::deep .mud-table-cell {
+        color: #e0e0e0 !important;
+    }
+
+    ::deep .mud-table-row:hover {
+        background-color: rgba(255,152,0,0.05) !important;
+    }
+</style>

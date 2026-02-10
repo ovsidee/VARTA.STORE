@@ -1,0 +1,204 @@
+@using Varta.Store.Shared.DTO
+@using Varta.Store.Shared
+@inject HttpClient Http
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="productForm.Name" 
+                      Label="Назва" 
+                      Variant="Variant.Outlined" 
+                      Margin="Margin.Dense"
+                      Class="mb-4" />
+        
+        <MudTextField @bind-Value="productForm.Description" 
+                      Label="Опис" 
+                      Variant="Variant.Outlined" 
+                      Lines="3"
+                      Margin="Margin.Dense"
+                      Class="mb-4" />
+        
+        <MudNumericField @bind-Value="productForm.Price" 
+                         Label="Ціна (₴)" 
+                         Variant="Variant.Outlined" 
+                         Margin="Margin.Dense"
+                         Min="0m"
+                         Class="mb-4" />
+        
+        <MudTextField @bind-Value="productForm.ImageUrl" 
+                      Label="Назва файлу зображення" 
+                      Variant="Variant.Outlined" 
+                      Margin="Margin.Dense"
+                      HelperText="Наприклад: product.png"
+                      Class="mb-4" />
+
+        @if (_loadingLookups)
+        {
+            <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="mb-4" />
+        }
+        else
+        {
+            <div class="mb-4">
+                <MudText Typo="Typo.caption" Class="mb-1" Style="color: #9e9eae;">Категорія</MudText>
+                <select @bind="_selectedCategoryId" 
+                        @bind:event="onchange"
+                        class="custom-select"
+                        style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255,152,0,0.3); border-radius: 4px; background: rgba(30, 30, 45, 0.95); color: #ffffff; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
+                    @foreach (var category in _categories)
+                    {
+                        <option value="@category.Id" style="background: #1e1e2d; color: #ffffff; padding: 8px;">@category.Name</option>
+                    }
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <MudText Typo="Typo.caption" Class="mb-1" Style="color: #9e9eae;">Сервер</MudText>
+                <select @bind="_selectedServerTagId"
+                        @bind:event="onchange"
+                        class="custom-select"
+                        style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255,152,0,0.3); border-radius: 4px; background: rgba(30, 30, 45, 0.95); color: #ffffff; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
+                    @foreach (var server in _serverTags)
+                    {
+                        <option value="@server.Id" style="background: #1e1e2d; color: #ffffff; padding: 8px;">@server.Name</option>
+                    }
+                </select>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4">@errorMessage</MudAlert>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Text">Скасувати</MudButton>
+        <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="Submit">Зберегти</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] required public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public ProductDto? Product { get; set; }
+
+    private ProductUpdateDto productForm = new();
+    private string? errorMessage;
+    private bool _loadingLookups = true;
+    private List<Category> _categories = new();
+    private List<ServerTag> _serverTags = new();
+    
+    // Separate tracking for dropdown selections
+    private int _selectedCategoryId
+    {
+        get => productForm.CategoryId;
+        set
+        {
+            productForm.CategoryId = value;
+            StateHasChanged();
+        }
+    }
+    
+    private int _selectedServerTagId
+    {
+        get => productForm.ServerTagId;
+        set
+        {
+            productForm.ServerTagId = value;
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadLookupData();
+        
+        if (Product != null)
+        {
+            // For existing products, look up IDs from names
+            var categoryId = _categories.FirstOrDefault(c => c.Name == Product.CategoryName)?.Id ?? 1;
+            var serverTagId = _serverTags.FirstOrDefault(s => s.Name == Product.ServerTagName)?.Id ?? 1;
+            
+            productForm = new ProductUpdateDto
+            {
+                Name = Product.Name,
+                Description = Product.Description,
+                Price = Product.Price,
+                ImageUrl = Product.ImageUrl,
+                CategoryId = categoryId,
+                ServerTagId = serverTagId
+            };
+        }
+        else
+        {
+            // Set defaults for new product
+            productForm.CategoryId = _categories.FirstOrDefault()?.Id ?? 1;
+            productForm.ServerTagId = _serverTags.FirstOrDefault()?.Id ?? 1;
+        }
+    }
+
+    private async Task LoadLookupData()
+    {
+        _loadingLookups = true;
+        try
+        {
+            var categoriesTask = Http.GetFromJsonAsync<List<Category>>("api/categories");
+            var serverTagsTask = Http.GetFromJsonAsync<List<ServerTag>>("api/servertags");
+
+            await Task.WhenAll(categoriesTask, serverTagsTask);
+
+            _categories = await categoriesTask ?? new List<Category>();
+            _serverTags = await serverTagsTask ?? new List<ServerTag>();
+            
+            Console.WriteLine($"Loaded {_categories.Count} categories and {_serverTags.Count} servers");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Помилка завантаження даних: {ex.Message}";
+            Console.WriteLine($"Error loading lookup data: {ex}");
+        }
+        finally
+        {
+            _loadingLookups = false;
+            StateHasChanged(); // Force re-render
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        errorMessage = null;
+
+        try
+        {
+            if (Product == null)
+            {
+                // Create new product
+                var response = await Http.PostAsJsonAsync("api/products", productForm);
+                if (response.IsSuccessStatusCode)
+                {
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    errorMessage = $"Помилка створення: {response.StatusCode}";
+                }
+            }
+            else
+            {
+                // Update existing product
+                var response = await Http.PatchAsJsonAsync($"api/products/{Product.Id}", productForm);
+                if (response.IsSuccessStatusCode)
+                {
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    errorMessage = $"Помилка оновлення: {response.StatusCode}";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Помилка: {ex.Message}";
+        }
+    }
+}

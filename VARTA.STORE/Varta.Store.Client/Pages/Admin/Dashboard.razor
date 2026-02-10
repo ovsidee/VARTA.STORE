@@ -1,0 +1,99 @@
+@page "/admin"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager NavManager
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Адмін Панель</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16 pt-4">
+    
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 animate-fade-in" 
+             Style="font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px;">
+        АДМІНІСТРАТИВНА ПАНЕЛЬ
+    </MudText>
+
+    <MudGrid Justify="Justify.Center" Class="animate-fade-in">
+        <MudItem xs="12" md="6">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column admin-card mud-theme-dark" 
+                      Style="background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%); border: 1px solid rgba(255,152,0,0.1); min-height: 280px;">
+                <div class="d-flex align-center mb-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Inventory" Color="Color.Warning" Size="Size.Large" Class="mr-3" />
+                    <MudText Typo="Typo.h5" Style="font-weight: 700; letter-spacing: 1px;">
+                        УПРАВЛІННЯ ПРОДУКТАМИ
+                    </MudText>
+                </div>
+                <MudText Typo="Typo.body1" Color="Color.Default" Class="mb-6 flex-grow-1" Style="color: #b0b0b0;">
+                    Створювати, редагувати та видаляти продукти в магазині. Керуйте каталогом товарів, встановлюйте ціни та категорії.
+                </MudText>
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Warning" 
+                           Size="Size.Large"
+                           FullWidth="true"
+                           OnClick='() => NavManager.NavigateTo("/admin/products")'
+                           StartIcon="@Icons.Material.Filled.ArrowForward"
+                           Class="admin-button">
+                    ПЕРЕЙТИ
+                </MudButton>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column admin-card mud-theme-dark" 
+                      Style="background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%); border: 1px solid rgba(255,152,0,0.1); min-height: 280px;">
+                <div class="d-flex align-center mb-4">
+                    <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Warning" Size="Size.Large" Class="mr-3" />
+                    <MudText Typo="Typo.h5" Style="font-weight: 700; letter-spacing: 1px;">
+                        КОРИСТУВАЧІ
+                    </MudText>
+                </div>
+                <MudText Typo="Typo.body1" Color="Color.Default" Class="mb-6 flex-grow-1" Style="color: #b0b0b0;">
+                    Переглядати інформацію про користувачів, їх баланс, історію покупок та транзакції. Повний контроль над базою користувачів.
+                </MudText>
+                <MudButton Variant="Variant.Filled" 
+                           Color="Color.Info" 
+                           Size="Size.Large"
+                           FullWidth="true"
+                           OnClick='() => NavManager.NavigateTo("/admin/users")'
+                           StartIcon="@Icons.Material.Filled.People"
+                           Class="admin-button">
+                    ПЕРЕЙТИ
+                </MudButton>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+</MudContainer>
+
+<style>
+    .admin-card {
+        transition: all 0.3s ease;
+        backdrop-filter: blur(12px);
+    }
+
+    .admin-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(255,152,0,0.3) !important;
+        border-color: rgba(255,152,0,0.3) !important;
+    }
+
+    .admin-button {
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .admin-button:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 24px rgba(255,152,0,0.4);
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

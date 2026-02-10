@@ -78,6 +78,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
         if (keyValuePairs == null) return new List<Claim>();
 
-        return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString() ?? ""));
+        return keyValuePairs.Select(kvp => new Claim(kvp.Key == "role" ? ClaimTypes.Role : kvp.Key, kvp.Value.ToString() ?? ""));
     }
 }

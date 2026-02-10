@@ -1,0 +1,100 @@
+@using Varta.Store.Shared.DTO
+@using Varta.Store.Shared
+@inject HttpClient Http
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="serverForm.Name" 
+                      Label="Назва сервера" 
+                      Variant="Variant.Outlined" 
+                      Margin="Margin.Dense"
+                      Class="mb-4" />
+        
+        <MudTextField @bind-Value="serverForm.IpAddress" 
+                      Label="IP адреса (IP:Port)" 
+                      Variant="Variant.Outlined" 
+                      Margin="Margin.Dense"
+                      HelperText="Наприклад: 127.0.0.1:2302"
+                      Class="mb-4" />
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4">@errorMessage</MudAlert>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Text">Скасувати</MudButton>
+        <MudButton Color="Color.Warning" Variant="Variant.Filled" OnClick="Submit">Зберегти</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] required public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public ServerTag? Server { get; set; }
+
+    private ServerTag serverForm = new();
+    private string? errorMessage;
+
+    protected override void OnInitialized()
+    {
+        if (Server != null)
+        {
+            serverForm = new ServerTag
+            {
+                Id = Server.Id,
+                Name = Server.Name,
+                IpAddress = Server.IpAddress
+            };
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        errorMessage = null;
+
+        try
+        {
+            if (string.IsNullOrEmpty(serverForm.Name))
+            {
+                errorMessage = "Назва сервера є обов'язковою";
+                return;
+            }
+
+            if (Server == null)
+            {
+                // Create new server
+                var response = await Http.PostAsJsonAsync("api/servertags", serverForm);
+                if (response.IsSuccessStatusCode)
+                {
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    errorMessage = $"Помилка створення: {response.StatusCode}";
+                }
+            }
+            else
+            {
+                // Update existing server
+                // Ensure ID is set correctly for the update
+                serverForm.Id = Server.Id;
+                
+                var response = await Http.PutAsJsonAsync($"api/servertags/{Server.Id}", serverForm);
+                if (response.IsSuccessStatusCode)
+                {
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    errorMessage = $"Помилка оновлення: {response.StatusCode}";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Помилка: {ex.Message}";
+        }
+    }
+}

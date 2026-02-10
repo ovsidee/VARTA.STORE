@@ -40,6 +40,13 @@
                 МАГАЗИН
             </MudButton>
 
+            <AuthorizeView Roles="Admin">
+                <MudButton Variant="Variant.Text" Color="Color.Warning" Class="nav-link mx-2"
+                           OnClick='() => NavManager.NavigateTo("/admin")'>
+                    АДМІН ПАНЕЛЬ
+                </MudButton>
+            </AuthorizeView>
+
             <MudBadge Content="_cartCount" Color="Color.Error" Overlap="true" Class="mx-2" Visible="@(_cartCount > 0)">
                 <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Inherit" 
                                OnClick='() => NavManager.NavigateTo("/cart")' />

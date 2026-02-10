@@ -30,6 +30,9 @@ public class AppUser
     [MaxLength(250)]
     public string ProfileUrl { get; set; }
 
+    [MaxLength(20)]
+    public string Role { get; set; } = "User";
+
     // nvg property for easier appuser.Orders...
     public List<Order> Orders { get; set; } = new();
     public List<WalletTransaction> WalletTransactions { get; set; } = new();

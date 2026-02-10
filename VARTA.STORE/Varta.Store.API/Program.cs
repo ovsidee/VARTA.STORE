@@ -47,6 +47,7 @@ public class Program
 
         // DI for services
         builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IAdminService, AdminService>();
 
         // Donatik Service (Mock in Dev, Real in Prod)
         // Check if we want to force Mock Mode via config (default to true in Development if not specified? No, let's be explicit)
@@ -155,7 +156,7 @@ public class Program
                 {
                     try
                     {
-                        context.Database.EnsureCreated(); // Creates DB if not exists
+                        context.Database.Migrate(); // Uses migrations instead of EnsureCreated
                         logger.LogInformation("Database connected!");
                         break;
                     }

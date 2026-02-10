@@ -34,7 +34,7 @@ namespace Varta.Store.API.Data
 
             // seed server tags
             modelBuilder.Entity<ServerTag>().HasData(
-                new ServerTag { Id = 1, Name = "Chernarus 3PP" }
+                new ServerTag { Id = 1, Name = "Chernarus 3PP", IpAddress = "178.150.251.247:2307"}
             );
 
             // seed order statuses

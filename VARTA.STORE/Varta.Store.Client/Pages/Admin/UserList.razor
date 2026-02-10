@@ -1,0 +1,163 @@
+@page "/admin/users"
+@using Microsoft.AspNetCore.Authorization
+@using Varta.Store.Shared.DTO
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@inject ISnackbar Snackbar
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Користувачі</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16 mb-16 pt-4">
+    
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-6 animate-fade-in" 
+             Style="font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px;">
+        КОРИСТУВАЧІ
+    </MudText>
+
+    @if (_isLoading)
+    {
+        <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="mb-4" />
+        <MudSkeleton Height="400px" />
+    }
+    else if (users == null || users.Count == 0)
+    {
+        <MudPaper Elevation="0" Class="pa-8 text-center" Style="background: rgba(30, 30, 45, 0.5);">
+            <MudIcon Icon="@Icons.Material.Filled.People" Size="Size.Large" Color="Color.Default" Class="mb-4" />
+            <MudText Typo="Typo.h6">Користувачів не знайдено.</MudText>
+        </MudPaper>
+    }
+    else
+    {
+        <MudPaper Elevation="25" Class="pa-6 admin-table-paper mud-theme-dark">
+            <MudDataGrid T="UserProfileDto" 
+                         Items="@users" 
+                         Hover="true" 
+                         Dense="true"
+                         Filterable="true"
+                         QuickFilter="@_quickFilter"
+                         Elevation="0"
+                         Class="admin-data-grid">
+                <ToolBarContent>
+                    <MudTextField @bind-Value="_searchString" 
+                                  Placeholder="Пошук користувачів..." 
+                                  Adornment="Adornment.Start" 
+                                  AdornmentIcon="@Icons.Material.Filled.Search" 
+                                  IconSize="Size.Medium" 
+                                  Class="mt-0"
+                                  Immediate="true"
+                                  Clearable="true"></MudTextField>
+                    <MudSpacer />
+                </ToolBarContent>
+                <Columns>
+                    <PropertyColumn Property="x => x.Id" Title="ID" />
+                    <TemplateColumn Title="Аватар" Sortable="false" Filterable="false">
+                        <CellTemplate>
+                            <MudAvatar Size="Size.Small">
+                                <MudImage Src="@context.Item.AvatarUrl" Alt="Avatar" />
+                            </MudAvatar>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.Username" Title="Ім'я" />
+                    <PropertyColumn Property="x => x.SteamID" Title="SteamID" />
+                    <TemplateColumn Title="Баланс" Sortable="true">
+                        <CellTemplate>
+                            <MudChip Color="Color.Warning" Size="Size.Small" Variant="Variant.Text">
+                                @context.Item.Balance.ToString("F2") ₴
+                            </MudChip>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn Title="Дії" Sortable="false" Filterable="false">
+                        <CellTemplate>
+                            <MudIconButton Icon="@Icons.Material.Filled.Visibility" 
+                                           Color="Color.Info" 
+                                           Size="Size.Small"
+                                           OnClick="@(() => ViewUserDetails(context.Item.Id))" />
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudPaper>
+    }
+
+</MudContainer>
+
+@code {
+    private List<UserProfileDto>? users;
+    private bool _isLoading = true;
+    private string _searchString = "";
+
+    private Func<UserProfileDto, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Username.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.SteamID.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        _isLoading = true;
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<UserProfileDto>>("api/admin/users");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Помилка завантаження: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void ViewUserDetails(int userId)
+    {
+        NavManager.NavigateTo($"/admin/users/{userId}");
+    }
+}
+
+<style>
+    .admin-table-paper {
+        background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+        border: 1px solid rgba(255,152,0,0.1);
+        backdrop-filter: blur(12px);
+    }
+
+    .admin-data-grid {
+        background: transparent !important;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    ::deep .mud-table-cell {
+        color: #e0e0e0 !important;
+    }
+
+    ::deep .mud-table-row:hover {
+        background-color: rgba(255,152,0,0.05) !important;
+    }
+
+    ::deep .mud-input {
+        color: #e0e0e0 !important;
+    }
+</style>

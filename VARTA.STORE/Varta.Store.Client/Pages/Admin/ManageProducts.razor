@@ -1,0 +1,231 @@
+@page "/admin/products"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Varta.Store.Shared.DTO
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Управління Продуктами</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16 mb-16 pt-4">
+    
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-6 animate-fade-in" 
+             Style="font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px;">
+        УПРАВЛІННЯ ПРОДУКТАМИ
+    </MudText>
+
+    <div class="d-flex justify-space-between align-center mb-6">
+        <MudButton Variant="Variant.Filled" 
+                   Color="Color.Success" 
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="ShowCreateDialog"
+                   Class="admin-action-button">
+            СТВОРИТИ ПРОДУКТ
+        </MudButton>
+    </div>
+
+    @if (_isLoading)
+    {
+        <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="mb-4" />
+        <MudSkeleton Height="400px" />
+    }
+    else if (products == null || products.Count == 0)
+    {
+        <MudPaper Elevation="0" Class="pa-8 text-center" Style="background: rgba(30, 30, 45, 0.5);">
+            <MudIcon Icon="@Icons.Material.Filled.Inventory" Size="Size.Large" Color="Color.Default" Class="mb-4" />
+            <MudText Typo="Typo.h6">Продуктів не знайдено.</MudText>
+        </MudPaper>
+    }
+    else
+    {
+        <MudPaper Elevation="25" Class="pa-6 admin-table-paper mud-theme-dark">
+            <MudDataGrid T="ProductDto" 
+                         Items="@products" 
+                         Hover="true" 
+                         Dense="true"
+                         Elevation="0"
+                         Class="admin-data-grid">
+                <Columns>
+                    <PropertyColumn Property="x => x.Id" Title="ID" />
+                    <TemplateColumn Title="Зображення" CellStyle="width: 100px;">
+                        <CellTemplate>
+                            <MudImage Src="@($"/images/products/{context.Item.ImageUrl}")" 
+                                      Alt="@context.Item.Name" 
+                                      Height="50" 
+                                      Width="50" 
+                                      ObjectFit="ObjectFit.Cover"
+                                      Class="rounded" />
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.Name" Title="Назва" />
+                    <TemplateColumn Title="Ціна">
+                        <CellTemplate>
+                            <MudChip Color="Color.Warning" Size="Size.Small" Variant="Variant.Text">
+                                @context.Item.Price ₴
+                            </MudChip>
+                        </CellTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.CategoryName" Title="Категорія" />
+                    <PropertyColumn Property="x => x.ServerTagName" Title="Сервер" />
+                    <TemplateColumn Title="Дії" CellStyle="width: 200px;">
+                        <CellTemplate>
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                           Color="Color.Warning" 
+                                           Size="Size.Small"
+                                           OnClick="@(() => EditProduct(context.Item))"
+                                           Class="mr-2" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                           Color="Color.Error" 
+                                           Size="Size.Small"
+                                           OnClick="@(() => DeleteProduct(context.Item.Id))" />
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudPaper>
+    }
+
+</MudContainer>
+
+@code {
+    private List<ProductDto>? products;
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProducts();
+    }
+
+    private async Task LoadProducts()
+    {
+        _isLoading = true;
+        try
+        {
+            products = await Http.GetFromJsonAsync<List<ProductDto>>("api/products");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Помилка завантаження: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task ShowCreateDialog()
+    {
+        var parameters = new DialogParameters { ["Product"] = null };
+        var options = new DialogOptions { 
+            MaxWidth = MaxWidth.Medium, 
+            FullWidth = true,
+            CloseButton = true
+        };
+        
+        var dialog = await DialogService.ShowAsync<ProductFormDialog>("Новий Продукт", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await LoadProducts();
+            Snackbar.Add("Продукт успішно створено!", Severity.Success);
+        }
+    }
+
+    private async Task EditProduct(ProductDto product)
+    {
+        var parameters = new DialogParameters { ["Product"] = product };
+        var options = new DialogOptions { 
+            MaxWidth = MaxWidth.Medium, 
+            FullWidth = true,
+            CloseButton = true
+        };
+        
+        var dialog = await DialogService.ShowAsync<ProductFormDialog>("Редагувати Продукт", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await LoadProducts();
+            Snackbar.Add("Продукт успішно оновлено!", Severity.Success);
+        }
+    }
+
+    private async Task DeleteProduct(int id)
+    {
+        var parameters = new DialogParameters
+        {
+            ["ContentText"] = "Ви впевнені, що хочете видалити цей продукт? Цю дію не можна скасувати.",
+            ["ButtonText"] = "Видалити",
+            ["Color"] = Color.Error
+        };
+
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small };
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Підтвердження видалення", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            try
+            {
+                var response = await Http.DeleteAsync($"api/products/{id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadProducts();
+                    Snackbar.Add("Продукт успішно видалено!", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add($"Помилка видалення: {response.StatusCode}", Severity.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Помилка: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+}
+
+<style>
+    .admin-table-paper {
+        background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+        border: 1px solid rgba(255,152,0,0.1);
+        backdrop-filter: blur(12px);
+    }
+
+    .admin-data-grid {
+        background: transparent !important;
+    }
+
+    .admin-action-button {
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .admin-action-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    ::deep .mud-table-cell {
+        color: #e0e0e0 !important;
+    }
+
+    ::deep .mud-table-row:hover {
+        background-color: rgba(255,152,0,0.05) !important;
+    }
+</style>
