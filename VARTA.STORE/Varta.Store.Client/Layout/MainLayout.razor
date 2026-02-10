@@ -45,12 +45,14 @@
                             </MudText>
                         </div>
 
-                        @* 2. User Avatar (without menu now, just display) *@
-                        <MudBadge Overlap="true" Color="Color.Success" Dot="true" Bordered="true">
-                            <MudAvatar Style="border: 2px solid #ff9800;">
-                                <MudImage Src="@auth.User.FindFirst("AvatarUrl")?.Value" Alt="Avatar" />
-                            </MudAvatar>
-                        </MudBadge>
+                        @* 2. User Avatar (clickable to go to profile) *@
+                        <MudTooltip Text="Мій Профіль">
+                            <MudBadge Overlap="true" Color="Color.Success" Dot="true" Bordered="true">
+                                <MudAvatar Style="border: 2px solid #ff9800; cursor: pointer;" @onclick='() => NavManager.NavigateTo("/profile")'>
+                                    <MudImage Src="@auth.User.FindFirst("AvatarUrl")?.Value" Alt="Avatar" />
+                                </MudAvatar>
+                            </MudBadge>
+                        </MudTooltip>
 
                         @* 3. Logout Button to the right of avatar *@
                         <MudButton Variant="Variant.Outlined" 

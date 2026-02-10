@@ -1,0 +1,124 @@
+@page "/profile"
+@using Varta.Store.Shared.DTO
+@using Varta.Store.Client.Services
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject IProfileService ProfileService
+@inject NavigationManager NavManager
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 pt-8">
+    @if (_loading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="d-flex mx-auto" />
+    }
+    else if (_profile == null)
+    {
+        <MudAlert Severity="Severity.Error">Не вдалося завантажити профіль. Спробуйте пізніше.</MudAlert>
+    }
+    else
+    {
+        <MudGrid>
+            <!-- User Info Section -->
+            <MudItem xs="12" md="4">
+                <MudCard Elevation="4" Class="pa-4 rounded-lg">
+                    <MudCardContent Class="d-flex flex-column align-center">
+                        <MudAvatar Style="width: 120px; height: 120px; border: 4px solid #ff9800;" Class="mb-4">
+                            <MudImage Src="@_profile.AvatarUrl" Alt="@_profile.Username" />
+                        </MudAvatar>
+                        <MudText Typo="Typo.h5" Style="font-weight: bold;">@_profile.Username</MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-4">@_profile.SteamID</MudText>
+                        
+                        <MudDivider Class="my-2" Style="width: 100%;" />
+                        
+                        <div class="d-flex justify-space-between w-100 px-4 mt-2">
+                            <MudText>Баланс:</MudText>
+                            <MudText Color="Color.Success" Style="font-weight: bold;">@_profile.Balance.ToString("F2") ₴</MudText>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+
+            <!-- Purchase History Section -->
+            <MudItem xs="12" md="8">
+                <MudCard Elevation="4" Class="rounded-lg">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h5">Історія Покупок</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        @if (_profile.Orders == null || !_profile.Orders.Any())
+                        {
+                            <MudText Typo="Typo.body1" Class="pa-4">Ви ще не робили покупок.</MudText>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick='() => NavManager.NavigateTo("/store")'>Перейти до магазину</MudButton>
+                        }
+                        else
+                        {
+                            <MudExpansionPanels MultiExpansion="true">
+                                @foreach (var order in _profile.Orders)
+                                {
+                                    <MudExpansionPanel Class="mb-2 border-solid border-1 mud-border-lines-default">
+                                        <TitleContent>
+                                            <div class="d-flex justify-space-between align-center w-100 mr-4">
+                                                <div class="d-flex flex-column">
+                                                    <MudText Typo="Typo.subtitle1">Замовлення #@order.Id</MudText>
+                                                    <MudText Typo="Typo.caption">@order.DateCreated.ToLocalTime().ToString("g")</MudText>
+                                                </div>
+                                                <div class="d-flex flex-column align-end">
+                                                    <MudText Typo="Typo.subtitle1" Color="Color.Success" Style="font-weight: bold;">@order.TotalAmount.ToString("F2") ₴</MudText>
+                                                    <MudChip T="string" Size="Size.Small" Color="@GetStatusColor(order.StatusName)">@order.StatusName</MudChip>
+                                                </div>
+                                            </div>
+                                        </TitleContent>
+                                        <ChildContent>
+                                            <MudList T="string" Dense="true">
+                                                @foreach (var item in order.Items)
+                                                {
+                                                    <MudListItem>
+                                                        <div class="d-flex align-center gap-4">
+                                                            <MudAvatar Rounded="true" Size="Size.Medium">
+                                                                <MudImage Src="@item.ImageUrl" />
+                                                            </MudAvatar>
+                                                            <div class="flex-grow-1">
+                                                                <MudText Typo="Typo.body2">@item.ProductName</MudText>
+                                                                <MudText Typo="Typo.caption">x @item.Quantity</MudText>
+                                                            </div>
+                                                            <MudText Typo="Typo.body2">@item.PriceAtPurchase.ToString("F2") ₴</MudText>
+                                                        </div>
+                                                    </MudListItem>
+                                                    <MudDivider />
+                                                }
+                                            </MudList>
+                                        </ChildContent>
+                                    </MudExpansionPanel>
+                                }
+                            </MudExpansionPanels>
+                        }
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    }
+</MudContainer>
+
+@code {
+    private UserProfileDto? _profile;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _profile = await ProfileService.GetProfileAsync();
+        _loading = false;
+    }
+
+    private Color GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Оплачено" => Color.Success,
+            "Очікування" => Color.Warning,
+            "Видано" => Color.Info,
+            _ => Color.Default
+        };
+    }
+}
