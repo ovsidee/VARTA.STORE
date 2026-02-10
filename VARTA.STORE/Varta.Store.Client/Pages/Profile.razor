@@ -178,7 +178,8 @@
     {
         if (_profile == null) return;
         
-        var url = $"https://vartadayz.donatik.ua?amount={_topUpAmount}&name={_profile.SteamID}&comment=TopUp";
+        // Include username in the message parameter (likely correct name)
+        var url = $"https://vartadayz.donatik.ua?amount={_topUpAmount}&name={_profile.SteamID}&message=TopUp - {_profile.Username}";
         NavManager.NavigateTo(url, forceLoad: true); 
     }
 

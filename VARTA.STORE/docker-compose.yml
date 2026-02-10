@@ -37,7 +37,7 @@ services:
       
       # Donatik Configuration
       Donatik__Token: ${DONATIK_TOKEN}
-      Donatik__UseMock: "false" 
+      Donatik__UseMock: "true" 
 
   client:
     build:
