@@ -8,4 +8,5 @@ public class UserProfileDto
     public string AvatarUrl { get; set; } = string.Empty;
     public decimal Balance { get; set; }
     public List<OrderDto> Orders { get; set; } = new();
+    public List<WalletTransactionDto> Transactions { get; set; } = new();
 }

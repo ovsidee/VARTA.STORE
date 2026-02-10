@@ -1,0 +1,85 @@
+@page "/servers"
+@inject ISnackbar Snackbar
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Сервери - VARTA</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16" Style="padding-top: 40px;">
+    
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8" Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
+        SERVERS
+    </MudText>
+
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" md="8">
+            
+            <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden" Style="background-color: #1e1e2d;">
+                
+                <div class="relative" style="line-height: 0;">
+                     <!-- Using a placeholder or existing image if available. User mentioned 'images/server1.png'. I'll assume it exists or use a placeholder for now to prevent 404 if not found, but better to stick to user's code. -->
+                    <MudCardMedia Image="images/server1.png" Height="300" Class="server-image"/>
+                    
+                    <div class="server-overlay"></div>
+                    
+                </div>
+
+                <MudCardContent Class="pa-6" Style="background-color: #1e1e2d;">
+                    <div class="d-flex justify-space-between align-center">
+                        
+                        <div @onclick="CopyToServerClipboard" style="cursor: pointer;" title="Click to copy IP">
+                            <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">
+                                [UA|EU] VARTA | 3pp | Loot +
+                            </MudText>
+                            
+                            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
+                                IP: @ServerIp (Натисни щоб скопіювати)
+                            </MudText>
+                        </div>
+                        
+                        <MudIconButton OnClick="CopyToServerClipboard" Icon="@Icons.Material.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" Class="ml-4" />
+                    </div>
+                </MudCardContent>
+            </MudCard>
+
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+<style>
+    .server-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #333;
+    }
+
+    .server-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border-color: #ff9800;
+    }
+
+    .server-image {
+        transition: transform 0.5s ease;
+    }
+
+    .server-card:hover .server-image {
+        transform: scale(1.05);
+    }
+    
+    .copy-hover {
+        transition: color 0.2s;
+    }
+    
+    .server-card:hover .copy-hover {
+        color: #ff9800 !important;
+    }
+</style>
+
+@code {
+    private string ServerIp = "185.189.255.233:2302";
+
+    private async Task CopyToServerClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ServerIp);
+        Snackbar.Add("IP скопійовано в буфер обміну!", Severity.Success);
+    }
+}

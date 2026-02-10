@@ -1,0 +1,87 @@
+@page "/cart"
+@using Varta.Store.Shared.DTO
+@using Varta.Store.Client.Services
+@inject ICartService CartService
+@inject NavigationManager NavManager
+
+<PageTitle>Кошик - VARTA</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-16 pt-8">
+    <MudText Typo="Typo.h4" Class="mb-6 font-weight-bold">КОШИК</MudText>
+
+    @if (_cartItems == null || !_cartItems.Any())
+    {
+        <MudAlert Severity="Severity.Info" Class="mt-4">Ваш кошик порожній.</MudAlert>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" OnClick='() => NavManager.NavigateTo("/store")'>
+            Перейти до магазину
+        </MudButton>
+    }
+    else
+    {
+        <MudTable Items="_cartItems" Hover="true" Elevation="0" Class="mb-6" Style="background: transparent;">
+            <HeaderContent>
+                <MudTh>Товар</MudTh>
+                <MudTh>Ціна</MudTh>
+                <MudTh>Кількість</MudTh>
+                <MudTh>Сума</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Товар">
+                    <div class="d-flex align-center gap-4">
+                        <MudAvatar Rounded="true" Size="Size.Large">
+                            <MudImage Src="@($"images/{context.ImageUrl}")" />
+                        </MudAvatar>
+                        <MudText>@context.ProductName</MudText>
+                    </div>
+                </MudTd>
+                <MudTd DataLabel="Ціна">@context.Price ₴</MudTd>
+                <MudTd DataLabel="Кількість">@context.Quantity</MudTd>
+                <MudTd DataLabel="Сума">@(context.Price * context.Quantity) ₴</MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveItem(context))" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+
+        <div class="d-flex justify-end align-center gap-4 my-6">
+            <MudText Typo="Typo.h5">Всього: <b>@_cartItems.Sum(i => i.Price * i.Quantity) ₴</b></MudText>
+            <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="ClearCart">Очистити</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Large" OnClick='() => NavManager.NavigateTo("/checkout")'>
+                ОФОРМИТИ ЗАМОВЛЕННЯ
+            </MudButton>
+        </div>
+    }
+</MudContainer>
+
+@code {
+    private List<CartItemDto> _cartItems = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCart();
+        CartService.OnChange += StateHasChanged; // Re-render if changed elsewhere
+    }
+
+    private async Task LoadCart()
+    {
+        _cartItems = await CartService.GetCartItems();
+    }
+
+    private async Task RemoveItem(CartItemDto item)
+    {
+        await CartService.RemoveFromCart(item.ProductId);
+        await LoadCart();
+    }
+
+    private async Task ClearCart()
+    {
+        await CartService.ClearCart();
+        await LoadCart();
+    }
+
+    public void Dispose()
+    {
+        CartService.OnChange -= StateHasChanged;
+    }
+}

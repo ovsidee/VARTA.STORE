@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Varta.Store.Shared; 
+using Varta.Store.Shared;
 
 namespace Varta.Store.API.Data
 {
@@ -12,16 +12,17 @@ namespace Varta.Store.API.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<ServerTag> ServerTags { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
-        
+        public DbSet<WalletTransaction> WalletTransactions { get; set; }
+
         public StoreDbContext(DbContextOptions<StoreDbContext> options) : base(options)
         {
         }
-        
-        
-       protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
+
             // seed categories
             modelBuilder.Entity<Category>().HasData(
                 new Category { Id = 1, Name = "Будівельні набори" },
@@ -46,45 +47,45 @@ namespace Varta.Store.API.Data
             // seed products
             modelBuilder.Entity<Product>().HasData(
                 // Будівельні набори (Id: 1)
-                new Product 
-                { 
-                    Id = 1, 
-                    Name = "Маленький буд. набір", 
-                    Price = 120, 
-                    CategoryId = 1, 
+                new Product
+                {
+                    Id = 1,
+                    Name = "Маленький буд. набір",
+                    Price = 120,
+                    CategoryId = 1,
                     ServerTagId = 1,
                     ImageUrl = "small_kit.png",
-                    Description = "Код. лок, точильний камінь, лопата, молоток, 4 колоди, топорик, 20 дошок, плоскогубці, пилка, металевий дріт, door kit, пачка цв'яхів" 
+                    Description = "Код. лок, точильний камінь, лопата, молоток, 4 колоди, топорик, 20 дошок, плоскогубці, пилка, металевий дріт, door kit, пачка цв'яхів"
                 },
-                new Product 
-                { 
-                    Id = 2, 
-                    Name = "Середній буд. набір", 
-                    Price = 250, 
-                    CategoryId = 1, 
+                new Product
+                {
+                    Id = 2,
+                    Name = "Середній буд. набір",
+                    Price = 250,
+                    CategoryId = 1,
                     ServerTagId = 1,
                     ImageUrl = "medium_kit.png",
-                    Description = "3 код. лока, точильний камінь, лопата, молоток, 12 колод, топорик, 60 дошок, плоскогубці, 2 пилки, 3 металевих дрота, door kit, 3 пачки цв'яхів" 
+                    Description = "3 код. лока, точильний камінь, лопата, молоток, 12 колод, топорик, 60 дошок, плоскогубці, 2 пилки, 3 металевих дрота, door kit, 3 пачки цв'яхів"
                 },
-                new Product 
-                { 
-                    Id = 3, 
-                    Name = "Великий буд. набір", 
-                    Price = 400, 
-                    CategoryId = 1, 
+                new Product
+                {
+                    Id = 3,
+                    Name = "Великий буд. набір",
+                    Price = 400,
+                    CategoryId = 1,
                     ServerTagId = 1,
                     ImageUrl = "large_kit.png",
-                    Description = "5 код. локів, 2 бочки, 2 точильних камня, 2 лопати, 2 молотка, 20 колод, 2 топорика, 100 дошок, 2 плоскогубців, 2 пилки, 5 металевих дротів, door kit, 5 пачки цв'яхів" 
+                    Description = "5 код. локів, 2 бочки, 2 точильних камня, 2 лопати, 2 молотка, 20 колод, 2 топорика, 100 дошок, 2 плоскогубців, 2 пилки, 5 металевих дротів, door kit, 5 пачки цв'яхів"
                 },
-                new Product 
-                { 
-                    Id = 4, 
-                    Name = "Набір для флагштоку", 
-                    Price = 150, 
-                    CategoryId = 1, 
+                new Product
+                {
+                    Id = 4,
+                    Name = "Набір для флагштоку",
+                    Price = 150,
+                    CategoryId = 1,
                     ServerTagId = 1,
                     ImageUrl = "flag_kit.png",
-                    Description = "32 каменя, 10 колод, упаковка цвяхів, мотузка, металевий дріт, молоток, кувалда, кирка, прапор 'DayZ'" 
+                    Description = "32 каменя, 10 колод, упаковка цвяхів, мотузка, металевий дріт, молоток, кувалда, кирка, прапор 'DayZ'"
                 },
 
                 // Запчастини (Id: 2)
@@ -106,25 +107,25 @@ namespace Varta.Store.API.Data
                 new Product { Id = 20, Name = "Паяльна лампа", Price = 30, CategoryId = 2, ServerTagId = 1, ImageUrl = "blowtorch.png", Description = "Інструмент для ремонту" },
 
                 // Інше (Id: 3)
-                new Product 
-                { 
-                    Id = 21, 
-                    Name = "Чорний сет", 
-                    Price = 150, 
-                    CategoryId = 3, 
-                    ServerTagId = 1, 
+                new Product
+                {
+                    Id = 21,
+                    Name = "Чорний сет",
+                    Price = 150,
+                    CategoryId = 3,
+                    ServerTagId = 1,
                     ImageUrl = "black_set.png",
-                    Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу" 
+                    Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу"
                 },
-                new Product 
-                { 
-                    Id = 22, 
-                    Name = "Зелений сет", 
-                    Price = 150, 
-                    CategoryId = 3, 
-                    ServerTagId = 1, 
+                new Product
+                {
+                    Id = 22,
+                    Name = "Зелений сет",
+                    Price = 150,
+                    CategoryId = 3,
+                    ServerTagId = 1,
                     ImageUrl = "green_set.png",
-                    Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу" 
+                    Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу"
                 },
 
                 // Фурнітура (Id: 4)

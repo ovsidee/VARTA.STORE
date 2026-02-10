@@ -36,6 +36,10 @@ public class ProfileController : ControllerBase
             .Include(u => u.Orders)
                 .ThenInclude(o => o.Items)
                     .ThenInclude(oph => oph.Product)
+            .Include(u => u.Orders)
+                .ThenInclude(o => o.Items)
+                    .ThenInclude(oph => oph.Product)
+            .Include(u => u.WalletTransactions)
             .FirstOrDefaultAsync(u => u.Id == userId);
 
         if (user == null)
@@ -65,7 +69,16 @@ public class ProfileController : ControllerBase
                     PriceAtPurchase = i.PriceAtPurchase,
                     Quantity = i.Quantity
                 }).ToList()
-            }).OrderByDescending(o => o.DateCreated).ToList()
+            }).OrderByDescending(o => o.DateCreated).ToList(),
+
+            Transactions = user.WalletTransactions.Select(t => new WalletTransactionDto
+            {
+                Id = t.Id,
+                Amount = t.Amount,
+                Date = t.Date,
+                Status = t.Status,
+                ExternalTransactionId = t.ExternalTransactionId
+            }).OrderByDescending(t => t.Date).ToList()
         };
 
         return Ok(profileDto);

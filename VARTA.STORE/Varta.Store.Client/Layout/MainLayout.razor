@@ -7,6 +7,8 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ISnackbar Snackbar
 @inject HttpClient Http
+@inject ICartService CartService
+@using Varta.Store.Client.Services
 
 <MudThemeProvider IsDarkMode="true" />
 <MudDialogProvider />
@@ -29,9 +31,19 @@
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
+                       OnClick='() => NavManager.NavigateTo("/servers")'>
+                СЕРВЕРИ
+            </MudButton>
+
+            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
                        OnClick='() => NavManager.NavigateTo("/store")'>
                 МАГАЗИН
             </MudButton>
+
+            <MudBadge Content="_cartCount" Color="Color.Error" Overlap="true" Class="mx-2" Visible="@(_cartCount > 0)">
+                <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Inherit" 
+                               OnClick='() => NavManager.NavigateTo("/cart")' />
+            </MudBadge>
 
             @* Authentication Section *@
             <AuthorizeView Context="auth">
@@ -41,7 +53,7 @@
                         <div class="d-flex flex-column align-end">
                             <MudText Typo="Typo.caption" Style="color: #9e9eae; line-height: 1;">Баланс</MudText>
                             <MudText Typo="Typo.body1" Color="Color.Warning" Style="font-weight: 900;">
-                                @auth.User.FindFirst("Balance")?.Value ₴
+                                @BalanceService.CurrentBalance.ToString("F2") ₴
                             </MudText>
                         </div>
 
@@ -92,7 +104,77 @@
     </MudMainContent>
 </MudLayout>
 
+@inject IBalanceService BalanceService
+@inject IProfileService ProfileService
+
+@* ... imports ... *@
+
 @code {
+    private int _cartCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cartCount = await CartService.GetCartCount();
+        CartService.OnChange += UpdateUI;
+        BalanceService.OnChange += UpdateUI;
+        
+        // Initial balance sync
+        await SyncBalance();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Double check balance after render if needed or rely on OnInitialized
+            // However, OnInitialized runs once. If user logs in later, we need to detect that.
+            // But MainLayout wraps everything.
+            // Ideally, CustomAuthStateProvider should also trigger a balance fetch?
+            // Or we just rely on the claim initially.
+        }
+    }
+
+    private async Task SyncBalance()
+    {
+        // Try to get latest balance from profile if logged in
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            var claimBalance = authState.User.FindFirst("Balance")?.Value;
+            if (decimal.TryParse(claimBalance, out var b))
+            {
+                 // Set initial from claim to avoid flicker
+                 if (BalanceService.CurrentBalance == 0) BalanceService.SetBalance(b);
+            }
+
+            try 
+            {
+                // Fetch fresh from API to be sure
+                var profile = await ProfileService.GetProfileAsync();
+                if (profile != null)
+                {
+                    BalanceService.SetBalance(profile.Balance);
+                }
+            }
+            catch {}
+        }
+    }
+
+    private void UpdateUI()
+    {
+         Task.Run(async () => 
+        {
+            _cartCount = await CartService.GetCartCount();
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
+    public void Dispose()
+    {
+        CartService.OnChange -= UpdateUI;
+        BalanceService.OnChange -= UpdateUI;
+    }
+
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");

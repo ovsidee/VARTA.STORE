@@ -31,6 +31,10 @@
                 customProvider.NotifyUserLogin(jwt);
             }
             
+            // Note: MainLayout will pick up the balance on redirect because it re-renders/initializes
+            // But we can also set it here if we want to be safe, though parsing JWT here repeats logic.
+            // Let's leave it to MainLayout's OnInitialized/SyncBalance logic which runs after navigation.
+            
             // Redirect to home page
             NavManager.NavigateTo("/"); 
         }

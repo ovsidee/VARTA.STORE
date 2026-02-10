@@ -1,0 +1,153 @@
+@page "/checkout"
+@using Varta.Store.Shared.DTO
+@using Varta.Store.Client.Services
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject ICartService CartService
+@inject IProfileService ProfileService
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@inject ISnackbar Snackbar
+
+<PageTitle>Оформлення замовлення - VARTA</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-16 pt-8">
+    <MudText Typo="Typo.h4" Class="mb-6 font-weight-bold" Align="Align.Center">ОФОРМЛЕННЯ</MudText>
+    
+    @if (_isProcessing)
+    {
+         <div class="d-flex justify-center my-8">
+             <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+         </div>
+    }
+    else if (_orderSuccess)
+    {
+        <MudAlert Severity="Severity.Success" Variant="Variant.Filled" Class="my-4">
+            Замовлення успішно оформлено!
+        </MudAlert>
+        <div class="d-flex justify-center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick='() => NavManager.NavigateTo("/profile")'>
+                Перейти до профілю
+            </MudButton>
+        </div>
+    }
+    else
+    {
+        <MudPaper Class="pa-6 rounded-lg" Elevation="3">
+            <MudText Typo="Typo.h6" Class="mb-4">Ваше замовлення</MudText>
+            
+            <MudList T="string" Dense="true" DisablePadding="true">
+                @foreach (var item in _cartItems)
+                {
+                    <MudListItem>
+                        <div class="d-flex justify-space-between w-100">
+                            <MudText>@item.ProductName (x @item.Quantity)</MudText>
+                            <MudText><b>@(item.Price * item.Quantity) ₴</b></MudText>
+                        </div>
+                    </MudListItem>
+                    <MudDivider />
+                }
+            </MudList>
+            
+            <div class="d-flex justify-space-between mt-4 pt-2" style="border-top: 2px solid #333;">
+                <MudText Typo="Typo.h5" Style="font-weight: bold;">До сплати:</MudText>
+                <MudText Typo="Typo.h5" Color="Color.Warning" Style="font-weight: bold;">@_totalAmount ₴</MudText>
+            </div>
+
+            <MudDivider Class="my-6" />
+
+            <MudText Typo="Typo.h6" Class="mb-2">Спосіб оплати</MudText>
+            
+            @if (_userProfile != null)
+            {
+                <div class="d-flex align-center justify-space-between pa-4 rounded border-solid border-1 mud-border-primary mb-4" style="background: rgba(30,30,45,0.5);">
+                    <div class="d-flex align-center gap-2">
+                        <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" Color="Color.Primary" />
+                        <div>
+                            <MudText Typo="Typo.body1">Баланс акаунту</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">Поточний: @_userProfile.Balance ₴</MudText>
+                        </div>
+                    </div>
+                </div>
+
+                @if (_userProfile.Balance < _totalAmount)
+                {
+                    <MudAlert Severity="Severity.Error" Class="mb-4">
+                        Недостатньо коштів на балансі. Необхідно ще: <b>@(_totalAmount - _userProfile.Balance) ₴</b>
+                    </MudAlert>
+                     <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick='() => NavManager.NavigateTo("/profile")'>
+                        ПОПОВНИТИ БАЛАНС
+                    </MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" FullWidth="true" Size="Size.Large" OnClick="PlaceOrder">
+                        ОПЛАТИТИ ЗАМОВЛЕННЯ
+                    </MudButton>
+                }
+            }
+            else
+            {
+                 <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+            }
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    private List<CartItemDto> _cartItems = new();
+    private decimal _totalAmount = 0;
+    private UserProfileDto? _userProfile;
+    private bool _isProcessing = false;
+    private bool _orderSuccess = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cartItems = await CartService.GetCartItems();
+        if (!_cartItems.Any())
+        {
+            NavManager.NavigateTo("/store");
+            return;
+        }
+        _totalAmount = _cartItems.Sum(i => i.Price * i.Quantity);
+        _userProfile = await ProfileService.GetProfileAsync();
+    }
+
+    private async Task PlaceOrder()
+    {
+        _isProcessing = true;
+        try
+        {
+            var orderDto = new CreateOrderDto
+            {
+                Items = _cartItems.Select(i => new CreateOrderItemDto 
+                { 
+                    ProductId = i.ProductId, 
+                    Quantity = i.Quantity 
+                }).ToList()
+            };
+
+            var response = await Http.PostAsJsonAsync("api/orders", orderDto);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                await CartService.ClearCart();
+                _orderSuccess = true;
+                Snackbar.Add("Замовлення успішно створено!", Severity.Success);
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Snackbar.Add($"Помилка: {error}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Помилка з'єднання: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isProcessing = false;
+        }
+    }
+}

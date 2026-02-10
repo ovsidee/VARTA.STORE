@@ -44,6 +44,9 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public void NotifyUserLogin(string token)
     {
+        // Set header immediately so subsequent API calls work without refresh
+        _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
         var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
         var user = new ClaimsPrincipal(identity);
         var authState = Task.FromResult(new AuthenticationState(user));
@@ -60,10 +63,10 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
     {
         var payload = jwt.Split('.')[1];
-        
+
         // FIX: Handle Base64Url characters (-) and (_)
         var base64 = payload.Replace('-', '+').Replace('_', '/');
-        
+
         switch (base64.Length % 4)
         {
             case 2: base64 += "=="; break;

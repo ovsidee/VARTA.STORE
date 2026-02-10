@@ -15,10 +15,13 @@
                 
                 <div class="d-flex gap-2">
                     <MudIconButton Icon="@Icons.Custom.Brands.Discord" Color="Color.Inherit" 
-                                   Href="https://discord.gg/mkQbaxmuUS" Target="_blank" Class="social-btn"/>
+                                   Href="@DiscordUrl" Target="_blank" Class="social-btn"/>
                     
                     <MudIconButton Icon="@Icons.Custom.Brands.TikTok" Color="Color.Inherit" 
                                    Href="@TikTokUrl" Target="_blank" Class="social-btn"/>
+
+                     <MudIconButton Icon="@Icons.Custom.Brands.YouTube" Color="Color.Inherit" 
+                                   Href="@YouTubeUrl" Target="_blank" Class="social-btn"/>
                 </div>
             </MudItem>
 
@@ -26,6 +29,7 @@
                 <MudText Typo="Typo.h6" Class="mb-4" Style="font-weight: 800; color: white;">НАВІГАЦІЯ</MudText>
                 <div class="d-flex flex-column gap-2">
                     <MudLink OnClick='() => NavManager.NavigateTo("/")' Color="Color.Inherit" Class="footer-link">Головна</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/servers")' Color="Color.Inherit" Class="footer-link">Сервери</MudLink>
                     <MudLink OnClick='() => NavManager.NavigateTo("/store")' Color="Color.Inherit" Class="footer-link">Магазин</MudLink>
                     <MudLink OnClick='() => NavManager.NavigateTo("/rules")' Color="Color.Inherit" Class="footer-link">Правила сервера</MudLink>
                     <MudLink OnClick='() => NavManager.NavigateTo("/support")' Color="Color.Inherit" Class="footer-link">Підтримка</MudLink>
@@ -42,6 +46,7 @@
                     <MudIcon Icon="@Icons.Material.Filled.AccessTime" Size="Size.Small" Color="Color.Warning" Class="mr-2"/>
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">Працюємо 24/7</MudText>
                 </div>
+             
             </MudItem>
         </MudGrid>
 
@@ -59,8 +64,9 @@
 </MudPaper>
 
 @code {
-    // Defining the URL here solves the issue because the @ string is perfectly valid in C# code
     private const string TikTokUrl = "https://www.tiktok.com/@varta_dayz";
+    private const string YouTubeUrl = "https://m.youtube.com/channel/UCiK9WRmstpmup1ff27exjQA";
+    private const string DiscordUrl = "https://discord.gg/mkQbaxmuUS";
 }
 
 <style>

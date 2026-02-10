@@ -8,10 +8,10 @@ public class AppUser
 {
     [Key]
     public int Id { get; set; }
-    
+
     [Column(TypeName = "decimal(10,2)")]
     public decimal Balance { get; set; }
-        
+
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
     [Required]
@@ -24,12 +24,13 @@ public class AppUser
 
     [Required]
     [MaxLength(250)]
-    public string AvatarUrl { get; set; }  
-    
+    public string AvatarUrl { get; set; }
+
     [Required]
     [MaxLength(250)]
     public string ProfileUrl { get; set; }
 
     // nvg property for easier appuser.Orders...
     public List<Order> Orders { get; set; } = new();
+    public List<WalletTransaction> WalletTransactions { get; set; } = new();
 }

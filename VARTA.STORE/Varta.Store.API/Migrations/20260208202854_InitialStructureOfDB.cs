@@ -175,6 +175,7 @@ namespace Varta.Store.API.Migrations
                 name: "IX_Product_ServerTagId",
                 table: "Product",
                 column: "ServerTagId");
+
         }
 
         /// <inheritdoc />

@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
-using Varta.Store.API.Data; 
+using Varta.Store.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Varta.Store.API.Services.Implementation;
@@ -13,28 +13,63 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        // Fix for "Cannot write DateTime with Kind=UTC to PostgreSQL type 'timestamp without time zone'"
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+        // Load .env file manually
+        var root = Directory.GetCurrentDirectory();
+        var dotenv = Path.Combine(root, ".env");
+        if (!File.Exists(dotenv))
+        {
+            // Try parent directory (solution root)
+            dotenv = Path.Combine(Directory.GetParent(root)?.FullName ?? "", ".env");
+        }
+
+        if (File.Exists(dotenv))
+        {
+            foreach (var line in File.ReadAllLines(dotenv))
+            {
+                var parts = line.Split('=', 2);
+                if (parts.Length != 2) continue;
+                Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim());
+            }
+        }
+
         var builder = WebApplication.CreateBuilder(args);
 
         // add db (postgresql)
         builder.Services.AddDbContext<StoreDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
-        
+
         var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-        
+
         // DI for services
         builder.Services.AddScoped<IProductService, ProductService>();
-        
+
+        // Donatik Service (Mock in Dev, Real in Prod)
+        // Check if we want to force Mock Mode via config (default to true in Development if not specified? No, let's be explicit)
+        var useMock = builder.Configuration.GetValue<bool>("Donatik:UseMock");
+
+        if (useMock)
+        {
+            builder.Services.AddScoped<IDonatikService, MockDonatikService>();
+        }
+        else
+        {
+            builder.Services.AddHttpClient<IDonatikService, DonatikService>();
+        }
+
         // add controllers
         builder.Services.AddControllers();
-        
-        builder.Services.AddEndpointsApiExplorer(); 
-        
+
+        builder.Services.AddEndpointsApiExplorer();
+
         builder.Services.AddOpenApi();
 
-        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();     
-        
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
         // cors
         builder.Services.AddCors(options =>
         {
@@ -45,7 +80,7 @@ public class Program
                     policy.WithOrigins(allowedOrigins)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials(); 
+                        .AllowCredentials();
                 }
                 else
                 {
@@ -57,7 +92,7 @@ public class Program
                 }
             });
         });
-        
+
         builder.Services.AddAuthentication(options =>
             {
                 // for protecting API endpoints
@@ -67,7 +102,7 @@ public class Program
             .AddCookie("Cookies") // Needed temporarily for the Steam handshake
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false;
+                options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -82,16 +117,17 @@ public class Program
             })
             .AddSteam(options =>
             {
-                options.SignInScheme = "Cookies"; 
+                options.SignInScheme = "Cookies";
                 options.ApplicationKey = builder.Configuration["Authentication:Steam:ApplicationKey"];
-    
+
                 // --- ДОДАЙТЕ ЦЕЙ РЯДОК ---
                 // Це змусить Steam повертати юзера на /api/signin-steam
                 // І Nginx перенаправить цей запит на бекенд!
                 options.CallbackPath = "/api/signin-steam";
                 // -------------------------
 
-                options.Events.OnAuthenticated = context => {
+                options.Events.OnAuthenticated = context =>
+                {
                     return Task.CompletedTask;
                 };
             });
@@ -102,17 +138,17 @@ public class Program
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         });
-        
+
         // db migration for docker
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
             var logger = services.GetRequiredService<ILogger<Program>>();
-            
-            try 
+
+            try
             {
                 var context = services.GetRequiredService<StoreDbContext>();
-                
+
                 // retry loop to wait for Postgres to wake up
                 int retries = 5;
                 while (retries > 0)
@@ -137,18 +173,18 @@ public class Program
                 logger.LogError(ex, "Database migration failed.");
             }
         }
-        
+
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi(); 
+            app.MapOpenApi();
         }
-        
-        app.UseCors("StrictPolicy");        
-        
+
+        app.UseCors("StrictPolicy");
+
         app.UseAuthentication();
-        
+
         app.UseAuthorization();
-        
+
         app.MapControllers();
 
         app.Run();
