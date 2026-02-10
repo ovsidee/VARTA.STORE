@@ -34,6 +34,10 @@ services:
       # == УНІВЕРСАЛЬНА ЗМІННА ==
       AppUrl: ${PUBLIC_URL}
       AllowedOrigins__0: ${PUBLIC_URL}
+      
+      # Donatik Configuration
+      Donatik__Token: ${DONATIK_TOKEN}
+      Donatik__UseMock: "false" 
 
   client:
     build:

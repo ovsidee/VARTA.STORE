@@ -19,7 +19,7 @@
             Твоя історія виживання починається тут.
         </MudText>
 
-        <div class="d-flex gap-4 animate-slide-up delay-1">
+        <div class="d-flex gap-4 animate-slide-up delay-200">
             <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large"
                        Class="px-10 py-3 hero-btn" OnClick="@(() => NavManager.NavigateTo("/store"))">
                 <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Class="mr-2"/> МАГАЗИН
@@ -37,7 +37,7 @@
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-n16 relative z-10">
     <MudGrid Class="justify-center">
         <MudItem xs="12" md="4">
-            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card animate-slide-in-left delay-300">
                 <MudIcon Icon="@Icons.Material.Filled.Bolt" Size="Size.Large" Color="Color.Warning" Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ШВИДКА ВИДАЧА</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
@@ -47,7 +47,7 @@
         </MudItem>
 
         <MudItem xs="12" md="4">
-            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card animate-slide-up delay-400">
                 <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Success" Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ЧЕСНА ГРА</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
@@ -57,7 +57,7 @@
         </MudItem>
 
         <MudItem xs="12" md="4">
-            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card animate-slide-in-right delay-500">
                 <MudIcon Icon="@Icons.Material.Filled.Public" Size="Size.Large" Color="Color.Info" Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">СТАБІЛЬНІСТЬ</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
@@ -208,4 +208,36 @@
     .right-4 { right: 16px; }
     .z-10 { z-index: 10; }
     .mt-n16 { margin-top: -4rem; }
+
+    /* === ANIMATIONS === */
+    .animate-fade-in { animation: fadeIn 1s ease-out forwards; opacity: 0; }
+    .animate-slide-up { animation: slideUp 0.8s ease-out forwards; opacity: 0; }
+    .animate-slide-in-left { animation: slideInLeft 0.8s ease-out forwards; opacity: 0; }
+    .animate-slide-in-right { animation: slideInRight 0.8s ease-out forwards; opacity: 0; }
+
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @@keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @@keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-100px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    @@keyframes slideInRight {
+        from { opacity: 0; transform: translateX(100px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
 </style>

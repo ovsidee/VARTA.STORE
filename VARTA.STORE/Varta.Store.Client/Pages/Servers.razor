@@ -1,48 +1,71 @@
 @page "/servers"
+@using Varta.Store.Shared
 @inject ISnackbar Snackbar
 @inject IJSRuntime JSRuntime
+@inject IServerTagService ServerTagService
 
 <PageTitle>Сервери - VARTA</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16" Style="padding-top: 40px;">
     
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8" Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 animate-fade-in" Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
         SERVERS
     </MudText>
 
-    <MudGrid Justify="Justify.Center">
-        <MudItem xs="12" md="8">
-            
-            <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden" Style="background-color: #1e1e2d;">
-                
-                <div class="relative" style="line-height: 0;">
-                     <!-- Using a placeholder or existing image if available. User mentioned 'images/server1.png'. I'll assume it exists or use a placeholder for now to prevent 404 if not found, but better to stick to user's code. -->
-                    <MudCardMedia Image="images/server1.png" Height="300" Class="server-image"/>
+    @if (_isLoading)
+    {
+         <MudGrid Justify="Justify.Center">
+            @for (int i = 0; i < 3; i++) 
+            { 
+                <MudItem xs="12" md="8">
+                    <MudSkeleton Height="400px" Class="rounded-lg" />
+                    <MudSkeleton Height="40px" Width="60%" Class="mt-4 rounded" />
+                </MudItem> 
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <MudGrid Justify="Justify.Center" Class="animate-fade-in">
+            @if (_servers != null)
+            {
+                @foreach (var server in _servers)
+                {
+                    <MudItem xs="12" md="8">
                     
-                    <div class="server-overlay"></div>
-                    
-                </div>
-
-                <MudCardContent Class="pa-6" Style="background-color: #1e1e2d;">
-                    <div class="d-flex justify-space-between align-center">
+                        <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden" Style="background-color: #1e1e2d;">
                         
-                        <div @onclick="CopyToServerClipboard" style="cursor: pointer;" title="Click to copy IP">
-                            <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">
-                                [UA|EU] VARTA | 3pp | Loot +
-                            </MudText>
+                            <div class="relative" style="line-height: 0;">
+                                 <!-- Using a placeholder or existing image if available. -->
+                                <MudCardMedia Image="images/server1.png" Height="300" Class="server-image"/>
                             
-                            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
-                                IP: @ServerIp (Натисни щоб скопіювати)
-                            </MudText>
-                        </div>
-                        
-                        <MudIconButton OnClick="CopyToServerClipboard" Icon="@Icons.Material.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" Class="ml-4" />
-                    </div>
-                </MudCardContent>
-            </MudCard>
+                                <div class="server-overlay"></div>
+                            
+                            </div>
 
-        </MudItem>
-    </MudGrid>
+                            <MudCardContent Class="pa-6" Style="background-color: #1e1e2d;">
+                                <div class="d-flex justify-space-between align-center">
+                                
+                                    <div @onclick="() => CopyToServerClipboard(server.IpAddress)" style="cursor: pointer;" title="Click to copy IP">
+                                        <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">
+                                            @server.Name
+                                        </MudText>
+                                    
+                                        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
+                                            IP: @server.IpAddress (Натисни щоб скопіювати)
+                                        </MudText>
+                                    </div>
+                                
+                                    <MudIconButton OnClick="() => CopyToServerClipboard(server.IpAddress)" Icon="@Icons.Material.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" Class="ml-4" />
+                                </div>
+                            </MudCardContent>
+                        </MudCard>
+
+                    </MudItem>
+                }
+            }
+        </MudGrid>
+    }
 </MudContainer>
 
 <style>
@@ -72,14 +95,34 @@
     .server-card:hover .copy-hover {
         color: #ff9800 !important;
     }
+
+    /* Fade In Animation */
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 
 @code {
-    private string ServerIp = "185.189.255.233:2302";
+    private List<ServerTag>? _servers;
+    private bool _isLoading = true;
 
-    private async Task CopyToServerClipboard()
+    protected override async Task OnInitializedAsync()
     {
-        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ServerIp);
+        await Task.Delay(300);
+        _servers = await ServerTagService.GetServerTags();
+        _isLoading = false;
+    }
+
+    private async Task CopyToServerClipboard(string? ip)
+    {
+        if (string.IsNullOrEmpty(ip)) return;
+        
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ip);
         Snackbar.Add("IP скопійовано в буфер обміну!", Severity.Success);
     }
 }

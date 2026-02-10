@@ -23,6 +23,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IBalanceService, BalanceService>();
+builder.Services.AddScoped<IServerTagService, ServerTagService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();

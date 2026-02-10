@@ -23,30 +23,35 @@ public class DonatikService : IDonatikService
         if (string.IsNullOrEmpty(token) || token == "REPLACE_ME_LOCALLY")
         {
             _logger.LogError("Donatik Token is missing in configuration.");
-            return new List<DonatikDonation>();
+            throw new InvalidOperationException("Donatik API Token is missing or invalid in configuration. Please check 'Donatik:Token' setting.");
         }
 
-        // URL based on user docs: http://api.donatik.io/donations?token=TOKEN&page=1&perPage=500
-        // We might want to filter by date to optimize, but let's stick to last 500 for now.
-        var url = $"http://api.donatik.io/donations?token={token}&page=1&perPage={limit}";
+        // URL based on user docs: https://api.donatik.io/donations?page=1&perPage=500
+        // Token must be in X-Token header
+        var url = $"https://api.donatik.io/donations?page=1&perPage={limit}";
 
         try
         {
+            _httpClient.DefaultRequestHeaders.Remove("X-Token");
+            _httpClient.DefaultRequestHeaders.Add("X-Token", token);
+
             var response = await _httpClient.GetAsync(url);
+            var content = await response.Content.ReadAsStringAsync();
+            _logger.LogInformation($"[DonatikService] Status: {response.StatusCode}. Raw Response: {content}");
+
             response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-            // The docs didn't specify the exact root wrapper, assuming standard "content" wrapper or array.
-            // Based on typical pagination APIs, it's often an object with a 'content' or 'data' array.
-            // Let's assume the mapped model structure is correct based on general observation, 
-            // but we might need to adjust if the API returns a raw array.
-            // The user provided the "Get sub user" type but not the specific "Get donations" response schema 
-            // other than the params.
-            // I'll try to deserialize to the DonatikResponse wrapper first.
-
             var result = JsonSerializer.Deserialize<DonatikResponse>(content, options);
+
+            if (result?.Content != null)
+            {
+                foreach (var d in result.Content)
+                {
+                    _logger.LogInformation($"[DonatikService] Parsed Donation: ID={d.Id}, Name={d.Name}, Amount={d.Amount} {d.Currency}");
+                }
+            }
+
             return result?.Content ?? new List<DonatikDonation>();
         }
         catch (Exception ex)

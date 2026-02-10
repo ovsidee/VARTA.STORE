@@ -48,7 +48,22 @@ public class PaymentController : ControllerBase
 
         // 2. Fetch donations from Donatik
         // Pass the steamId as filterName to help the Mock service (and potentially real service if updated later)
-        var donations = await _donatikService.GetRecentDonationsAsync(500, steamId);
+        List<Services.Models.DonatikDonation> donations;
+        try
+        {
+            donations = await _donatikService.GetRecentDonationsAsync(500, steamId);
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Configuration error (missing token)
+            _logger.LogError(ex, "Donatik configuration error.");
+            return StatusCode(500, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching donations.");
+            return StatusCode(500, "Failed to connect to payment provider.");
+        }
 
         // 3. Find a matching donation
         // Logic:
@@ -60,6 +75,17 @@ public class PaymentController : ControllerBase
         var processedIds = await _context.WalletTransactions
             .Select(t => t.ExternalTransactionId)
             .ToListAsync();
+
+        _logger.LogInformation($"[PaymentController] Looking for payment from SteamID: '{steamId}' with Amount >= {request.Amount}");
+
+        foreach (var d in donations)
+        {
+            var nameMatch = d.Name.Trim().Equals(steamId, StringComparison.OrdinalIgnoreCase);
+            var amountMatch = d.Amount >= request.Amount;
+            var notProcessed = !processedIds.Contains(d.Id);
+
+            _logger.LogInformation($"[PaymentController] Candidate: ID={d.Id}, Name='{d.Name}', Amount={d.Amount}, Currency={d.Currency}. Match: Name={nameMatch}, Amount={amountMatch}, NotProcessed={notProcessed}");
+        }
 
         var matchingDonation = donations.FirstOrDefault(d =>
             d.Name.Trim().Equals(steamId, StringComparison.OrdinalIgnoreCase) &&
