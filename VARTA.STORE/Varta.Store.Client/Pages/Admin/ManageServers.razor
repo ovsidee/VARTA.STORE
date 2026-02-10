@@ -1,110 +1,46 @@
 @page "/admin/servers"
 @using Varta.Store.Shared
-@using Varta.Store.Client.Components
+@using System.Net.Http.Json
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Admin")]
 @inject HttpClient Http
-@inject IDialogService DialogService
 @inject ISnackbar Snackbar
-@attribute [Authorize(Roles = "Admin")]
+@inject IDialogService DialogService
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
-    <div class="d-flex justify-space-between align-center mb-6">
-        <div>
-            <MudText Typo="Typo.h4" Class="mb-1" Style="font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Керування Серверами</MudText>
-            <MudText Typo="Typo.body2" Style="color: #9e9eae;">Керування ігровими серверами та їх IP-адресами</MudText>
-        </div>
-        <MudButton Variant="Variant.Filled" 
-                   Color="Color.Warning" 
-                   StartIcon="@Icons.Material.Filled.Add"
-                   OnClick="OpenCreateDialog"
-                   Style="font-weight: 700; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(255,152,0,0.3);">
-            Додати Сервер
-        </MudButton>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 pt-8">
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.h4">Manage Servers</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddServer">Add Server</MudButton>
     </div>
 
-    <MudPaper Elevation="25" Class="pa-4" Style="background: rgba(30, 30, 45, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;">
-        @if (_loading)
-        {
-            <div class="d-flex justify-center align-center py-8">
-                <MudProgressCircular Color="Color.Warning" Indeterminate="true" Size="Size.Large" />
-            </div>
-        }
-        else
-        {
-            <MudDataGrid Items="@_servers" 
-                         Filterable="true" 
-                         SortMode="SortMode.Multiple" 
-                         Groupable="false"
-                         Hover="true"
-                         Dense="true"
-                         RowClass="cursor-pointer"
-                         Style="background: transparent; color: #e0e0e0;">
-                <Columns>
-                    <PropertyColumn Property="x => x.Id" Title="ID" Sortable="true" Filterable="true" />
-                    
-                    <PropertyColumn Property="x => x.Name" Title="Назва" Sortable="true" Filterable="true">
-                        <CellTemplate>
-                            <div class="d-flex align-center">
-                                <MudIcon Icon="@Icons.Material.Filled.Dns" Size="Size.Small" Class="mr-2" Color="Color.Warning" />
-                                <MudText Typo="Typo.body2" Style="font-weight: 600;">@context.Item.Name</MudText>
-                            </div>
-                        </CellTemplate>
-                    </PropertyColumn>
-                    
-                    <PropertyColumn Property="x => x.IpAddress" Title="IP Адреса" Sortable="true" Filterable="true">
-                        <CellTemplate>
-                            @if (!string.IsNullOrEmpty(context.Item.IpAddress))
-                            {
-                                <MudChip Size="Size.Small" Color="Color.Dark" Variant="Variant.Outlined" Style="border-color: rgba(255,255,255,0.1);">
-                                    @context.Item.IpAddress
-                                </MudChip>
-                            }
-                            else
-                            {
-                                <MudText Typo="Typo.caption" Style="color: #666; font-style: italic;">Не вказано</MudText>
-                            }
-                        </CellTemplate>
-                    </PropertyColumn>
-                    
-                    <TemplateColumn Title="Дії" CellClass="d-flex justify-end">
-                        <CellTemplate>
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" 
-                                           Size="Size.Small" 
-                                           Color="Color.Warning" 
-                                           OnClick="@(() => OpenEditDialog(context.Item))"
-                                           Title="Редагувати" />
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete" 
-                                           Size="Size.Small" 
-                                           Color="Color.Error" 
-                                           OnClick="@(() => DeleteServer(context.Item))"
-                                           Title="Видалити" />
-                        </CellTemplate>
-                    </TemplateColumn>
-                </Columns>
-                <PagerContent>
-                    <MudDataGridPager T="ServerTag" />
-                </PagerContent>
-            </MudDataGrid>
-        }
-    </MudPaper>
+    @if (_loading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Class="d-flex mx-auto" />
+    }
+    else
+    {
+        <MudTable Items="_servers" Hover="true" Striped="true" Elevation="4">
+            <HeaderContent>
+                <MudTh>ID</MudTh>
+                <MudTh>Name</MudTh>
+                <MudTh>IP Address</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="ID">@context.Id</MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="IP Address">@context.IpAddress</MudTd>
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" Size="Size.Small" OnClick="@(() => EditServer(context))" Title="Edit" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Size="Size.Small" OnClick="@(() => DeleteServer(context))" Title="Delete" />
+                </MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    }
 </MudContainer>
-
-<style>
-    .mud-table-root {
-        background-color: transparent !important;
-    }
-    .mud-table-cell {
-        color: #e0e0e0 !important;
-        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
-    }
-    .mud-table-hover .mud-table-row:hover {
-        background-color: rgba(255,255,255,0.05) !important;
-    }
-    .mud-table-container {
-        overflow-x: auto;
-    }
-</style>
 
 @code {
     private List<ServerTag> _servers = new();
@@ -120,11 +56,11 @@
         _loading = true;
         try
         {
-            _servers = await Http.GetFromJsonAsync<List<ServerTag>>("api/servertags") ?? new List<ServerTag>();
+            _servers = await Http.GetFromJsonAsync<List<ServerTag>>("api/servertags") ?? new();
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Помилка завантаження серверів: {ex.Message}", Severity.Error);
+            Snackbar.Add($"Error loading servers: {ex.Message}", Severity.Error);
         }
         finally
         {
@@ -132,64 +68,56 @@
         }
     }
 
-    private async Task OpenCreateDialog()
+    private async Task AddServer()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<ServerFormDialog>("Додати Сервер", options);
+        var dialog = DialogService.Show<Varta.Store.Client.Pages.Admin.Dialogs.ServerDialog>("Add Server", options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
             await LoadServers();
-            Snackbar.Add("Сервер додано успішно", Severity.Success);
         }
     }
 
-    private async Task OpenEditDialog(ServerTag server)
+    private async Task EditServer(ServerTag server)
     {
         var parameters = new DialogParameters { ["Server"] = server };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<ServerFormDialog>("Редагувати Сервер", parameters, options);
+        var dialog = DialogService.Show<Varta.Store.Client.Pages.Admin.Dialogs.ServerDialog>("Edit Server", parameters, options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
             await LoadServers();
-            Snackbar.Add("Сервер оновлено успішно", Severity.Success);
         }
     }
 
     private async Task DeleteServer(ServerTag server)
     {
-        var parameters = new DialogParameters
-        {
-            ["ContentText"] = $"Ви дійсно хочете видалити сервер '{server.Name}'? Цю дію неможливо скасувати.",
-            ["ButtonText"] = "Видалити",
-            ["Color"] = Color.Error
-        };
+        bool? result = await DialogService.ShowMessageBox(
+            "Delete Server", 
+            $"Are you sure you want to delete '{server.Name}'?", 
+            yesText: "Delete", cancelText: "Cancel");
 
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<ConfirmDialog>("Підтвердження видалення", parameters, options);
-        var result = await dialog.Result;
-
-        if (!result.Canceled)
+        if (result == true)
         {
             try
             {
                 var response = await Http.DeleteAsync($"api/servertags/{server.Id}");
                 if (response.IsSuccessStatusCode)
                 {
+                    Snackbar.Add("Server deleted successfully", Severity.Success);
                     await LoadServers();
-                    Snackbar.Add("Сервер видалено успішно", Severity.Success);
                 }
                 else
                 {
-                    Snackbar.Add($"Помилка видалення: {response.StatusCode}", Severity.Error);
+                     Snackbar.Add("Failed to delete server", Severity.Error);
                 }
             }
             catch (Exception ex)
             {
-                Snackbar.Add($"Помилка: {ex.Message}", Severity.Error);
+                Snackbar.Add($"Error deleting server: {ex.Message}", Severity.Error);
             }
         }
     }

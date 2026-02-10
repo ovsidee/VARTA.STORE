@@ -1,0 +1,70 @@
+@using Varta.Store.Shared
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" Label="Server Name" @bind-Value="Server.Name" Required="true" RequiredError="Name is required" />
+        <MudTextField T="string" Label="IP Address:Port" @bind-Value="Server.IpAddress" HelperText="e.g. 1.1.1.1:2302" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public ServerTag Server { get; set; } = new();
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        if (string.IsNullOrWhiteSpace(Server.Name))
+        {
+            Snackbar.Add("Name is required", Severity.Warning);
+            return;
+        }
+
+        // TODO: Validate IP format if needed
+
+        try
+        {
+            if (Server.Id == 0)
+            {
+                // Create
+                var response = await Http.PostAsJsonAsync("api/servertags", Server);
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add("Server created successfully", Severity.Success);
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    Snackbar.Add("Failed to create server", Severity.Error);
+                }
+            }
+            else
+            {
+                // Update
+                var response = await Http.PutAsJsonAsync($"api/servertags/{Server.Id}", Server);
+                if (response.IsSuccessStatusCode)
+                {
+                    Snackbar.Add("Server updated successfully", Severity.Success);
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                else
+                {
+                    Snackbar.Add("Failed to update server", Severity.Error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+             Snackbar.Add($"Error saving server: {ex.Message}", Severity.Error);
+        }
+    }
+    
+    [Inject] HttpClient Http { get; set; }
+}
