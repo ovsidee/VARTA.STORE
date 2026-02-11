@@ -15,4 +15,7 @@ public class ServerTag
 
     [MaxLength(50)]
     public string? IpAddress { get; set; }
+
+    [MaxLength(255)]
+    public string? ImageUrl { get; set; }
 }

@@ -17,30 +17,30 @@
 
 <MudLayout>
     <MudAppBar Elevation="0" Fixed="true" Class="blur-navbar px-8" Style="z-index: 2000;">
-        <MudIcon Icon="@Icons.Material.Filled.Shield" Color="Color.Warning" Size="Size.Large" Class="mr-2"/>
+        <MudIcon Icon="@Icons.Material.Filled.Shield" Color="Color.Warning" Size="Size.Large" Class="mr-2" />
         <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px; cursor: pointer; margin-right: 60px;"
-                 @onclick='() => NavManager.NavigateTo("/")'>
+            @onclick='() => NavManager.NavigateTo("/")'>
             VARTA
         </MudText>
 
         <MudHidden Breakpoint="Breakpoint.MdAndDown">
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
-                       OnClick='() => NavManager.NavigateTo("/")'>
+                OnClick='() => NavManager.NavigateTo("/")'>
                 ГОЛОВНА
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
-                       OnClick='() => NavManager.NavigateTo("/info")'>
+                OnClick='() => NavManager.NavigateTo("/info")'>
                 ІНФО
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
-                       OnClick='() => NavManager.NavigateTo("/servers")'>
+                OnClick='() => NavManager.NavigateTo("/servers")'>
                 СЕРВЕРИ
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
-                       OnClick='() => NavManager.NavigateTo("/store")'>
+                OnClick='() => NavManager.NavigateTo("/store")'>
                 МАГАЗИН
             </MudButton>
 
@@ -48,14 +48,14 @@
 
             <AuthorizeView Roles="Admin">
                 <MudButton Variant="Variant.Text" Color="Color.Warning" Class="nav-link mx-2"
-                           OnClick='() => NavManager.NavigateTo("/admin")'>
+                    OnClick='() => NavManager.NavigateTo("/admin")'>
                     АДМІН ПАНЕЛЬ
                 </MudButton>
             </AuthorizeView>
 
             <MudBadge Content="_cartCount" Color="Color.Error" Overlap="true" Class="mx-2" Visible="@(_cartCount > 0)">
-                <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Inherit" 
-                               OnClick='() => NavManager.NavigateTo("/cart")' />
+                <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Inherit"
+                    OnClick='() => NavManager.NavigateTo("/cart")' />
             </MudBadge>
 
             @* Authentication Section *@
@@ -73,39 +73,76 @@
                         @* 2. User Avatar (clickable to go to profile) *@
                         <MudTooltip Text="Мій Профіль">
                             <MudBadge Overlap="true" Color="Color.Success" Dot="true" Bordered="true">
-                                <MudAvatar Style="border: 2px solid #ff9800; cursor: pointer;" @onclick='() => NavManager.NavigateTo("/profile")'>
+                                <MudAvatar Style="border: 2px solid #ff9800; cursor: pointer;"
+                                    @onclick='() => NavManager.NavigateTo("/profile")'>
                                     <MudImage Src="@auth.User.FindFirst("AvatarUrl")?.Value" Alt="Avatar" />
                                 </MudAvatar>
                             </MudBadge>
                         </MudTooltip>
 
                         @* 3. Logout Button to the right of avatar *@
-                        <MudButton Variant="Variant.Outlined" 
-                                   Color="Color.Error" 
-                                   Size="Size.Small"
-                                   OnClick="Logout"
-                                   StartIcon="@Icons.Material.Filled.Logout"
-                                   Style="text-transform: uppercase; font-weight: bold;">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="Logout"
+                            StartIcon="@Icons.Material.Filled.Logout"
+                            Style="text-transform: uppercase; font-weight: bold;">
                             Вийти
                         </MudButton>
                     </div>
                 </Authorized>
                 <NotAuthorized>
-                    <MudButton Variant="Variant.Filled"
-                               Color="Color.Warning"
-                               Size="Size.Small"
-                               Class="ml-6 px-4 rounded-pill"
-                               StartIcon="@Icons.Custom.Brands.Steam"
-                               Href="@($"{Http.BaseAddress}api/auth/login")"> LOGIN VIA STEAM
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small"
+                        Class="ml-6 px-4 rounded-pill" StartIcon="@Icons.Custom.Brands.Steam"
+                        Href="@($"{Http.BaseAddress}api/auth/login")"> LOGIN VIA STEAM
                     </MudButton>
                 </NotAuthorized>
             </AuthorizeView>
         </MudHidden>
 
         <MudHidden Breakpoint="Breakpoint.LgAndUp">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.End" />
+            <MudBadge Content="_cartCount" Color="Color.Error" Overlap="true" Class="mx-2" Visible="@(_cartCount > 0)">
+                <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Inherit" Edge="Edge.End"
+                    OnClick='() => NavManager.NavigateTo("/cart")' />
+            </MudBadge>
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.End"
+                OnClick="@((e) => DrawerToggle())" />
         </MudHidden>
     </MudAppBar>
+
+    <MudDrawer @bind-Open="@_drawerOpen" Anchor="Anchor.Right" Elevation="2" Variant="@DrawerVariant.Temporary"
+        Class="mud-theme-dark" Style="background-color: #1e1e2d;">
+        <MudDrawerHeader Class="d-flex align-center justify-space-between px-4 py-4">
+            <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px;">VARTA</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Inherit"
+                OnClick="@((e) => DrawerToggle())" />
+        </MudDrawerHeader>
+        <MudNavMenu Class="pt-4">
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">ГОЛОВНА</MudNavLink>
+            <MudNavLink Href="/info" Icon="@Icons.Material.Filled.Info">ІНФО</MudNavLink>
+            <MudNavLink Href="/servers" Icon="@Icons.Material.Filled.Dns">СЕРВЕРИ</MudNavLink>
+            <MudNavLink Href="/store" Icon="@Icons.Material.Filled.Store">МАГАЗИН</MudNavLink>
+            <MudNavLink Href="/cart" Icon="@Icons.Material.Filled.ShoppingCart">
+                КОШИК @(_cartCount > 0 ? $"({_cartCount})" : "")
+            </MudNavLink>
+
+            <AuthorizeView Roles="Admin">
+                <MudNavLink Href="/admin" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Warning">
+                    АДМІН ПАНЕЛЬ</MudNavLink>
+            </AuthorizeView>
+
+            <MudDivider Class="my-4" />
+
+            <AuthorizeView>
+                <Authorized>
+                    <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">ПРОФІЛЬ</MudNavLink>
+                    <MudNavLink OnClick="Logout" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">ВИЙТИ
+                    </MudNavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <MudNavLink Href="api/auth/login" Icon="@Icons.Custom.Brands.Steam" IconColor="Color.Info">E-MAIL /
+                        STEAM</MudNavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </MudNavMenu>
+    </MudDrawer>
 
     <MudMainContent Class="pt-0">
         <div class="d-flex flex-column" style="min-height: 100vh;">
@@ -124,13 +161,19 @@
 
 @code {
     private int _cartCount = 0;
+    private bool _drawerOpen = false;
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
 
     protected override async Task OnInitializedAsync()
     {
         _cartCount = await CartService.GetCartCount();
         CartService.OnChange += UpdateUI;
         BalanceService.OnChange += UpdateUI;
-        
+
         // Initial balance sync
         await SyncBalance();
     }
@@ -156,11 +199,11 @@
             var claimBalance = authState.User.FindFirst("Balance")?.Value;
             if (decimal.TryParse(claimBalance, out var b))
             {
-                 // Set initial from claim to avoid flicker
-                 if (BalanceService.CurrentBalance == 0) BalanceService.SetBalance(b);
+                // Set initial from claim to avoid flicker
+                if (BalanceService.CurrentBalance == 0) BalanceService.SetBalance(b);
             }
 
-            try 
+            try
             {
                 // Fetch fresh from API to be sure
                 var profile = await ProfileService.GetProfileAsync();
@@ -169,13 +212,13 @@
                     BalanceService.SetBalance(profile.Balance);
                 }
             }
-            catch {}
+            catch { }
         }
     }
 
     private void UpdateUI()
     {
-         Task.Run(async () => 
+        Task.Run(async () =>
         {
             _cartCount = await CartService.GetCartCount();
             await InvokeAsync(StateHasChanged);
@@ -206,9 +249,17 @@
     .blur-navbar {
         background-color: rgba(30, 30, 45, 0.9) !important;
         backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         transition: background-color 0.3s;
     }
-    .nav-link { font-weight: bold; letter-spacing: 1px; }
-    body { background-color: #121212; margin: 0; }
+
+    .nav-link {
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    body {
+        background-color: #121212;
+        margin: 0;
+    }
 </style>

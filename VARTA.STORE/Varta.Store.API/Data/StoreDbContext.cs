@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Varta.Store.Shared;
 
 namespace Varta.Store.API.Data
@@ -89,22 +89,22 @@ namespace Varta.Store.API.Data
                 },
 
                 // Запчастини (Id: 2)
-                new Product { Id = 5, Name = "Радіатор", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "radiator.png", Description = "Автомобільний радіатор" },
-                new Product { Id = 6, Name = "Свічка Запалювання", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "products/candle.png", Description = "Для бензинових двигунів" },
-                new Product { Id = 7, Name = "Свічка Розжарення", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "glowplug.png", Description = "Для дизельних двигунів" },
-                new Product { Id = 8, Name = "Акумулятор до V3S", Price = 60, CategoryId = 2, ServerTagId = 1, ImageUrl = "battery_truck.png", Description = "Вантажний акумулятор" },
-                new Product { Id = 9, Name = "Акумулятор 12В", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "battery_car.png", Description = "Автомобільний акумулятор" },
-                new Product { Id = 10, Name = "Колесо до Gunter 2", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "wheel_gunter.png", Description = "Запасне колесо" },
-                new Product { Id = 11, Name = "Колесо до M1024", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "wheel_m1024.png", Description = "Запасне колесо" },
-                new Product { Id = 12, Name = "Переднє Колесо до V3S", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "wheel_v3s_front.png", Description = "Вантажне колесо" },
-                new Product { Id = 13, Name = "Заднє Колесо до V3S", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "wheel_v3s_rear.png", Description = "Вантажне колесо (подвійне)" },
-                new Product { Id = 14, Name = "Колесо до Olga24", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "wheel_olga.png", Description = "Запасне колесо" },
-                new Product { Id = 15, Name = "Колесо до Sarka120", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "wheel_sarka.png", Description = "Запасне колесо" },
-                new Product { Id = 16, Name = "Колесо до Ada4x4", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "wheel_ada.png", Description = "Запасне колесо" },
-                new Product { Id = 17, Name = "Епоксидна смола", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "epoxy.png", Description = "Ремонтний матеріал" },
-                new Product { Id = 18, Name = "Каністра з бензином", Price = 25, CategoryId = 2, ServerTagId = 1, ImageUrl = "jerrycan.png", Description = "Повна каністра" },
-                new Product { Id = 19, Name = "Батарейка 9v", Price = 10, CategoryId = 2, ServerTagId = 1, ImageUrl = "battery_9v.png", Description = "Елемент живлення" },
-                new Product { Id = 20, Name = "Паяльна лампа", Price = 30, CategoryId = 2, ServerTagId = 1, ImageUrl = "blowtorch.png", Description = "Інструмент для ремонту" },
+                new Product { Id = 5, Name = "Радіатор", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/radiator.png", Description = "Автомобільний радіатор" },
+                new Product { Id = 6, Name = "Свічка Запалювання", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/candleIgnition.png", Description = "Для бензинових двигунів" },
+                new Product { Id = 7, Name = "Свічка Розжарення", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/candleIncandescence.png", Description = "Для дизельних двигунів" },
+                new Product { Id = 8, Name = "Акумулятор до V3S", Price = 60, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/carBattery2.png", Description = "Вантажний акумулятор" },
+                new Product { Id = 9, Name = "Акумулятор 12В", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/carBattery.png", Description = "Автомобільний акумулятор" },
+                new Product { Id = 10, Name = "Колесо до Gunter 2", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/wheelGunter.png", Description = "Запасне колесо" },
+                new Product { Id = 11, Name = "Колесо до M1024", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/wheelHammer.png", Description = "Запасне колесо" },
+                new Product { Id = 12, Name = "Переднє Колесо до V3S", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/wheelV3S.png", Description = "Вантажне колесо" },
+                new Product { Id = 13, Name = "Заднє Колесо до V3S", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/wheelV3S.png", Description = "Вантажне колесо (подвійне)" },
+                new Product { Id = 14, Name = "Колесо до Olga24", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/wheelvOlga.png", Description = "Запасне колесо" },
+                new Product { Id = 15, Name = "Колесо до Sarka120", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/wheelSarka.png", Description = "Запасне колесо" },
+                new Product { Id = 16, Name = "Колесо до Ada4x4", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/wheelGunter.png", Description = "Запасне колесо (тимчасово Gunter)" }, // Assuming no Ada wheel image found, using placeholder or check list again. Wait, Ada is Niva. I listed files. I did not see 'wheelAda.png'. I saw 'wheelGunter', 'wheelHammer', 'wheelSarka', 'wheelV3S', 'wheelvOlga'. I will use Gunter or leave old one? Old one was 'wheel_ada.png'. New list doesn't have it. I'll use Gunter as placeholder or maybe 'wheelSarka'. Let's use Gunter.
+                new Product { Id = 17, Name = "Епоксидна смола", Price = 40, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/epoxy.png", Description = "Ремонтний матеріал" },
+                new Product { Id = 18, Name = "Каністра з бензином", Price = 25, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/canister.png", Description = "Повна каністра" },
+                new Product { Id = 19, Name = "Батарейка 9v", Price = 10, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/battery 9V.png", Description = "Елемент живлення" },
+                new Product { Id = 20, Name = "Паяльна лампа", Price = 30, CategoryId = 2, ServerTagId = 1, ImageUrl = "transport/blowtorch.png", Description = "Інструмент для ремонту" },
 
                 // Інше (Id: 3)
                 new Product

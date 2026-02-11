@@ -1,8 +1,9 @@
 ﻿@page "/"
 @inject NavigationManager NavManager
-@inject IJSRuntime JSRuntime 
+@inject IJSRuntime JSRuntime
 @inject ISnackbar Snackbar
 @using Microsoft.AspNetCore.Authorization
+@using Varta.Store.Shared
 @attribute [AllowAnonymous]
 
 <PageTitle>VARTA - Головна</PageTitle>
@@ -20,15 +21,14 @@
         </MudText>
 
         <div class="d-flex gap-4 animate-slide-up delay-200">
-            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large"
-                       Class="px-10 py-3 hero-btn" OnClick="@(() => NavManager.NavigateTo("/store"))">
-                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Class="mr-2"/> МАГАЗИН
+            <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" Class="px-10 py-3 hero-btn"
+                OnClick="@(() => NavManager.NavigateTo("/store"))">
+                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Class="mr-2" /> МАГАЗИН
             </MudButton>
 
             <MudButton Variant="Variant.Outlined" Color="Color.Inherit" Size="Size.Large"
-                       Class="px-10 py-3 hero-btn-outline"
-                       Href="https://discord.gg/mkQbaxmuUS" Target="_blank">
-                <MudIcon Icon="@Icons.Custom.Brands.Discord" Class="mr-2"/> DISCORD
+                Class="px-10 py-3 hero-btn-outline" Href="https://discord.gg/mkQbaxmuUS" Target="_blank">
+                <MudIcon Icon="@Icons.Custom.Brands.Discord" Class="mr-2" /> DISCORD
             </MudButton>
         </div>
     </div>
@@ -38,7 +38,8 @@
     <MudGrid Class="justify-center">
         <MudItem xs="12" md="4">
             <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
-                <MudIcon Icon="@Icons.Material.Filled.Bolt" Size="Size.Large" Color="Color.Warning" Class="mb-4 icon-glow" />
+                <MudIcon Icon="@Icons.Material.Filled.Bolt" Size="Size.Large" Color="Color.Warning"
+                    Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ШВИДКА ВИДАЧА</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
                     Система видачі товарів. Купуй та отримуй в грі за секунди.
@@ -48,7 +49,8 @@
 
         <MudItem xs="12" md="4">
             <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
-                <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Success" Class="mb-4 icon-glow" />
+                <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Success"
+                    Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ЧЕСНА ГРА</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
                     Активна та розуміюча адміністрація 24/7. В грі вирішує тільки скіл.
@@ -58,7 +60,8 @@
 
         <MudItem xs="12" md="4">
             <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
-                <MudIcon Icon="@Icons.Material.Filled.Public" Size="Size.Large" Color="Color.Info" Class="mb-4 icon-glow" />
+                <MudIcon Icon="@Icons.Material.Filled.Public" Size="Size.Large" Color="Color.Info"
+                    Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">СТАБІЛЬНІСТЬ</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
                     Виділений сервер у Європі, приємний пінг, жодних лагів під час ПВП.
@@ -70,56 +73,104 @@
 
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16">
-    
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 animate-fade-in delay-500" Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
+
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 animate-fade-in delay-500"
+        Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
         СЕРВЕРИ
     </MudText>
 
-    <MudGrid Justify="Justify.Center">
-        <MudItem xs="12" md="8">
-            
-            <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden animate-slide-up delay-500" Style="background-color: #1e1e2d;">
-                
-                <div class="relative" style="line-height: 0;">
-                    <MudCardMedia Image="images/server1.png" Height="300" Class="server-image"/>
-                    
-                    <div class="server-overlay"></div>
-                    
-                </div>
+    <MudGrid>
+        @if (_isLoading)
+        {
+            <MudItem xs="12" md="6">
+                <MudSkeleton Height="400px" Class="rounded-lg" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSkeleton Height="400px" Class="rounded-lg" />
+            </MudItem>
+        }
+        else if (_servers != null)
+        {
+            @foreach (var server in _servers)
+            {
+                <MudItem xs="12" md="6">
 
-                <MudCardContent Class="pa-6" Style="background-color: #1e1e2d;">
-                    <div class="d-flex justify-space-between align-center">
-                        
-                        <div @onclick="CopyToServerClipboard" style="cursor: pointer;" title="Click to copy IP">
-                            <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">
-                                [UA|EU] VARTA | 3pp | Loot +
-                            </MudText>
-                            
-                            <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
-                                IP: @ServerIp (Натисни щоб скопіювати)
-                            </MudText>
+                    <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden animate-slide-up delay-500"
+                        Style="background-color: #1e1e2d;">
+
+                        <div class="relative" style="line-height: 0;">
+                            @if (!string.IsNullOrEmpty(server.ImageUrl))
+                            {
+                                <MudCardMedia Image="@($"images/{server.ImageUrl}")" Height="300" Class="server-image" />
+                            }
+                            else
+                            {
+                                <MudCardMedia Image="images/servers/server1.png" Height="300" Class="server-image" />
+                            }
+
+                            <div class="server-overlay"></div>
+
                         </div>
-                        
-                        <MudIconButton OnClick="CopyToServerClipboard" Icon="@Icons.Material.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" Class="ml-4" />
-                    </div>
-                </MudCardContent>
-            </MudCard>
 
-        </MudItem>
+                        <MudCardContent Class="pa-6" Style="background-color: #1e1e2d;">
+                            <div class="d-flex justify-space-between align-center">
+
+                                <div @onclick="() => CopyToServerClipboard(server.IpAddress)" style="cursor: pointer;"
+                                    title="Click to copy IP">
+                                    <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">
+                                        @server.Name
+                                    </MudText>
+
+                                    <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
+                                        IP: @server.IpAddress (Натисни щоб скопіювати)
+                                    </MudText>
+                                </div>
+
+                                <MudIconButton OnClick="() => CopyToServerClipboard(server.IpAddress)"
+                                    Icon="@Icons.Material.Filled.ContentCopy" Variant="Variant.Filled" Color="Color.Warning"
+                                    Size="Size.Large" Class="ml-4" />
+                            </div>
+                        </MudCardContent>
+                    </MudCard>
+
+                </MudItem>
+            }
+        }
     </MudGrid>
 </MudContainer>
 
 @code {
-    // Defined IP here so we can use it in logic and HTML
-    private const string ServerIp = "178.150.251.247:2307";
+    private List<ServerTag>? _servers;
+    private bool _isLoading = true;
 
-    private async Task CopyToServerClipboard()
+    [Inject] IServerTagService ServerTagService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
     {
+        await Task.Delay(300); // Simulate loading or ensure animation plays
+        try
+        {
+            _servers = await ServerTagService.GetServerTags();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Помилка завантаження серверів: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task CopyToServerClipboard(string? ip)
+    {
+        if (string.IsNullOrEmpty(ip)) return;
+
         // This Javascript function copies text to clipboard
-        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ServerIp);
-        
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ip);
+
         // Show success message
-        Snackbar.Add($"IP {ServerIp} скопійовано!", Severity.Success);
+        Snackbar.Add($"IP {ip} скопійовано!", Severity.Success);
     }
 }
 
@@ -139,8 +190,11 @@
 
     .hero-overlay {
         position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: linear-gradient(180deg, rgba(20,20,31,0.7) 0%, rgba(20,20,31,0.95) 100%);
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(20, 20, 31, 0.7) 0%, rgba(20, 20, 31, 0.95) 100%);
     }
 
     .hero-content {
@@ -153,7 +207,7 @@
         font-weight: 900;
         letter-spacing: 5px;
         color: white;
-        text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
         text-transform: uppercase;
     }
 
@@ -169,10 +223,11 @@
         transition: transform 0.3s ease, border-color 0.3s ease;
         height: 100%;
     }
+
     .feature-card:hover {
         transform: translateY(-5px);
         border-color: #ff9800;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     /* server card style  */
@@ -181,15 +236,18 @@
         border: 1px solid #333;
         transition: all 0.5s ease;
     }
+
     .server-card:hover {
         transform: translateY(-10px);
         border-color: #ff9800;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     }
 
     .server-image {
-        transition: transform 0.7s ease; /* Slightly slower zoom for the image */
+        transition: transform 0.7s ease;
+        /* Slightly slower zoom for the image */
     }
+
     .server-card:hover .server-image {
         transform: scale(1.05);
     }
@@ -198,47 +256,120 @@
     .copy-hover {
         transition: color 0.3s;
     }
+
     .server-card:hover .copy-hover {
         color: #ff9800 !important;
     }
 
     /* Helper Utilities */
-    .relative { position: relative; }
-    .absolute { position: absolute; }
-    .top-4 { top: 16px; }
-    .right-4 { right: 16px; }
-    .z-10 { z-index: 10; }
-    .mt-n16 { margin-top: -4rem; }
+    .relative {
+        position: relative;
+    }
+
+    .absolute {
+        position: absolute;
+    }
+
+    .top-4 {
+        top: 16px;
+    }
+
+    .right-4 {
+        right: 16px;
+    }
+
+    .z-10 {
+        z-index: 10;
+    }
+
+    .mt-n16 {
+        margin-top: -4rem;
+    }
 
     /* === ANIMATIONS === */
-    .animate-fade-in { animation: fadeIn 1s ease-out forwards; opacity: 0; }
-    .animate-slide-up { animation: slideUp 0.8s ease-out forwards; opacity: 0; }
-    .animate-slide-in-left { animation: slideInLeft 0.8s ease-out forwards; opacity: 0; }
-    .animate-slide-in-right { animation: slideInRight 0.8s ease-out forwards; opacity: 0; }
+    .animate-fade-in {
+        animation: fadeIn 1s ease-out forwards;
+        opacity: 0;
+    }
 
-    .delay-100 { animation-delay: 0.1s; }
-    .delay-200 { animation-delay: 0.2s; }
-    .delay-300 { animation-delay: 0.3s; }
-    .delay-400 { animation-delay: 0.4s; }
-    .delay-500 { animation-delay: 0.5s; }
+    .animate-slide-up {
+        animation: slideUp 0.8s ease-out forwards;
+        opacity: 0;
+    }
+
+    .animate-slide-in-left {
+        animation: slideInLeft 0.8s ease-out forwards;
+        opacity: 0;
+    }
+
+    .animate-slide-in-right {
+        animation: slideInRight 0.8s ease-out forwards;
+        opacity: 0;
+    }
+
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-300 {
+        animation-delay: 0.3s;
+    }
+
+    .delay-400 {
+        animation-delay: 0.4s;
+    }
+
+    .delay-500 {
+        animation-delay: 0.5s;
+    }
 
     @@keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
     }
 
     @@keyframes slideUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     @@keyframes slideInLeft {
-        from { opacity: 0; transform: translateX(-100px); }
-        to { opacity: 1; transform: translateX(0); }
+        from {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     @@keyframes slideInRight {
-        from { opacity: 0; transform: translateX(100px); }
-        to { opacity: 1; transform: translateX(0); }
+        from {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 </style>

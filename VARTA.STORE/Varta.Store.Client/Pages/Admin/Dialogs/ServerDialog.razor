@@ -1,10 +1,38 @@
 @using Varta.Store.Shared
+@using System.Net.Http.Headers
 @inject ISnackbar Snackbar
+@inject HttpClient Http
 
 <MudDialog>
     <DialogContent>
-        <MudTextField T="string" Label="Server Name" @bind-Value="Server.Name" Required="true" RequiredError="Name is required" />
-        <MudTextField T="string" Label="IP Address:Port" @bind-Value="Server.IpAddress" HelperText="e.g. 1.1.1.1:2302" />
+        <MudTextField T="string" Label="Server Name" @bind-Value="Server.Name" Required="true" RequiredError="Name is required" Class="mb-4"/>
+        <MudTextField T="string" Label="IP Address:Port" @bind-Value="Server.IpAddress" HelperText="e.g. 1.1.1.1:2302" Class="mb-4"/>
+
+        <!-- Image Upload Section -->
+        <div class="d-flex align-center gap-4 mb-4">
+            <div class="d-flex flex-column gap-2 flex-grow-1">
+                <MudTextField @bind-Value="Server.ImageUrl" Label="Шлях до зображення" Variant="Variant.Outlined"
+                              Margin="Margin.Dense" ReadOnly="true" HelperText="Завантажте файл або вкажіть шлях вручну" />
+            </div>
+
+            <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.CloudUpload">
+                        Завантажити
+                    </MudButton>
+                </ActivatorContent>
+            </MudFileUpload>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Server.ImageUrl))
+        {
+            <div class="d-flex justify-center mb-4">
+                <MudImage Src="@($"images/{Server.ImageUrl}")" Height="150" ObjectFit="ObjectFit.Contain"
+                          Class="rounded-lg border pa-2" />
+            </div>
+        }
+
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -13,11 +41,53 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
 
     [Parameter] public ServerTag Server { get; set; } = new();
 
     private void Cancel() => MudDialog.Cancel();
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        if (file == null) return;
+
+        // Limit size to 5MB
+        if (file.Size > 5 * 1024 * 1024)
+        {
+            Snackbar.Add("Файл занадто великий (макс 5MB)", Severity.Error);
+            return;
+        }
+
+        try
+        {
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(5 * 1024 * 1024));
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/servertags/upload-image", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result != null)
+                {
+                    Server.ImageUrl = result.ImageUrl;
+                    Snackbar.Add("Зображення завантажено!", Severity.Success);
+                    StateHasChanged();
+                }
+            }
+            else
+            {
+                var errorMsg = await response.Content.ReadAsStringAsync();
+                Snackbar.Add($"Помилка завантаження: {response.StatusCode} - {errorMsg}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Помилка: {ex.Message}", Severity.Error);
+        }
+    }
 
     private async Task Submit()
     {
@@ -26,8 +96,6 @@
             Snackbar.Add("Name is required", Severity.Warning);
             return;
         }
-
-        // TODO: Validate IP format if needed
 
         try
         {
@@ -66,5 +134,8 @@
         }
     }
     
-    [Inject] HttpClient Http { get; set; }
+    private class ImageUploadResult
+    {
+        public string ImageUrl { get; set; } = string.Empty;
+    }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Varta.Store.API.Data;
@@ -11,9 +12,11 @@ using Varta.Store.API.Data;
 namespace Varta.Store.API.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260211183806_UpdateTransportImages")]
+    partial class UpdateTransportImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,7 +295,7 @@ namespace Varta.Store.API.Migrations
                             Id = 5,
                             CategoryId = 2,
                             Description = "Автомобільний радіатор",
-                            ImageUrl = "transport/radiator.png",
+                            ImageUrl = "products/transport/radiator.png",
                             Name = "Радіатор",
                             Price = 50m,
                             ServerTagId = 1
@@ -302,7 +305,7 @@ namespace Varta.Store.API.Migrations
                             Id = 6,
                             CategoryId = 2,
                             Description = "Для бензинових двигунів",
-                            ImageUrl = "transport/candleIgnition.png",
+                            ImageUrl = "products/transport/candleIgnition.png",
                             Name = "Свічка Запалювання",
                             Price = 50m,
                             ServerTagId = 1
@@ -312,7 +315,7 @@ namespace Varta.Store.API.Migrations
                             Id = 7,
                             CategoryId = 2,
                             Description = "Для дизельних двигунів",
-                            ImageUrl = "transport/candleIncandescence.png",
+                            ImageUrl = "products/transport/candleIncandescence.png",
                             Name = "Свічка Розжарення",
                             Price = 50m,
                             ServerTagId = 1
@@ -322,7 +325,7 @@ namespace Varta.Store.API.Migrations
                             Id = 8,
                             CategoryId = 2,
                             Description = "Вантажний акумулятор",
-                            ImageUrl = "transport/carBattery2.png",
+                            ImageUrl = "products/transport/carBattery2.png",
                             Name = "Акумулятор до V3S",
                             Price = 60m,
                             ServerTagId = 1
@@ -332,7 +335,7 @@ namespace Varta.Store.API.Migrations
                             Id = 9,
                             CategoryId = 2,
                             Description = "Автомобільний акумулятор",
-                            ImageUrl = "transport/carBattery.png",
+                            ImageUrl = "products/transport/carBattery.png",
                             Name = "Акумулятор 12В",
                             Price = 50m,
                             ServerTagId = 1
@@ -342,7 +345,7 @@ namespace Varta.Store.API.Migrations
                             Id = 10,
                             CategoryId = 2,
                             Description = "Запасне колесо",
-                            ImageUrl = "transport/wheelGunter.png",
+                            ImageUrl = "products/transport/wheelGunter.png",
                             Name = "Колесо до Gunter 2",
                             Price = 40m,
                             ServerTagId = 1
@@ -352,7 +355,7 @@ namespace Varta.Store.API.Migrations
                             Id = 11,
                             CategoryId = 2,
                             Description = "Запасне колесо",
-                            ImageUrl = "transport/wheelHammer.png",
+                            ImageUrl = "products/transport/wheelHammer.png",
                             Name = "Колесо до M1024",
                             Price = 40m,
                             ServerTagId = 1
@@ -362,7 +365,7 @@ namespace Varta.Store.API.Migrations
                             Id = 12,
                             CategoryId = 2,
                             Description = "Вантажне колесо",
-                            ImageUrl = "transport/wheelV3S.png",
+                            ImageUrl = "products/transport/wheelV3S.png",
                             Name = "Переднє Колесо до V3S",
                             Price = 40m,
                             ServerTagId = 1
@@ -372,7 +375,7 @@ namespace Varta.Store.API.Migrations
                             Id = 13,
                             CategoryId = 2,
                             Description = "Вантажне колесо (подвійне)",
-                            ImageUrl = "transport/wheelV3S.png",
+                            ImageUrl = "products/transport/wheelV3S.png",
                             Name = "Заднє Колесо до V3S",
                             Price = 50m,
                             ServerTagId = 1
@@ -382,7 +385,7 @@ namespace Varta.Store.API.Migrations
                             Id = 14,
                             CategoryId = 2,
                             Description = "Запасне колесо",
-                            ImageUrl = "transport/wheelvOlga.png",
+                            ImageUrl = "products/transport/wheelvOlga.png",
                             Name = "Колесо до Olga24",
                             Price = 40m,
                             ServerTagId = 1
@@ -392,7 +395,7 @@ namespace Varta.Store.API.Migrations
                             Id = 15,
                             CategoryId = 2,
                             Description = "Запасне колесо",
-                            ImageUrl = "transport/wheelSarka.png",
+                            ImageUrl = "products/transport/wheelSarka.png",
                             Name = "Колесо до Sarka120",
                             Price = 40m,
                             ServerTagId = 1
@@ -402,7 +405,7 @@ namespace Varta.Store.API.Migrations
                             Id = 16,
                             CategoryId = 2,
                             Description = "Запасне колесо (тимчасово Gunter)",
-                            ImageUrl = "transport/wheelGunter.png",
+                            ImageUrl = "products/transport/wheelGunter.png",
                             Name = "Колесо до Ada4x4",
                             Price = 40m,
                             ServerTagId = 1
@@ -412,7 +415,7 @@ namespace Varta.Store.API.Migrations
                             Id = 17,
                             CategoryId = 2,
                             Description = "Ремонтний матеріал",
-                            ImageUrl = "transport/epoxy.png",
+                            ImageUrl = "products/transport/epoxy.png",
                             Name = "Епоксидна смола",
                             Price = 40m,
                             ServerTagId = 1
@@ -422,7 +425,7 @@ namespace Varta.Store.API.Migrations
                             Id = 18,
                             CategoryId = 2,
                             Description = "Повна каністра",
-                            ImageUrl = "transport/canister.png",
+                            ImageUrl = "products/transport/canister.png",
                             Name = "Каністра з бензином",
                             Price = 25m,
                             ServerTagId = 1
@@ -432,7 +435,7 @@ namespace Varta.Store.API.Migrations
                             Id = 19,
                             CategoryId = 2,
                             Description = "Елемент живлення",
-                            ImageUrl = "transport/battery 9V.png",
+                            ImageUrl = "products/transport/battery 9V.png",
                             Name = "Батарейка 9v",
                             Price = 10m,
                             ServerTagId = 1
@@ -442,7 +445,7 @@ namespace Varta.Store.API.Migrations
                             Id = 20,
                             CategoryId = 2,
                             Description = "Інструмент для ремонту",
-                            ImageUrl = "transport/blowtorch.png",
+                            ImageUrl = "products/transport/blowtorch.png",
                             Name = "Паяльна лампа",
                             Price = 30m,
                             ServerTagId = 1
@@ -576,10 +579,6 @@ namespace Varta.Store.API.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(50)
