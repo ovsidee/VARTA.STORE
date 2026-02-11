@@ -68,33 +68,25 @@ public class PaymentController : ControllerBase
         // 3. Find a matching donation
         // Logic:
         // - Name must match SteamID (case insensitive)
-        // - Amount must be >= request.Amount
         // - Must NOT be already used (check WalletTransactions)
+        // - We accept ANY amount that hasn't been processed yet.
 
         // Get processed IDs from DB
         var processedIds = await _context.WalletTransactions
             .Select(t => t.ExternalTransactionId)
             .ToListAsync();
 
-        _logger.LogInformation($"[PaymentController] Looking for payment from SteamID: '{steamId}' with Amount >= {request.Amount}");
-
-        foreach (var d in donations)
-        {
-            var nameMatch = d.Name.Trim().Equals(steamId, StringComparison.OrdinalIgnoreCase);
-            var amountMatch = d.Amount >= request.Amount;
-            var notProcessed = !processedIds.Contains(d.Id);
-
-            _logger.LogInformation($"[PaymentController] Candidate: ID={d.Id}, Name='{d.Name}', Amount={d.Amount}, Currency={d.Currency}. Match: Name={nameMatch}, Amount={amountMatch}, NotProcessed={notProcessed}");
-        }
+        _logger.LogInformation($"[PaymentController] Looking for ANY unprocessed payment from SteamID: '{steamId}'");
 
         var matchingDonation = donations.FirstOrDefault(d =>
             d.Name.Trim().Equals(steamId, StringComparison.OrdinalIgnoreCase) &&
-            d.Amount >= request.Amount &&
             !processedIds.Contains(d.Id) // Ensure not already processed
         );
 
         if (matchingDonation == null)
         {
+            // Fallback: Check if there's a payment with "similar" name or message if exact steamID match fails? 
+            // For now, strict SteamID match is safest.
             return BadRequest("Payment not found or all matching payments have already been credited. Please try again in 1 minute.");
         }
 

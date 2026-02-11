@@ -19,27 +19,50 @@ public class DonatikService : IDonatikService
 
     public async Task<List<DonatikDonation>> GetRecentDonationsAsync(int limit = 500, string? filterName = null)
     {
-        var token = _configuration["Donatik:Token"];
+        // Try to get token from Env var first, then config
+        var token = Environment.GetEnvironmentVariable("DONATIK_TOKEN")
+                    ?? _configuration["Donatik:Token"];
+
         if (string.IsNullOrEmpty(token) || token == "REPLACE_ME_LOCALLY")
         {
             _logger.LogError("Donatik Token is missing in configuration.");
-            throw new InvalidOperationException("Donatik API Token is missing or invalid in configuration. Please check 'Donatik:Token' setting.");
+            throw new InvalidOperationException("Donatik API Token is missing or invalid in configuration. Please check 'DONATIK_TOKEN' environment variable or 'Donatik:Token' setting.");
         }
 
-        // URL based on user docs: https://api.donatik.io/donations?page=1&perPage=500
-        // Token must be in X-Token header
-        var url = $"https://api.donatik.io/donations?page=1&perPage={limit}";
+        // Default to last 30 days if not specified (though method sig doesn't have dates yet, we can add them later or just hardcode for "Recent")
+        var toDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+        var fromDate = DateTime.UtcNow.AddDays(-30).ToString("yyyy-MM-dd");
+
+        // URL construction with query params:
+        // http://api.donatik.io/donations?token=...&fromDate=...&toDate=...&page=1&perPage=500
+        var builder = new UriBuilder("http://api.donatik.io/donations");
+        var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
+        query["token"] = token;
+        query["fromDate"] = fromDate;
+        query["toDate"] = toDate;
+        query["page"] = "1";
+        query["perPage"] = limit.ToString();
+
+        builder.Query = query.ToString();
+        var url = builder.ToString();
 
         try
         {
+            // Remove header if it exists (clearing potential legacy usage)
             _httpClient.DefaultRequestHeaders.Remove("X-Token");
-            _httpClient.DefaultRequestHeaders.Add("X-Token", token);
+
+            _logger.LogInformation($"[DonatikService] Requesting: {url.Replace(token, "***")}");
 
             var response = await _httpClient.GetAsync(url);
             var content = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation($"[DonatikService] Status: {response.StatusCode}. Raw Response: {content}");
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError($"[DonatikService] Failed. Status: {response.StatusCode}. Content: {content}");
+                response.EnsureSuccessStatusCode();
+            }
+
+            // _logger.LogInformation($"[DonatikService] Response: {content}"); // Optional: log full response for debug
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var result = JsonSerializer.Deserialize<DonatikResponse>(content, options);

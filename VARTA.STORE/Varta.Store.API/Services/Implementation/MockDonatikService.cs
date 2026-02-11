@@ -22,8 +22,7 @@ public class MockDonatikService : IDonatikService
              {
                  Id = Guid.NewGuid().ToString(),
                  Name = "76561197960287930", // Common default steamID or similar
-                 Amount = 100,
-                 Currency = "UAH",
+                 Payment = new DonatikPayment { Amount = "100", Currency = "UAH" },
                  CreatedAt = DateTime.UtcNow,
                  Message = "Test Donation"
              },
@@ -31,8 +30,7 @@ public class MockDonatikService : IDonatikService
              {
                  Id = "MOCK_PAYMENT_" + Random.Shared.Next(1000, 9999),
                  Name = "MockSteamID",
-                 Amount = 50,
-                 Currency = "UAH",
+                 Payment = new DonatikPayment { Amount = "50", Currency = "UAH" },
                  CreatedAt = DateTime.UtcNow
              }
         };
@@ -44,8 +42,7 @@ public class MockDonatikService : IDonatikService
             {
                 Id = "MOCK_PAYMENT_" + Guid.NewGuid().ToString().Substring(0, 8),
                 Name = filterName,
-                Amount = 1000, // Always give 1000 UAH for testing
-                Currency = "UAH",
+                Payment = new DonatikPayment { Amount = "1000", Currency = "UAH" },
                 CreatedAt = DateTime.UtcNow,
                 Message = "Auto-Generated Mock Donation"
             });
