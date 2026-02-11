@@ -37,31 +37,37 @@
         }
         else
         {
-            <div class="mb-4">
-                <MudText Typo="Typo.caption" Class="mb-1" Style="color: #9e9eae;">Категорія</MudText>
-                <select @bind="_selectedCategoryId" 
-                        @bind:event="onchange"
-                        class="custom-select"
-                        style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255,152,0,0.3); border-radius: 4px; background: rgba(30, 30, 45, 0.95); color: #ffffff; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
-                    @foreach (var category in _categories)
-                    {
-                        <option value="@category.Id" style="background: #1e1e2d; color: #ffffff; padding: 8px;">@category.Name</option>
-                    }
-                </select>
-            </div>
+            <MudText Typo="Typo.caption" Class="mb-2 d-block">Доступно категорій: @_categories.Count, серверів: @_serverTags.Count</MudText>
             
-            <div class="mb-4">
-                <MudText Typo="Typo.caption" Class="mb-1" Style="color: #9e9eae;">Сервер</MudText>
-                <select @bind="_selectedServerTagId"
-                        @bind:event="onchange"
-                        class="custom-select"
-                        style="width: 100%; padding: 12px 16px; border: 1px solid rgba(255,152,0,0.3); border-radius: 4px; background: rgba(30, 30, 45, 0.95); color: #ffffff; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
-                    @foreach (var server in _serverTags)
-                    {
-                        <option value="@server.Id" style="background: #1e1e2d; color: #ffffff; padding: 8px;">@server.Name</option>
-                    }
-                </select>
-            </div>
+            <MudSelect T="int" Label="Категорія" @bind-Value="productForm.CategoryId" 
+                        Variant="Variant.Outlined" 
+                        Margin="Margin.Dense"
+                        Dense="true"
+                        Color="Color.Warning"
+                        AdornmentColor="Color.Warning"
+                        AnchorOrigin="Origin.BottomCenter"
+                        TransformOrigin="Origin.TopCenter"
+                        Class="mb-4">
+                 @foreach (var category in _categories)
+                 {
+                     <MudSelectItem T="int" Value="@category.Id" @key="@category.Id">@category.Name</MudSelectItem>
+                 }
+             </MudSelect>
+             
+             <MudSelect T="int" Label="Сервер" @bind-Value="productForm.ServerTagId" 
+                        Variant="Variant.Outlined" 
+                        Margin="Margin.Dense"
+                        Dense="true"
+                        Color="Color.Warning"
+                        AdornmentColor="Color.Warning"
+                        AnchorOrigin="Origin.BottomCenter"
+                        TransformOrigin="Origin.TopCenter"
+                        Class="mb-4">
+                 @foreach (var server in _serverTags)
+                 {
+                     <MudSelectItem T="int" Value="@server.Id" @key="@server.Id">@server.Name</MudSelectItem>
+                 }
+             </MudSelect>
         }
 
         @if (!string.IsNullOrEmpty(errorMessage))
@@ -84,27 +90,6 @@
     private bool _loadingLookups = true;
     private List<Category> _categories = new();
     private List<ServerTag> _serverTags = new();
-    
-    // Separate tracking for dropdown selections
-    private int _selectedCategoryId
-    {
-        get => productForm.CategoryId;
-        set
-        {
-            productForm.CategoryId = value;
-            StateHasChanged();
-        }
-    }
-    
-    private int _selectedServerTagId
-    {
-        get => productForm.ServerTagId;
-        set
-        {
-            productForm.ServerTagId = value;
-            StateHasChanged();
-        }
-    }
 
     protected override async Task OnInitializedAsync()
     {

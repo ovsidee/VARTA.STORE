@@ -9,34 +9,26 @@
 
 <PageTitle>Управління Продуктами</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16 mb-16 pt-4">
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16 pt-8 animate-fade-in">
     
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-6 animate-fade-in" 
-             Style="font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px;">
-        УПРАВЛІННЯ ПРОДУКТАМИ
-    </MudText>
-
-    <div class="d-flex justify-space-between align-center mb-6">
+    <div class="d-flex justify-space-between align-center mb-8">
+        <MudText Typo="Typo.h3" Style="font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px;">
+            УПРАВЛІННЯ ПРОДУКТАМИ
+        </MudText>
         <MudButton Variant="Variant.Filled" 
-                   Color="Color.Success" 
+                   Color="Color.Warning" 
+                   Size="Size.Large"
                    StartIcon="@Icons.Material.Filled.Add"
                    OnClick="ShowCreateDialog"
-                   Class="admin-action-button">
-            СТВОРИТИ ПРОДУКТ
+                   Class="admin-button">
+            Додати Продукт
         </MudButton>
     </div>
 
     @if (_isLoading)
     {
         <MudProgressLinear Color="Color.Warning" Indeterminate="true" Class="mb-4" />
-        <MudSkeleton Height="400px" />
-    }
-    else if (products == null || products.Count == 0)
-    {
-        <MudPaper Elevation="0" Class="pa-8 text-center" Style="background: rgba(30, 30, 45, 0.5);">
-            <MudIcon Icon="@Icons.Material.Filled.Inventory" Size="Size.Large" Color="Color.Default" Class="mb-4" />
-            <MudText Typo="Typo.h6">Продуктів не знайдено.</MudText>
-        </MudPaper>
+        <MudSkeleton Height="400px" Class="rounded-lg" />
     }
     else
     {
@@ -45,53 +37,137 @@
                          Items="@products" 
                          Hover="true" 
                          Dense="true"
+                         Filterable="true"
+                         QuickFilter="@_quickFilter"
                          Elevation="0"
                          Class="admin-data-grid">
+                <ToolBarContent>
+                    <MudTextField @bind-Value="_searchString" 
+                                  Placeholder="Пошук продуктів..." 
+                                  Adornment="Adornment.Start" 
+                                  AdornmentIcon="@Icons.Material.Filled.Search" 
+                                  IconSize="Size.Medium" 
+                                  Class="mt-0"
+                                  Immediate="true"
+                                  Clearable="true"></MudTextField>
+                    <MudSpacer />
+                </ToolBarContent>
                 <Columns>
                     <PropertyColumn Property="x => x.Id" Title="ID" />
-                    <TemplateColumn Title="Зображення" CellStyle="width: 100px;">
+                    <TemplateColumn Title="Зображення" Sortable="false" Filterable="false">
                         <CellTemplate>
-                            <MudImage Src="@($"/images/products/{context.Item.ImageUrl}")" 
-                                      Alt="@context.Item.Name" 
-                                      Height="50" 
-                                      Width="50" 
-                                      ObjectFit="ObjectFit.Cover"
-                                      Class="rounded" />
+                             <MudImage Src="@($"/images/products/{context.Item.ImageUrl}")" 
+                                       Alt="@context.Item.Name" 
+                                       Height="40" 
+                                       Width="40" 
+                                       ObjectFit="ObjectFit.Cover"
+                                       Class="rounded shadow" />
                         </CellTemplate>
                     </TemplateColumn>
                     <PropertyColumn Property="x => x.Name" Title="Назва" />
-                    <TemplateColumn Title="Ціна">
+                    <TemplateColumn Title="Ціна" Sortable="true">
                         <CellTemplate>
-                            <MudChip Color="Color.Warning" Size="Size.Small" Variant="Variant.Text">
-                                @context.Item.Price ₴
-                            </MudChip>
+                             <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Text" Style="font-weight: 900;">
+                                @context.Item.Price.ToString("F2") ₴
+                             </MudChip>
                         </CellTemplate>
                     </TemplateColumn>
                     <PropertyColumn Property="x => x.CategoryName" Title="Категорія" />
                     <PropertyColumn Property="x => x.ServerTagName" Title="Сервер" />
-                    <TemplateColumn Title="Дії" CellStyle="width: 200px;">
+                    <TemplateColumn Title="Дії" Sortable="false" Filterable="false">
                         <CellTemplate>
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" 
-                                           Color="Color.Warning" 
-                                           Size="Size.Small"
-                                           OnClick="@(() => EditProduct(context.Item))"
-                                           Class="mr-2" />
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete" 
-                                           Color="Color.Error" 
-                                           Size="Size.Small"
-                                           OnClick="@(() => DeleteProduct(context.Item.Id))" />
+                            <div class="d-flex gap-2">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                               Color="Color.Primary" 
+                                               Size="Size.Small"
+                                               OnClick="@(() => EditProduct(context.Item))"
+                                               Title="Редагувати" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                               Color="Color.Error" 
+                                               Size="Size.Small"
+                                               OnClick="@(() => DeleteProduct(context.Item.Id))" 
+                                               Title="Видалити" />
+                            </div>
                         </CellTemplate>
                     </TemplateColumn>
                 </Columns>
+                <PagerContent>
+                    <MudDataGridPager T="ProductDto" />
+                </PagerContent>
             </MudDataGrid>
         </MudPaper>
     }
 
 </MudContainer>
 
+<style>
+    .admin-table-paper {
+        background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
+        border: 1px solid rgba(255,152,0,0.1);
+        backdrop-filter: blur(12px);
+        border-radius: 16px;
+    }
+
+    .admin-data-grid {
+        background: transparent !important;
+    }
+
+    .admin-button {
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .admin-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 24px rgba(255,152,0,0.4);
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    ::deep .mud-table-cell {
+        color: #e0e0e0 !important;
+        padding: 12px 16px !important;
+    }
+
+    ::deep .mud-table-row:hover {
+        background-color: rgba(255,152,0,0.05) !important;
+    }
+
+    ::deep .mud-input {
+        color: #e0e0e0 !important;
+    }
+</style>
+
 @code {
     private List<ProductDto>? products;
     private bool _isLoading = true;
+    private string _searchString = "";
+
+    private Func<ProductDto, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.CategoryName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+            
+        if (x.ServerTagName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,7 +179,7 @@
         _isLoading = true;
         try
         {
-            products = await Http.GetFromJsonAsync<List<ProductDto>>("api/products");
+            products = await Http.GetFromJsonAsync<List<ProductDto>>("api/products") ?? new();
         }
         catch (Exception ex)
         {
@@ -124,13 +200,13 @@
             CloseButton = true
         };
         
-        var dialog = await DialogService.ShowAsync<ProductFormDialog>("Новий Продукт", parameters, options);
+        var dialog = await DialogService.ShowAsync<ProductFormDialog>("Створити Продукт", parameters, options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
             await LoadProducts();
-            Snackbar.Add("Продукт успішно створено!", Severity.Success);
+            Snackbar.Add("Продукт створено успішно", Severity.Success);
         }
     }
 
@@ -149,7 +225,7 @@
         if (!result.Canceled)
         {
             await LoadProducts();
-            Snackbar.Add("Продукт успішно оновлено!", Severity.Success);
+            Snackbar.Add("Продукт оновлено успішно", Severity.Success);
         }
     }
 
@@ -157,13 +233,13 @@
     {
         var parameters = new DialogParameters
         {
-            ["ContentText"] = "Ви впевнені, що хочете видалити цей продукт? Цю дію не можна скасувати.",
+            ["ContentText"] = "Ви впевнені, що хочете видалити цей продукт? Цю дію неможливо скасувати.",
             ["ButtonText"] = "Видалити",
             ["Color"] = Color.Error
         };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small };
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Підтвердження видалення", parameters, options);
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Підтвердіть Видалення", parameters, options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
@@ -174,7 +250,7 @@
                 if (response.IsSuccessStatusCode)
                 {
                     await LoadProducts();
-                    Snackbar.Add("Продукт успішно видалено!", Severity.Success);
+                    Snackbar.Add("Продукт видалено успішно", Severity.Success);
                 }
                 else
                 {
@@ -189,43 +265,3 @@
     }
 }
 
-<style>
-    .admin-table-paper {
-        background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
-        border: 1px solid rgba(255,152,0,0.1);
-        backdrop-filter: blur(12px);
-    }
-
-    .admin-data-grid {
-        background: transparent !important;
-    }
-
-    .admin-action-button {
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-    }
-
-    .admin-action-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
-    }
-
-    .animate-fade-in {
-        animation: fadeIn 0.8s ease-out;
-    }
-
-    @@keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    ::deep .mud-table-cell {
-        color: #e0e0e0 !important;
-    }
-
-    ::deep .mud-table-row:hover {
-        background-color: rgba(255,152,0,0.05) !important;
-    }
-</style>

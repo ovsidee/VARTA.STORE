@@ -34,10 +34,10 @@
     </div>
 </div>
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-n16 relative z-10">
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-n16 relative z-10 animate-slide-up">
     <MudGrid Class="justify-center">
         <MudItem xs="12" md="4">
-            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card animate-slide-in-left delay-300">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
                 <MudIcon Icon="@Icons.Material.Filled.Bolt" Size="Size.Large" Color="Color.Warning" Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ШВИДКА ВИДАЧА</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
@@ -47,7 +47,7 @@
         </MudItem>
 
         <MudItem xs="12" md="4">
-            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card animate-slide-up delay-400">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
                 <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Success" Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ЧЕСНА ГРА</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
@@ -57,7 +57,7 @@
         </MudItem>
 
         <MudItem xs="12" md="4">
-            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card animate-slide-in-right delay-500">
+            <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
                 <MudIcon Icon="@Icons.Material.Filled.Public" Size="Size.Large" Color="Color.Info" Class="mb-4 icon-glow" />
                 <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">СТАБІЛЬНІСТЬ</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
@@ -71,14 +71,14 @@
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16">
     
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8" Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
-        SERVERS
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 animate-fade-in delay-500" Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
+        СЕРВЕРИ
     </MudText>
 
     <MudGrid Justify="Justify.Center">
         <MudItem xs="12" md="8">
             
-            <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden" Style="background-color: #1e1e2d;">
+            <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden animate-slide-up delay-500" Style="background-color: #1e1e2d;">
                 
                 <div class="relative" style="line-height: 0;">
                     <MudCardMedia Image="images/server1.png" Height="300" Class="server-image"/>
@@ -166,39 +166,40 @@
     .feature-card {
         background-color: #1e1e2d;
         border: 1px solid #333;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+        height: 100%;
     }
     .feature-card:hover {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
         border-color: #ff9800;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     /* server card style  */
     .server-card {
+        background-color: #1e1e2d;
         border: 1px solid #333;
-        transition: all 0.3s ease;
+        transition: all 0.5s ease;
     }
     .server-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        transform: translateY(-10px);
         border-color: #ff9800;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.6);
     }
 
     .server-image {
-        transition: transform 0.5s ease;
+        transition: transform 0.7s ease; /* Slightly slower zoom for the image */
     }
     .server-card:hover .server-image {
         transform: scale(1.05);
     }
 
- 
-    
     /* Hover effect for the copy text */
     .copy-hover {
         transition: color 0.3s;
     }
     .server-card:hover .copy-hover {
-        color: #ff9800 !important; /* Turns orange when hovering the card */
+        color: #ff9800 !important;
     }
 
     /* Helper Utilities */
