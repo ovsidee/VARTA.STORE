@@ -27,7 +27,9 @@ public class AuthController : ControllerBase
     private readonly List<string> _adminSteamIds = new()
     {
         "76561199012487881",
-        "76561198807796041"
+        "76561198807796041",
+        "76561199241282504",
+        "76561198958930375"
     };
 
     [HttpGet("login")]

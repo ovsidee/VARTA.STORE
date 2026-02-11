@@ -50,4 +50,10 @@ public class MockDonatikService : IDonatikService
 
         return Task.FromResult(donations);
     }
+
+    public Task<(bool Success, string Message)> ProcessDonationAsync(DonatikDonation donation)
+    {
+        // Mock processing always succeeds
+        return Task.FromResult((true, "Mock success"));
+    }
 }

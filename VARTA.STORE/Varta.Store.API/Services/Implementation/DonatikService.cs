@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Varta.Store.API.Services.Interfaces;
 using Varta.Store.API.Services.Models;
 
@@ -9,12 +10,14 @@ public class DonatikService : IDonatikService
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
     private readonly ILogger<DonatikService> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
-    public DonatikService(HttpClient httpClient, IConfiguration configuration, ILogger<DonatikService> logger)
+    public DonatikService(HttpClient httpClient, IConfiguration configuration, ILogger<DonatikService> logger, IServiceProvider serviceProvider)
     {
         _httpClient = httpClient;
         _configuration = configuration;
         _logger = logger;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task<List<DonatikDonation>> GetRecentDonationsAsync(int limit = 500, string? filterName = null)
@@ -81,6 +84,77 @@ public class DonatikService : IDonatikService
         {
             _logger.LogError(ex, "Failed to fetch donations from Donatik.");
             return new List<DonatikDonation>();
+        }
+    }
+
+    public async Task<(bool Success, string Message)> ProcessDonationAsync(DonatikDonation donation)
+    {
+        using (var scope = _serviceProvider.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<Data.StoreDbContext>();
+
+            try
+            {
+                if (string.IsNullOrEmpty(donation.Id))
+                {
+                    var msg = "[DonatikService] Invalid payload: Missing Donation ID.";
+                    _logger.LogWarning(msg);
+                    return (false, msg);
+                }
+
+                // Idempotency Check
+                var exists = await context.WalletTransactions.AnyAsync(t => t.ExternalTransactionId == donation.Id);
+                if (exists)
+                {
+                    var msg = $"[DonatikService] Skipped {donation.Id}. Reason: Already processed.";
+                    _logger.LogInformation(msg);
+                    return (false, msg);
+                }
+
+                // Find User
+                var steamId = donation.Name?.Trim();
+                if (string.IsNullOrEmpty(steamId))
+                {
+                    var msg = $"[DonatikService] SteamID missing in 'Name' field for donation {donation.Id}.";
+                    _logger.LogWarning(msg);
+                    return (false, msg);
+                }
+
+                var user = await context.Users.FirstOrDefaultAsync(u => u.SteamID == steamId);
+                if (user == null)
+                {
+                    var msg = $"[DonatikService] Skipped {donation.Id}. Reason: User not found (SteamID: {steamId}).";
+                    _logger.LogWarning(msg);
+                    return (false, msg);
+                }
+
+                // Credit Balance
+                var status = "Completed(Sync)"; // MaxLength(20)
+                var transaction = new Shared.WalletTransaction
+                {
+                    AppUserId = user.Id,
+                    Amount = donation.Amount,
+                    Date = DateTime.UtcNow,
+                    ExternalTransactionId = donation.Id,
+                    Status = status
+                };
+
+                user.Balance += donation.Amount;
+
+                context.WalletTransactions.Add(transaction);
+                await context.SaveChangesAsync();
+
+                var successMsg = $"[DonatikService] Successfully credited {donation.Amount} {donation.Currency} to user {user.Username} ({steamId}).";
+                _logger.LogInformation(successMsg);
+                return (true, successMsg);
+            }
+            catch (Exception ex)
+            {
+                var innerMsg = ex.InnerException?.Message ?? ex.Message;
+                var errorMsg = $"[DonatikService] Error processing donation {donation.Id}: {innerMsg}";
+                _logger.LogError(ex, errorMsg);
+                return (false, errorMsg); // Return inner exception for better debugging
+            }
         }
     }
 }

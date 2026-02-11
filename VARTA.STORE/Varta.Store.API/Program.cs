@@ -62,6 +62,9 @@ public class Program
             builder.Services.AddHttpClient<IDonatikService, DonatikService>();
         }
 
+        // Add Background Worker for Donatik Sync
+        builder.Services.AddHostedService<Varta.Store.API.Services.Background.DonatikSyncWorker>();
+
         // add controllers
         builder.Services.AddControllers();
 

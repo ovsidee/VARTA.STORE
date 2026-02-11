@@ -49,10 +49,9 @@
                             ПОПОВНИТИ ЧЕРЕЗ DONATIK
                         </MudButton>
 
-                        <MudButton Variant="Variant.Outlined" Color="Color.Success" FullWidth="true" 
-                                   OnClick="CheckPayment" Disabled="_checkingPayment" StartIcon="@Icons.Material.Filled.Refresh">
-                            @(_checkingPayment ? "ПЕРЕВІРКА..." : "Я ОПЛАТИВ (ПЕРЕВІРИТИ)")
-                        </MudButton>
+                        <MudAlert Severity="Severity.Info" Class="mt-2" Dense="true">
+                            Баланс зараховується автоматично протягом 1-2 хвилин після оплати.
+                        </MudAlert>
                         
                         <MudButton Variant="Variant.Text" Color="Color.Info" Class="mt-4" Href="/support">
                             Contact Support
@@ -150,7 +149,6 @@
     private UserProfileDto? _profile;
     private bool _loading = true;
     private decimal _topUpAmount = 100;
-    private bool _checkingPayment = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -182,44 +180,5 @@
         var url = $"https://vartadayz.donatik.ua?amount={_topUpAmount}&name={_profile.SteamID}&message=TopUp - {_profile.Username}";
         NavManager.NavigateTo(url, forceLoad: true); 
     }
-
-    private async Task CheckPayment()
-    {
-        _checkingPayment = true;
-        try
-        {
-            var response = await Http.PostAsJsonAsync("api/payment/check", new { Amount = _topUpAmount });
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<CheckPaymentResult>();
-                Snackbar.Add($"Успішно! Баланс поповнено на {result.AddedAmount} ₴", Severity.Success);
-                await LoadProfile(); // Refresh balance
-                
-                // Update global balance service
-                if (_profile != null)
-                {
-                    BalanceService.SetBalance(_profile.Balance);
-                }
-            }
-            else
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                Snackbar.Add($"Помилка: {error}", Severity.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-             Snackbar.Add($"Помилка зв'язку: {ex.Message}", Severity.Error);
-        }
-        finally
-        {
-            _checkingPayment = false;
-        }
-    }
-
-    public class CheckPaymentResult
-    {
-        public decimal NewBalance { get; set; }
-        public decimal AddedAmount { get; set; }
-    }
 }
+
