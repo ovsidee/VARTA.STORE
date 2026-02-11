@@ -34,7 +34,7 @@ namespace Varta.Store.API.Data
 
             // seed server tags
             modelBuilder.Entity<ServerTag>().HasData(
-                new ServerTag { Id = 1, Name = "Chernarus 3PP", IpAddress = "178.150.251.247:2307" }
+                new ServerTag { Id = 1, Name = "Chernarus 3PP", IpAddress = "178.150.251.247:2307", ImageUrl = "servers/server1.png" }
             );
 
             // seed order statuses
@@ -54,7 +54,7 @@ namespace Varta.Store.API.Data
                     Price = 120,
                     CategoryId = 1,
                     ServerTagId = 1,
-                    ImageUrl = "small_kit.png",
+                    ImageUrl = "buildingSets/smallConstructionKit.png",
                     Description = "Код. лок, точильний камінь, лопата, молоток, 4 колоди, топорик, 20 дошок, плоскогубці, пилка, металевий дріт, door kit, пачка цв'яхів"
                 },
                 new Product
@@ -64,7 +64,7 @@ namespace Varta.Store.API.Data
                     Price = 250,
                     CategoryId = 1,
                     ServerTagId = 1,
-                    ImageUrl = "medium_kit.png",
+                    ImageUrl = "buildingSets/mediumConstructionKit.png",
                     Description = "3 код. лока, точильний камінь, лопата, молоток, 12 колод, топорик, 60 дошок, плоскогубці, 2 пилки, 3 металевих дрота, door kit, 3 пачки цв'яхів"
                 },
                 new Product
@@ -74,18 +74,8 @@ namespace Varta.Store.API.Data
                     Price = 400,
                     CategoryId = 1,
                     ServerTagId = 1,
-                    ImageUrl = "large_kit.png",
+                    ImageUrl = "buildingSets/largeСonstructionKit.png",
                     Description = "5 код. локів, 2 бочки, 2 точильних камня, 2 лопати, 2 молотка, 20 колод, 2 топорика, 100 дошок, 2 плоскогубців, 2 пилки, 5 металевих дротів, door kit, 5 пачки цв'яхів"
-                },
-                new Product
-                {
-                    Id = 4,
-                    Name = "Набір для флагштоку",
-                    Price = 150,
-                    CategoryId = 1,
-                    ServerTagId = 1,
-                    ImageUrl = "flag_kit.png",
-                    Description = "32 каменя, 10 колод, упаковка цвяхів, мотузка, металевий дріт, молоток, кувалда, кирка, прапор 'DayZ'"
                 },
 
                 // Запчастини (Id: 2)
@@ -114,7 +104,7 @@ namespace Varta.Store.API.Data
                     Price = 150,
                     CategoryId = 3,
                     ServerTagId = 1,
-                    ImageUrl = "black_set.png",
+                    ImageUrl = "other/blackSet.png",
                     Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу"
                 },
                 new Product
@@ -124,23 +114,22 @@ namespace Varta.Store.API.Data
                     Price = 150,
                     CategoryId = 3,
                     ServerTagId = 1,
-                    ImageUrl = "green_set.png",
+                    ImageUrl = "other/greenSet.png",
                     Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу"
                 },
 
                 // Фурнітура (Id: 4)
-                new Product { Id = 23, Name = "Бочка", Price = 60, CategoryId = 4, ServerTagId = 1, ImageUrl = "barrel.png", Description = "Для зберігання речей" },
-                new Product { Id = 24, Name = "Ящик", Price = 15, CategoryId = 4, ServerTagId = 1, ImageUrl = "crate.png", Description = "Дерев'яний ящик" },
-                new Product { Id = 25, Name = "Військова палатка", Price = 50, CategoryId = 4, ServerTagId = 1, ImageUrl = "mil_tent.png", Description = "Великий намет" },
-                new Product { Id = 26, Name = "Туристична палатка", Price = 30, CategoryId = 4, ServerTagId = 1, ImageUrl = "camping_tent.png", Description = "Середній намет" },
-                new Product { Id = 27, Name = "Скриня", Price = 25, CategoryId = 4, ServerTagId = 1, ImageUrl = "seachest.png", Description = "Sea Chest" },
-                new Product { Id = 28, Name = "Стійка для зброї", Price = 80, CategoryId = 4, ServerTagId = 1, ImageUrl = "gunrack.png", Description = "10 слотів під зброю" },
+                new Product { Id = 23, Name = "Бочка", Price = 60, CategoryId = 4, ServerTagId = 1, ImageUrl = "furniture/barrel.png", Description = "Для зберігання речей" },
+                new Product { Id = 24, Name = "Ящик", Price = 15, CategoryId = 4, ServerTagId = 1, ImageUrl = "furniture/box.png", Description = "Дерев'яний ящик" },
+                new Product { Id = 25, Name = "Військова палатка", Price = 50, CategoryId = 4, ServerTagId = 1, ImageUrl = "furniture/militaryTent.png", Description = "Великий намет" },
+                new Product { Id = 26, Name = "Туристична палатка", Price = 30, CategoryId = 4, ServerTagId = 1, ImageUrl = "furniture/touristTent.png", Description = "Середній намет" },
+                new Product { Id = 27, Name = "Скриня", Price = 25, CategoryId = 4, ServerTagId = 1, ImageUrl = "furniture/chest.png", Description = "Sea Chest" },
 
                 // Набори для ремонту (Id: 5)
-                new Product { Id = 29, Name = "Набір для чистки зброї", Price = 50, CategoryId = 5, ServerTagId = 1, ImageUrl = "cleaning_kit.png", Description = "Weapon Cleaning Kit" },
-                new Product { Id = 30, Name = "Швейний набір", Price = 20, CategoryId = 5, ServerTagId = 1, ImageUrl = "sewing_kit.png", Description = "Sewing Kit" },
-                new Product { Id = 31, Name = "Набір інструментів скорняку", Price = 20, CategoryId = 5, ServerTagId = 1, ImageUrl = "leather_kit.png", Description = "Leather Sewing Kit" },
-                new Product { Id = 32, Name = "Набір для ремонту шин", Price = 20, CategoryId = 5, ServerTagId = 1, ImageUrl = "tire_kit.png", Description = "Tire Repair Kit" }
+                new Product { Id = 29, Name = "Набір для чистки зброї", Price = 50, CategoryId = 5, ServerTagId = 1, ImageUrl = "repairKits/gunCleaningKit.png", Description = "Weapon Cleaning Kit" },
+                new Product { Id = 30, Name = "Швейний набір", Price = 20, CategoryId = 5, ServerTagId = 1, ImageUrl = "repairKits/sewingKit.png", Description = "Sewing Kit" },
+                new Product { Id = 31, Name = "Набір інструментів скорняку", Price = 20, CategoryId = 5, ServerTagId = 1, ImageUrl = "repairKits/furriersSet.png", Description = "Leather Sewing Kit" },
+                new Product { Id = 32, Name = "Набір для ремонту шин", Price = 20, CategoryId = 5, ServerTagId = 1, ImageUrl = "repairKits/tireRepairKit.png", Description = "Tire Repair Kit" }
             );
         }
     }

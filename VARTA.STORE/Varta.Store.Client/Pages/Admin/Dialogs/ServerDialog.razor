@@ -5,20 +5,23 @@
 
 <MudDialog>
     <DialogContent>
-        <MudTextField T="string" Label="Server Name" @bind-Value="Server.Name" Required="true" RequiredError="Name is required" Class="mb-4"/>
-        <MudTextField T="string" Label="IP Address:Port" @bind-Value="Server.IpAddress" HelperText="e.g. 1.1.1.1:2302" Class="mb-4"/>
+        <MudTextField T="string" Label="Server Name" @bind-Value="Server.Name" Required="true"
+            RequiredError="Name is required" Class="mb-4" />
+        <MudTextField T="string" Label="IP Address:Port" @bind-Value="Server.IpAddress" HelperText="e.g. 1.1.1.1:2302"
+            Class="mb-4" />
 
         <!-- Image Upload Section -->
         <div class="d-flex align-center gap-4 mb-4">
             <div class="d-flex flex-column gap-2 flex-grow-1">
                 <MudTextField @bind-Value="Server.ImageUrl" Label="Шлях до зображення" Variant="Variant.Outlined"
-                              Margin="Margin.Dense" ReadOnly="true" HelperText="Завантажте файл або вкажіть шлях вручну" />
+                    Margin="Margin.Dense"
+                    HelperText="Завантажте файл або вкажіть шлях вручну (напр. servers/server1.png)" />
             </div>
 
             <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
                 <ActivatorContent>
                     <MudButton Variant="Variant.Filled" Color="Color.Warning"
-                               StartIcon="@Icons.Material.Filled.CloudUpload">
+                        StartIcon="@Icons.Material.Filled.CloudUpload">
                         Завантажити
                     </MudButton>
                 </ActivatorContent>
@@ -29,7 +32,7 @@
         {
             <div class="d-flex justify-center mb-4">
                 <MudImage Src="@($"images/{Server.ImageUrl}")" Height="150" ObjectFit="ObjectFit.Contain"
-                          Class="rounded-lg border pa-2" />
+                    Class="rounded-lg border pa-2" />
             </div>
         }
 
@@ -99,10 +102,17 @@
 
         try
         {
+            Console.WriteLine($"[DEBUG] Submit - Server.Name: {Server.Name}");
+            Console.WriteLine($"[DEBUG] Submit - Server.IpAddress: {Server.IpAddress}");
+            Console.WriteLine($"[DEBUG] Submit - Server.ImageUrl: {Server.ImageUrl}");
+            Console.WriteLine($"[DEBUG] Submit - Server.Id: {Server.Id}");
+
             if (Server.Id == 0)
             {
                 // Create
                 var response = await Http.PostAsJsonAsync("api/servertags", Server);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"[DEBUG] Create response: {response.StatusCode} - {responseBody}");
                 if (response.IsSuccessStatusCode)
                 {
                     Snackbar.Add("Server created successfully", Severity.Success);
@@ -110,13 +120,15 @@
                 }
                 else
                 {
-                    Snackbar.Add("Failed to create server", Severity.Error);
+                    Snackbar.Add($"Failed to create server: {responseBody}", Severity.Error);
                 }
             }
             else
             {
                 // Update
                 var response = await Http.PutAsJsonAsync($"api/servertags/{Server.Id}", Server);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"[DEBUG] Update response: {response.StatusCode} - {responseBody}");
                 if (response.IsSuccessStatusCode)
                 {
                     Snackbar.Add("Server updated successfully", Severity.Success);
@@ -124,16 +136,16 @@
                 }
                 else
                 {
-                    Snackbar.Add("Failed to update server", Severity.Error);
+                    Snackbar.Add($"Failed to update server: {responseBody}", Severity.Error);
                 }
             }
         }
         catch (Exception ex)
         {
-             Snackbar.Add($"Error saving server: {ex.Message}", Severity.Error);
+            Snackbar.Add($"Error saving server: {ex.Message}", Severity.Error);
         }
     }
-    
+
     private class ImageUploadResult
     {
         public string ImageUrl { get; set; } = string.Empty;

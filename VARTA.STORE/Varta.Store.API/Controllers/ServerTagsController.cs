@@ -12,11 +12,13 @@ public class ServerTagsController : ControllerBase
 {
     private readonly StoreDbContext _context;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<ServerTagsController> _logger;
 
-    public ServerTagsController(StoreDbContext context, IConfiguration configuration)
+    public ServerTagsController(StoreDbContext context, IConfiguration configuration, ILogger<ServerTagsController> logger)
     {
         _context = context;
         _configuration = configuration;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -43,8 +45,14 @@ public class ServerTagsController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<ServerTag>> CreateServerTag(ServerTag serverTag, CancellationToken ct)
     {
+        _logger.LogWarning("[DEBUG] CreateServerTag - Name: {Name}, IpAddress: {Ip}, ImageUrl: {ImageUrl}",
+            serverTag.Name, serverTag.IpAddress, serverTag.ImageUrl);
+
         _context.ServerTags.Add(serverTag);
         await _context.SaveChangesAsync(ct);
+
+        _logger.LogWarning("[DEBUG] SaveChanges done, new Id: {Id}, ImageUrl after save: {ImageUrl}",
+            serverTag.Id, serverTag.ImageUrl);
 
         return CreatedAtAction(nameof(GetServerTag), new { id = serverTag.Id }, serverTag);
     }
@@ -53,6 +61,9 @@ public class ServerTagsController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateServerTag(int id, ServerTag serverTag, CancellationToken ct)
     {
+        _logger.LogWarning("[DEBUG] UpdateServerTag - Id: {Id}, Name: {Name}, ImageUrl: {ImageUrl}",
+            serverTag.Id, serverTag.Name, serverTag.ImageUrl);
+
         if (id != serverTag.Id)
         {
             return BadRequest();

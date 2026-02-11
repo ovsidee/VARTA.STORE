@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Varta.Store.API.Data;
@@ -11,9 +12,11 @@ using Varta.Store.API.Data;
 namespace Varta.Store.API.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    partial class StoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260211194701_UpdateServerTagSeedImageUrl")]
+    partial class UpdateServerTagSeedImageUrl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,7 +255,7 @@ namespace Varta.Store.API.Migrations
                             Id = 1,
                             CategoryId = 1,
                             Description = "Код. лок, точильний камінь, лопата, молоток, 4 колоди, топорик, 20 дошок, плоскогубці, пилка, металевий дріт, door kit, пачка цв'яхів",
-                            ImageUrl = "buildingSets/smallConstructionKit.png",
+                            ImageUrl = "small_kit.png",
                             Name = "Маленький буд. набір",
                             Price = 120m,
                             ServerTagId = 1
@@ -262,7 +265,7 @@ namespace Varta.Store.API.Migrations
                             Id = 2,
                             CategoryId = 1,
                             Description = "3 код. лока, точильний камінь, лопата, молоток, 12 колод, топорик, 60 дошок, плоскогубці, 2 пилки, 3 металевих дрота, door kit, 3 пачки цв'яхів",
-                            ImageUrl = "buildingSets/mediumConstructionKit.png",
+                            ImageUrl = "medium_kit.png",
                             Name = "Середній буд. набір",
                             Price = 250m,
                             ServerTagId = 1
@@ -272,9 +275,19 @@ namespace Varta.Store.API.Migrations
                             Id = 3,
                             CategoryId = 1,
                             Description = "5 код. локів, 2 бочки, 2 точильних камня, 2 лопати, 2 молотка, 20 колод, 2 топорика, 100 дошок, 2 плоскогубців, 2 пилки, 5 металевих дротів, door kit, 5 пачки цв'яхів",
-                            ImageUrl = "buildingSets/largeСonstructionKit.png",
+                            ImageUrl = "large_kit.png",
                             Name = "Великий буд. набір",
                             Price = 400m,
+                            ServerTagId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 1,
+                            Description = "32 каменя, 10 колод, упаковка цвяхів, мотузка, металевий дріт, молоток, кувалда, кирка, прапор 'DayZ'",
+                            ImageUrl = "flag_kit.png",
+                            Name = "Набір для флагштоку",
+                            Price = 150m,
                             ServerTagId = 1
                         },
                         new
@@ -442,7 +455,7 @@ namespace Varta.Store.API.Migrations
                             Id = 21,
                             CategoryId = 3,
                             Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу",
-                            ImageUrl = "other/blackSet.png",
+                            ImageUrl = "black_set.png",
                             Name = "Чорний сет",
                             Price = 150m,
                             ServerTagId = 1
@@ -452,7 +465,7 @@ namespace Varta.Store.API.Migrations
                             Id = 22,
                             CategoryId = 3,
                             Description = "30 днів. 69 слотів + мисливський ніж + банка консервованих бобів + банка квасу",
-                            ImageUrl = "other/greenSet.png",
+                            ImageUrl = "green_set.png",
                             Name = "Зелений сет",
                             Price = 150m,
                             ServerTagId = 1
@@ -462,7 +475,7 @@ namespace Varta.Store.API.Migrations
                             Id = 23,
                             CategoryId = 4,
                             Description = "Для зберігання речей",
-                            ImageUrl = "furniture/barrel.png",
+                            ImageUrl = "barrel.png",
                             Name = "Бочка",
                             Price = 60m,
                             ServerTagId = 1
@@ -472,7 +485,7 @@ namespace Varta.Store.API.Migrations
                             Id = 24,
                             CategoryId = 4,
                             Description = "Дерев'яний ящик",
-                            ImageUrl = "furniture/box.png",
+                            ImageUrl = "crate.png",
                             Name = "Ящик",
                             Price = 15m,
                             ServerTagId = 1
@@ -482,7 +495,7 @@ namespace Varta.Store.API.Migrations
                             Id = 25,
                             CategoryId = 4,
                             Description = "Великий намет",
-                            ImageUrl = "furniture/militaryTent.png",
+                            ImageUrl = "mil_tent.png",
                             Name = "Військова палатка",
                             Price = 50m,
                             ServerTagId = 1
@@ -492,7 +505,7 @@ namespace Varta.Store.API.Migrations
                             Id = 26,
                             CategoryId = 4,
                             Description = "Середній намет",
-                            ImageUrl = "furniture/touristTent.png",
+                            ImageUrl = "camping_tent.png",
                             Name = "Туристична палатка",
                             Price = 30m,
                             ServerTagId = 1
@@ -502,9 +515,19 @@ namespace Varta.Store.API.Migrations
                             Id = 27,
                             CategoryId = 4,
                             Description = "Sea Chest",
-                            ImageUrl = "furniture/chest.png",
+                            ImageUrl = "seachest.png",
                             Name = "Скриня",
                             Price = 25m,
+                            ServerTagId = 1
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CategoryId = 4,
+                            Description = "10 слотів під зброю",
+                            ImageUrl = "gunrack.png",
+                            Name = "Стійка для зброї",
+                            Price = 80m,
                             ServerTagId = 1
                         },
                         new
@@ -512,7 +535,7 @@ namespace Varta.Store.API.Migrations
                             Id = 29,
                             CategoryId = 5,
                             Description = "Weapon Cleaning Kit",
-                            ImageUrl = "repairKits/gunCleaningKit.png",
+                            ImageUrl = "cleaning_kit.png",
                             Name = "Набір для чистки зброї",
                             Price = 50m,
                             ServerTagId = 1
@@ -522,7 +545,7 @@ namespace Varta.Store.API.Migrations
                             Id = 30,
                             CategoryId = 5,
                             Description = "Sewing Kit",
-                            ImageUrl = "repairKits/sewingKit.png",
+                            ImageUrl = "sewing_kit.png",
                             Name = "Швейний набір",
                             Price = 20m,
                             ServerTagId = 1
@@ -532,7 +555,7 @@ namespace Varta.Store.API.Migrations
                             Id = 31,
                             CategoryId = 5,
                             Description = "Leather Sewing Kit",
-                            ImageUrl = "repairKits/furriersSet.png",
+                            ImageUrl = "leather_kit.png",
                             Name = "Набір інструментів скорняку",
                             Price = 20m,
                             ServerTagId = 1
@@ -542,7 +565,7 @@ namespace Varta.Store.API.Migrations
                             Id = 32,
                             CategoryId = 5,
                             Description = "Tire Repair Kit",
-                            ImageUrl = "repairKits/tireRepairKit.png",
+                            ImageUrl = "tire_kit.png",
                             Name = "Набір для ремонту шин",
                             Price = 20m,
                             ServerTagId = 1
