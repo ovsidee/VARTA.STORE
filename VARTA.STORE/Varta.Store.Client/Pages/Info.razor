@@ -1,0 +1,158 @@
+@page "/info"
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
+
+<PageTitle>Інфо - VARTA</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16 animate-slide-up" Style="padding-top: 35px;">
+
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-2" Style="font-weight: 900; text-transform: uppercase; letter-spacing: 3px;">
+        VARTA
+    </MudText>
+    <MudText Typo="Typo.body1" Align="Align.Center" Class="mud-text-secondary mb-10" Style="max-width: 550px; margin: 0 auto;">
+        Проєкт, створений гравцями для гравців. Ось що нас вирізняє.
+    </MudText>
+
+    <MudGrid Spacing="6" Class="justify-center">
+
+        @* Card 1: Активна спільнота *@
+        <MudItem xs="12" md="6" lg="4">
+            <MudPaper Class="pa-8 d-flex flex-column align-center info-card" Elevation="4">
+                <div class="info-icon-circle info-icon-primary">
+                    <MudIcon Icon="@Icons.Material.Filled.Groups" Style="font-size: 2.2rem; color: white;" />
+                </div>
+                <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
+                    Активна спільнота
+                </MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
+                    Сотні гравців щодня обирають VARTA. Тут ти знайдеш напарників для рейдів, торгівлі та спільного виживання. Наша спільнота — це не просто сервер, а ціла екосистема.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        @* Card 2: Надійна підтримка *@
+        <MudItem xs="12" md="6" lg="4">
+            <MudPaper Class="pa-8 d-flex flex-column align-center info-card" Elevation="4">
+                <div class="info-icon-circle info-icon-success">
+                    <MudIcon Icon="@Icons.Material.Filled.SupportAgent" Style="font-size: 2.2rem; color: white;" />
+                </div>
+                <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
+                    Надійна підтримка
+                </MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
+                    Наша команда адміністраторів працює цілодобово. Будь-яке питання — від технічних проблем до ігрових суперечок — вирішується швидко та справедливо через Discord або пошту.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        @* Card 3: Автоматизовані платежі *@
+        <MudItem xs="12" md="6" lg="4">
+            <MudPaper Class="pa-8 d-flex flex-column align-center info-card" Elevation="4">
+                <div class="info-icon-circle info-icon-warning">
+                    <MudIcon Icon="@Icons.Material.Filled.Payment" Style="font-size: 2.2rem; color: white;" />
+                </div>
+                <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
+                    Автоматизовані платежі
+                </MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
+                    Оплата проходить миттєво та безпечно. Після підтвердження транзакції товар з'являється в твоєму інвентарі автоматично — жодного ручного втручання, жодних затримок.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        @* Card 4: Швидкість реакції *@
+        <MudItem xs="12" md="6" lg="4">
+            <MudPaper Class="pa-8 d-flex flex-column align-center info-card" Elevation="4">
+                <div class="info-icon-circle info-icon-info">
+                    <MudIcon Icon="@Icons.Material.Filled.Speed" Style="font-size: 2.2rem; color: white;" />
+                </div>
+                <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
+                    Швидкість реакції
+                </MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
+                    Кожен тікет, кожне повідомлення — ми реагуємо оперативно. Середній час відповіді адміністрації — до 30 хвилин. Твій комфорт у грі — наш головний пріоритет.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        @* Card 5: Інноваційні рішення *@
+        <MudItem xs="12" md="6" lg="4">
+            <MudPaper Class="pa-8 d-flex flex-column align-center info-card" Elevation="4">
+                <div class="info-icon-circle info-icon-secondary">
+                    <MudIcon Icon="@Icons.Material.Filled.Lightbulb" Style="font-size: 2.2rem; color: white;" />
+                </div>
+                <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
+                    Інноваційні рішення
+                </MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
+                    Власна система видачі, унікальний магазин та інтеграція зі Steam — ми постійно впроваджуємо нові технології, щоб зробити твій досвід на VARTA максимально зручним.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+        @* Card 6: Якість і стабільність *@
+        <MudItem xs="12" md="6" lg="4">
+            <MudPaper Class="pa-8 d-flex flex-column align-center info-card" Elevation="4">
+                <div class="info-icon-circle info-icon-error">
+                    <MudIcon Icon="@Icons.Material.Filled.Verified" Style="font-size: 2.2rem; color: white;" />
+                </div>
+                <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
+                    Якість і стабільність
+                </MudText>
+                <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
+                    Виділений сервер у Європі з аптаймом 99.9%. Регулярні оновлення, оптимізований лут та стабільний пінг — все для того, щоб ПВП та рейди приносили лише задоволення.
+                </MudText>
+            </MudPaper>
+        </MudItem>
+
+    </MudGrid>
+</MudContainer>
+
+<style>
+    /* === CARDS === */
+    .info-card {
+        background-color: #1e1e2d;
+        border: 1px solid #333;
+        border-radius: 16px;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+        height: 100%;
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        border-color: #ff9800;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* === ICON CIRCLES === */
+    .info-icon-circle {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+    }
+
+    .info-card:hover .info-icon-circle {
+        transform: scale(1.1);
+    }
+
+    .info-icon-primary   { background: linear-gradient(135deg, #1565c0, #42a5f5); box-shadow: 0 4px 15px rgba(21, 101, 192, 0.35); }
+    .info-icon-success   { background: linear-gradient(135deg, #2e7d32, #66bb6a); box-shadow: 0 4px 15px rgba(46, 125, 50, 0.35); }
+    .info-icon-warning   { background: linear-gradient(135deg, #e65100, #ff9800); box-shadow: 0 4px 15px rgba(230, 81, 0, 0.35); }
+    .info-icon-info      { background: linear-gradient(135deg, #00838f, #26c6da); box-shadow: 0 4px 15px rgba(0, 131, 143, 0.35); }
+    .info-icon-secondary { background: linear-gradient(135deg, #6a1b9a, #ab47bc); box-shadow: 0 4px 15px rgba(106, 27, 154, 0.35); }
+    .info-icon-error     { background: linear-gradient(135deg, #b71c1c, #ef5350); box-shadow: 0 4px 15px rgba(183, 28, 28, 0.35); }
+
+    /* === ANIMATIONS === */
+    .animate-slide-up {
+        animation: slideUp 0.8s ease-out;
+    }
+
+    @@keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

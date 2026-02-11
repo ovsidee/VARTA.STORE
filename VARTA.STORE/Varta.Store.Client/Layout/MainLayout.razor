@@ -18,17 +18,20 @@
 <MudLayout>
     <MudAppBar Elevation="0" Fixed="true" Class="blur-navbar px-8" Style="z-index: 2000;">
         <MudIcon Icon="@Icons.Material.Filled.Shield" Color="Color.Warning" Size="Size.Large" Class="mr-2"/>
-        <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px; cursor: pointer;"
+        <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px; cursor: pointer; margin-right: 60px;"
                  @onclick='() => NavManager.NavigateTo("/")'>
             VARTA
         </MudText>
-
-        <MudSpacer />
 
         <MudHidden Breakpoint="Breakpoint.MdAndDown">
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
                        OnClick='() => NavManager.NavigateTo("/")'>
                 ГОЛОВНА
+            </MudButton>
+
+            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
+                       OnClick='() => NavManager.NavigateTo("/info")'>
+                ІНФО
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
@@ -40,6 +43,8 @@
                        OnClick='() => NavManager.NavigateTo("/store")'>
                 МАГАЗИН
             </MudButton>
+
+            <MudSpacer />
 
             <AuthorizeView Roles="Admin">
                 <MudButton Variant="Variant.Text" Color="Color.Warning" Class="nav-link mx-2"
