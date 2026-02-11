@@ -9,12 +9,9 @@
 <PageTitle>Деталі Користувача</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16 mb-16 pt-4">
-    
-    <MudButton Variant="Variant.Text" 
-               StartIcon="@Icons.Material.Filled.ArrowBack" 
-               Color="Color.Default"
-               OnClick="GoBack"
-               Class="mb-6">
+
+    <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.ArrowBack" Color="Color.Default"
+        OnClick="GoBack" Class="mb-6">
         Назад до списку
     </MudButton>
 
@@ -46,16 +43,19 @@
                     <MudGrid>
                         <MudItem xs="12" sm="6">
                             <div class="d-flex align-center mb-2">
-                                <MudIcon Icon="@Icons.Custom.Brands.Steam" Color="Color.Info" Size="Size.Small" Class="mr-2" />
+                                <MudIcon Icon="@Icons.Custom.Brands.Steam" Color="Color.Info" Size="Size.Small"
+                                    Class="mr-2" />
                                 <MudText Typo="Typo.body2" Style="color: #9e9eae;">SteamID:</MudText>
                                 <MudText Typo="Typo.body1" Class="ml-2">@user.SteamID</MudText>
                             </div>
                         </MudItem>
                         <MudItem xs="12" sm="6">
                             <div class="d-flex align-center mb-2">
-                                <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" Color="Color.Warning" Size="Size.Small" Class="mr-2" />
+                                <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" Color="Color.Warning"
+                                    Size="Size.Small" Class="mr-2" />
                                 <MudText Typo="Typo.body2" Style="color: #9e9eae;">Баланс:</MudText>
-                                <MudChip T="string" Color="Color.Warning" Size="Size.Small" Class="ml-2">@user.Balance.ToString("F2") ₴</MudChip>
+                                <MudChip T="string" Color="Color.Warning" Size="Size.Small" Class="ml-2">
+                                    @user.Balance.ToString("F2") ₴</MudChip>
                             </div>
                         </MudItem>
                     </MudGrid>
@@ -78,12 +78,8 @@
         else
         {
             <MudPaper Elevation="25" Class="pa-6 mb-6 admin-table-paper mud-theme-dark">
-                <MudDataGrid T="WalletTransactionDto" 
-                             Items="@user.Transactions" 
-                             Hover="true" 
-                             Dense="true"
-                             Elevation="0"
-                             Class="admin-data-grid">
+                <MudDataGrid T="WalletTransactionDto" Items="@user.Transactions" Hover="true" Dense="true" Elevation="0"
+                    Class="admin-data-grid">
                     <Columns>
                         <PropertyColumn Property="x => x.Id" Title="ID" />
                         <TemplateColumn Title="Сума">
@@ -144,23 +140,10 @@
                         </MudGrid>
                     </div>
                     <div class="pa-4">
-                        <MudDataGrid T="OrderProductDto" 
-                                     Items="@order.Items" 
-                                     Hover="true" 
-                                     Dense="true"
-                                     Elevation="0"
-                                     Class="admin-data-grid">
+                        <MudDataGrid T="OrderProductDto" Items="@order.Items" Hover="true" Dense="true" Elevation="0"
+                            Class="admin-data-grid">
                             <Columns>
-                                <TemplateColumn Title="Зображення" Sortable="false">
-                                    <CellTemplate>
-                                        <MudImage Src="@($"/images/products/{context.Item.ImageUrl}")" 
-                                                  Alt="@context.Item.ProductName" 
-                                                  Height="40" 
-                                                  Width="40" 
-                                                  ObjectFit="ObjectFit.Cover"
-                                                  Class="rounded" />
-                                    </CellTemplate>
-                                </TemplateColumn>
+
                                 <PropertyColumn Property="x => x.ProductName" Title="Продукт" />
                                 <TemplateColumn Title="Ціна">
                                     <CellTemplate>
@@ -194,7 +177,7 @@
 @code {
     [Parameter]
     public int UserId { get; set; }
-    
+
     private UserProfileDto? user;
     private bool _isLoading = true;
 
@@ -239,25 +222,25 @@
 <style>
     .user-info-card {
         background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
-        border: 1px solid rgba(255,152,0,0.1);
+        border: 1px solid rgba(255, 152, 0, 0.1);
         backdrop-filter: blur(12px);
     }
 
     .admin-table-paper {
         background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
-        border: 1px solid rgba(255,152,0,0.1);
+        border: 1px solid rgba(255, 152, 0, 0.1);
         backdrop-filter: blur(12px);
     }
 
     .order-card {
         background: linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 35, 0.95) 100%);
-        border: 1px solid rgba(255,152,0,0.1);
+        border: 1px solid rgba(255, 152, 0, 0.1);
         backdrop-filter: blur(12px);
         transition: all 0.3s ease;
     }
 
     .order-card:hover {
-        border-color: rgba(255,152,0,0.3);
+        border-color: rgba(255, 152, 0, 0.3);
         transform: translateY(-2px);
     }
 
@@ -270,6 +253,6 @@
     }
 
     ::deep .mud-table-row:hover {
-        background-color: rgba(255,152,0,0.05) !important;
+        background-color: rgba(255, 152, 0, 0.05) !important;
     }
 </style>

@@ -38,6 +38,12 @@ services:
       # Donatik Configuration
       Donatik__Token: ${DONATIK_TOKEN}
       Donatik__UseMock: "false" 
+      
+      # Location to save images inside the container
+      Storage__ImagesPath: "/app/images/products"
+
+    volumes:
+      - product_images:/app/images/products
 
   client:
     build:
@@ -51,6 +57,9 @@ services:
       - "7120:80"
     depends_on:
       - api
+    volumes:
+      - product_images:/usr/share/nginx/html/images/products
 
 volumes:
   postgres_data:
+  product_images:

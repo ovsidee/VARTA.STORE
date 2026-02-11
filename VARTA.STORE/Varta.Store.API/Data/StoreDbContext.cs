@@ -34,7 +34,7 @@ namespace Varta.Store.API.Data
 
             // seed server tags
             modelBuilder.Entity<ServerTag>().HasData(
-                new ServerTag { Id = 1, Name = "Chernarus 3PP", IpAddress = "178.150.251.247:2307"}
+                new ServerTag { Id = 1, Name = "Chernarus 3PP", IpAddress = "178.150.251.247:2307" }
             );
 
             // seed order statuses
@@ -90,7 +90,7 @@ namespace Varta.Store.API.Data
 
                 // Запчастини (Id: 2)
                 new Product { Id = 5, Name = "Радіатор", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "radiator.png", Description = "Автомобільний радіатор" },
-                new Product { Id = 6, Name = "Свічка Запалювання", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "sparkplug.png", Description = "Для бензинових двигунів" },
+                new Product { Id = 6, Name = "Свічка Запалювання", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "products/candle.png", Description = "Для бензинових двигунів" },
                 new Product { Id = 7, Name = "Свічка Розжарення", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "glowplug.png", Description = "Для дизельних двигунів" },
                 new Product { Id = 8, Name = "Акумулятор до V3S", Price = 60, CategoryId = 2, ServerTagId = 1, ImageUrl = "battery_truck.png", Description = "Вантажний акумулятор" },
                 new Product { Id = 9, Name = "Акумулятор 12В", Price = 50, CategoryId = 2, ServerTagId = 1, ImageUrl = "battery_car.png", Description = "Автомобільний акумулятор" },

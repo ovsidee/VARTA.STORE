@@ -11,10 +11,12 @@ namespace Varta.Store.API.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
+    private readonly IConfiguration _configuration;
 
-    public ProductsController(IProductService productService)
+    public ProductsController(IProductService productService, IConfiguration configuration)
     {
         _productService = productService;
+        _configuration = configuration;
     }
 
     [HttpGet]
@@ -77,6 +79,61 @@ public class ProductsController : ControllerBase
 
         if (result) return Ok();
         return NotFound();
+    }
+
+    [HttpPost("upload-image")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UploadImage(IFormFile file, CancellationToken cancellationToken)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("Файл не обрано");
+
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+
+        if (!allowedExtensions.Contains(extension))
+            return BadRequest("Недопустимий формат файлу. Дозволені: .jpg, .jpeg, .png, .webp, .gif");
+
+        if (file.Length > 5 * 1024 * 1024) // 5MB
+            return BadRequest("Розмір файлу перевищує 5MB");
+
+        try
+        {
+            var imagesPath = _configuration["Storage:ImagesPath"];
+            string targetFolder;
+
+            if (string.IsNullOrEmpty(imagesPath))
+            {
+                // Fallback default
+                var apiRoot = Directory.GetCurrentDirectory();
+                targetFolder = Path.Combine(Directory.GetParent(apiRoot)?.FullName ?? "", "Varta.Store.Client", "wwwroot", "images", "products");
+            }
+            else
+            {
+                // Handle both absolute paths (Docker) and relative paths (Dev)
+                targetFolder = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), imagesPath));
+            }
+
+            if (!Directory.Exists(targetFolder))
+            {
+                Directory.CreateDirectory(targetFolder);
+            }
+
+            var fileName = $"img_{Guid.NewGuid().ToString("N")[..8]}_{file.FileName}";
+            var filePath = Path.Combine(targetFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream, cancellationToken);
+            }
+
+            // Return relative path for DB
+            return Ok(new { imageUrl = $"products/{fileName}" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Помилка завантаження: {ex.Message}");
+        }
     }
 
 }

@@ -1,35 +1,44 @@
 @using Varta.Store.Shared.DTO
 @using Varta.Store.Shared
+@using System.Net.Http.Headers
 @inject HttpClient Http
+@inject ISnackbar Snackbar
 
 <MudDialog>
     <DialogContent>
-        <MudTextField @bind-Value="productForm.Name" 
-                      Label="Назва" 
-                      Variant="Variant.Outlined" 
-                      Margin="Margin.Dense"
-                      Class="mb-4" />
-        
-        <MudTextField @bind-Value="productForm.Description" 
-                      Label="Опис" 
-                      Variant="Variant.Outlined" 
-                      Lines="3"
-                      Margin="Margin.Dense"
-                      Class="mb-4" />
-        
-        <MudNumericField @bind-Value="productForm.Price" 
-                         Label="Ціна (₴)" 
-                         Variant="Variant.Outlined" 
-                         Margin="Margin.Dense"
-                         Min="0m"
-                         Class="mb-4" />
-        
-        <MudTextField @bind-Value="productForm.ImageUrl" 
-                      Label="Назва файлу зображення" 
-                      Variant="Variant.Outlined" 
-                      Margin="Margin.Dense"
-                      HelperText="Наприклад: product.png"
-                      Class="mb-4" />
+        <MudTextField @bind-Value="productForm.Name" Label="Назва" Variant="Variant.Outlined" Margin="Margin.Dense"
+            Class="mb-4" />
+
+        <MudTextField @bind-Value="productForm.Description" Label="Опис" Variant="Variant.Outlined" Lines="3"
+            Margin="Margin.Dense" Class="mb-4" />
+
+        <MudNumericField @bind-Value="productForm.Price" Label="Ціна (₴)" Variant="Variant.Outlined"
+            Margin="Margin.Dense" Min="0m" Class="mb-4" />
+
+        <!-- Image Upload Section -->
+        <div class="d-flex align-center gap-4 mb-4">
+            <div class="d-flex flex-column gap-2 flex-grow-1">
+                <MudTextField @bind-Value="productForm.ImageUrl" Label="Шлях до зображення" Variant="Variant.Outlined"
+                    Margin="Margin.Dense" ReadOnly="true" HelperText="Завантажте файл або вкажіть шлях вручну" />
+            </div>
+
+            <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning"
+                        StartIcon="@Icons.Material.Filled.CloudUpload">
+                        Завантажити
+                    </MudButton>
+                </ActivatorContent>
+            </MudFileUpload>
+        </div>
+
+        @if (!string.IsNullOrEmpty(productForm.ImageUrl))
+        {
+            <div class="d-flex justify-center mb-4">
+                <MudImage Src="@($"images/{productForm.ImageUrl}")" Height="150" ObjectFit="ObjectFit.Contain"
+                    Class="rounded-lg border pa-2" />
+            </div>
+        }
 
         @if (_loadingLookups)
         {
@@ -37,37 +46,26 @@
         }
         else
         {
-            <MudText Typo="Typo.caption" Class="mb-2 d-block">Доступно категорій: @_categories.Count, серверів: @_serverTags.Count</MudText>
-            
-            <MudSelect T="int" Label="Категорія" @bind-Value="productForm.CategoryId" 
-                        Variant="Variant.Outlined" 
-                        Margin="Margin.Dense"
-                        Dense="true"
-                        Color="Color.Warning"
-                        AdornmentColor="Color.Warning"
-                        AnchorOrigin="Origin.BottomCenter"
-                        TransformOrigin="Origin.TopCenter"
-                        Class="mb-4">
-                 @foreach (var category in _categories)
-                 {
-                     <MudSelectItem T="int" Value="@category.Id" @key="@category.Id">@category.Name</MudSelectItem>
-                 }
-             </MudSelect>
-             
-             <MudSelect T="int" Label="Сервер" @bind-Value="productForm.ServerTagId" 
-                        Variant="Variant.Outlined" 
-                        Margin="Margin.Dense"
-                        Dense="true"
-                        Color="Color.Warning"
-                        AdornmentColor="Color.Warning"
-                        AnchorOrigin="Origin.BottomCenter"
-                        TransformOrigin="Origin.TopCenter"
-                        Class="mb-4">
-                 @foreach (var server in _serverTags)
-                 {
-                     <MudSelectItem T="int" Value="@server.Id" @key="@server.Id">@server.Name</MudSelectItem>
-                 }
-             </MudSelect>
+            <MudText Typo="Typo.caption" Class="mb-2 d-block">Доступно категорій: @_categories.Count, серверів:
+                @_serverTags.Count</MudText>
+
+            <MudSelect T="int" Label="Категорія" @bind-Value="productForm.CategoryId" Variant="Variant.Outlined"
+                Margin="Margin.Dense" Dense="true" Color="Color.Warning" AdornmentColor="Color.Warning"
+                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Class="mb-4">
+                @foreach (var category in _categories)
+                {
+                    <MudSelectItem T="int" Value="@category.Id" @key="@category.Id">@category.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="int" Label="Сервер" @bind-Value="productForm.ServerTagId" Variant="Variant.Outlined"
+                Margin="Margin.Dense" Dense="true" Color="Color.Warning" AdornmentColor="Color.Warning"
+                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Class="mb-4">
+                @foreach (var server in _serverTags)
+                {
+                    <MudSelectItem T="int" Value="@server.Id" @key="@server.Id">@server.Name</MudSelectItem>
+                }
+            </MudSelect>
         }
 
         @if (!string.IsNullOrEmpty(errorMessage))
@@ -94,22 +92,22 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadLookupData();
-        
+
         if (Product != null)
         {
             // For existing products, look up IDs from names
             var categoryId = _categories.FirstOrDefault(c => c.Name == Product.CategoryName)?.Id ?? 1;
             var serverTagId = _serverTags.FirstOrDefault(s => s.Name == Product.ServerTagName)?.Id ?? 1;
-            
+
             productForm = new ProductUpdateDto
-            {
-                Name = Product.Name,
-                Description = Product.Description,
-                Price = Product.Price,
-                ImageUrl = Product.ImageUrl,
-                CategoryId = categoryId,
-                ServerTagId = serverTagId
-            };
+                {
+                    Name = Product.Name,
+                    Description = Product.Description,
+                    Price = Product.Price,
+                    ImageUrl = Product.ImageUrl,
+                    CategoryId = categoryId,
+                    ServerTagId = serverTagId
+                };
         }
         else
         {
@@ -131,7 +129,7 @@
 
             _categories = await categoriesTask ?? new List<Category>();
             _serverTags = await serverTagsTask ?? new List<ServerTag>();
-            
+
             Console.WriteLine($"Loaded {_categories.Count} categories and {_serverTags.Count} servers");
         }
         catch (Exception ex)
@@ -143,6 +141,48 @@
         {
             _loadingLookups = false;
             StateHasChanged(); // Force re-render
+        }
+    }
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        if (file == null) return;
+
+        // Limit size to 5MB
+        if (file.Size > 5 * 1024 * 1024)
+        {
+            Snackbar.Add("Файл занадто великий (макс 5MB)", Severity.Error);
+            return;
+        }
+
+        try
+        {
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(5 * 1024 * 1024));
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var response = await Http.PostAsync("api/products/upload-image", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ImageUploadResult>();
+                if (result != null)
+                {
+                    productForm.ImageUrl = result.ImageUrl;
+                    Snackbar.Add("Зображення завантажено!", Severity.Success);
+                    StateHasChanged();
+                }
+            }
+            else
+            {
+                var errorMsg = await response.Content.ReadAsStringAsync();
+                Snackbar.Add($"Помилка завантаження: {response.StatusCode} - {errorMsg}", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Помилка: {ex.Message}", Severity.Error);
         }
     }
 
@@ -185,5 +225,10 @@
         {
             errorMessage = $"Помилка: {ex.Message}";
         }
+    }
+
+    private class ImageUploadResult
+    {
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

@@ -40,13 +40,15 @@
 [Parameter] public ProductDto Product { get; set; } = new();
 
 [Inject] ISnackbar Snackbar { get; set; } = default!;
+[Inject] Varta.Store.Client.Services.ICartService CartService { get; set; } = default!;
 
 private void Cancel() => MudDialogInstance.Cancel();
 
-private void Buy()
+private async Task Buy()
 {
-Snackbar.Add($"{Product.Name} додано до кошика!", Severity.Success);
-MudDialogInstance.Close(DialogResult.Ok(true));
+    await CartService.AddToCart(Product);
+    Snackbar.Add($"{Product.Name} додано до кошика!", Severity.Success);
+    MudDialogInstance.Close(DialogResult.Ok(true));
 }
 }
 

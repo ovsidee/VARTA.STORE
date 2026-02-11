@@ -54,16 +54,7 @@
                 </ToolBarContent>
                 <Columns>
                     <PropertyColumn Property="x => x.Id" Title="ID" />
-                    <TemplateColumn Title="Зображення" Sortable="false" Filterable="false">
-                        <CellTemplate>
-                             <MudImage Src="@($"/images/products/{context.Item.ImageUrl}")" 
-                                       Alt="@context.Item.Name" 
-                                       Height="40" 
-                                       Width="40" 
-                                       ObjectFit="ObjectFit.Cover"
-                                       Class="rounded shadow" />
-                        </CellTemplate>
-                    </TemplateColumn>
+
                     <PropertyColumn Property="x => x.Name" Title="Назва" />
                     <TemplateColumn Title="Ціна" Sortable="true">
                         <CellTemplate>
