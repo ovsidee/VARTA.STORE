@@ -79,12 +79,9 @@
         СЕРВЕРИ
     </MudText>
 
-    <MudGrid>
+    <MudGrid Justify="@(_servers != null && _servers.Count == 1 ? Justify.Center : Justify.FlexStart)">
         @if (_isLoading)
         {
-            <MudItem xs="12" md="6">
-                <MudSkeleton Height="400px" Class="rounded-lg" />
-            </MudItem>
             <MudItem xs="12" md="6">
                 <MudSkeleton Height="400px" Class="rounded-lg" />
             </MudItem>
@@ -93,7 +90,7 @@
         {
             @foreach (var server in _servers)
             {
-                <MudItem xs="12" md="6">
+                <MudItem xs="12" md="@(_servers.Count == 1 ? 8 : 6)">
 
                     <MudCard Elevation="4" Class="server-card rounded-lg overflow-hidden animate-slide-up delay-500"
                         Style="background-color: #1e1e2d;">
