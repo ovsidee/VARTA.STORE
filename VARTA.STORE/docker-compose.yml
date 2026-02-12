@@ -39,6 +39,9 @@ services:
       Donatik__Token: ${DONATIK_TOKEN}
       Donatik__UseMock: "false" 
       
+      # Game API Key for DayZ mod integration
+      GameApi__Key: ${GAME_API_KEY}
+      
       # Location to save images inside the container
       Storage__ImagesPath: "/app/images/products"
 
