@@ -7,6 +7,8 @@ using MudBlazor.Services;
 using Varta.Store.Client;
 using Varta.Store.Client.Auth;
 using Varta.Store.Client.Services;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -33,13 +35,10 @@ string apiUrl;
 
 if (builder.HostEnvironment.IsDevelopment())
 {
-    // ЛОКАЛЬНО (Rider): Указываем порт, на котором запущен API
-    // Проверьте launchSettings.json в API проекте, чтобы узнать точный порт!
     apiUrl = "http://localhost:5138";
 }
 else
 {
-    // DOCKER / PROD: Используем тот же домен, где открыт сайт (Nginx разрулит)
     apiUrl = builder.HostEnvironment.BaseAddress;
 }
 builder.Services.AddScoped(sp => new HttpClient
@@ -47,4 +46,29 @@ builder.Services.AddScoped(sp => new HttpClient
     BaseAddress = new Uri(apiUrl)
 });
 
-await builder.Build().RunAsync();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+var host = builder.Build();
+
+var culture = new CultureInfo("uk");
+
+try
+{
+    var localStorage = host.Services.GetRequiredService<ISyncLocalStorageService>();
+    var cultureResult = localStorage.GetItem<string>("culture");
+
+    if (!string.IsNullOrWhiteSpace(cultureResult))
+    {
+        culture = new CultureInfo(cultureResult);
+    }
+}
+catch (Exception)
+{
+    // Fallback to default culture if generic error occurs (e.g. JS not ready)
+    // In production, might want to log this
+}
+
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+await host.RunAsync();

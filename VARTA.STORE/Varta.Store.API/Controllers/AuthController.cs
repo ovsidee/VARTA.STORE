@@ -36,7 +36,6 @@ public class AuthController : ControllerBase
     [HttpGet("login")]
     public IActionResult Login()
     {
-        // Бібліотека сама побудує правильний Realm завдяки налаштуванням Nginx
         return Challenge(new AuthenticationProperties
         {
             RedirectUri = "/api/auth/callback"
@@ -46,22 +45,19 @@ public class AuthController : ControllerBase
     [HttpGet("callback")]
     public async Task<IActionResult> Callback()
     {
-        // Отримуємо дані від Steam через бібліотеку
         var result = await HttpContext.AuthenticateAsync("Cookies");
 
         if (!result.Succeeded)
             return BadRequest("Steam auth failed. Result was not succeeded.");
 
-        // Отримуємо Claims
         var claims = result.Principal.Claims;
         var steamIdClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-        // Steam повертає ID у форматі: https://steamcommunity.com/openid/id/76561198...
+        // Steam format: https://steamcommunity.com/openid/id/76561198...
         var steamId = steamIdClaim?.Split('/').Last();
 
         if (string.IsNullOrEmpty(steamId)) return BadRequest("Steam ID not found");
 
-        // --- ДАЛЕЕ ВАШ СТАНДАРТНЫЙ КОД ПОЛУЧЕНИЯ АВАТАРА ---
         var apiKey = _configuration["Authentication:Steam:ApplicationKey"];
         var username = "Survivor";
         var avatarUrl = "";
@@ -78,7 +74,6 @@ public class AuthController : ControllerBase
             catch { }
         }
 
-        // --- РАБОТА С БАЗОЙ ДАННЫХ ---
         var user = await _context.Users.FirstOrDefaultAsync(u => u.SteamID == steamId);
         if (user == null)
         {
@@ -107,10 +102,8 @@ public class AuthController : ControllerBase
         }
         await _context.SaveChangesAsync();
 
-        // --- ГЕНЕРАЦИЯ JWT ---
         var token = GenerateJwtToken(user);
 
-        // Редирект на фронтенд
         var clientUrl = _configuration["AppUrl"] ?? "http://localhost:7120";
         clientUrl = clientUrl.TrimEnd('/');
 
@@ -125,7 +118,6 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Name, user.Username),
             new Claim("SteamId", user.SteamID),
             new Claim("AvatarUrl", user.AvatarUrl),
-            new Claim("Balance", user.Balance.ToString("F2")),
             new Claim("Balance", user.Balance.ToString("F2")),
             new Claim(ClaimTypes.Role, user.Role)
         };

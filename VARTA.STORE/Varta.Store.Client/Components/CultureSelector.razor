@@ -1,0 +1,52 @@
+@using System.Globalization
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavManager
+
+<MudMenu Dense="true" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Color="Color.Inherit">
+    <ActivatorContent>
+        <MudButton Variant="Variant.Text" Color="Color.Inherit" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
+            Class="px-2" Style="min-width: unset;">
+            <div class="d-flex align-center gap-2">
+                @if (CultureInfo.CurrentCulture.Name.StartsWith("uk"))
+                {
+                    <MudText Typo="Typo.body1" Style="font-weight: bold;">UA</MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.body1" Style="font-weight: bold;">EN</MudText>
+                }
+            </div>
+        </MudButton>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem OnClick="@(() => SetCulture("uk"))">
+            <div class="d-flex align-center gap-2">
+                <span style="font-size: 1.2rem;">🇺🇦</span>
+                <MudText>Українська</MudText>
+            </div>
+        </MudMenuItem>
+        <MudMenuItem OnClick="@(() => SetCulture("en"))">
+            <div class="d-flex align-center gap-2">
+                <span style="font-size: 1.2rem;">🇬🇧</span>
+                <MudText>English</MudText>
+            </div>
+        </MudMenuItem>
+    </ChildContent>
+</MudMenu>
+
+@code {
+    private async Task SetCulture(string cultureName)
+    {
+        if (CultureInfo.CurrentCulture.Name != cultureName)
+        {
+            var culture = new CultureInfo(cultureName);
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            await LocalStorage.SetItemAsync("culture", cultureName);
+
+            // Force reload to apply culture change
+            NavManager.NavigateTo(NavManager.Uri, forceLoad: true);
+        }
+    }
+}

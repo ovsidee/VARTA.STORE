@@ -1,4 +1,5 @@
 ﻿@inject NavigationManager NavManager
+@inject IStringLocalizer<App> Localizer
 
 <MudPaper Class="footer-section py-12" Elevation="0" Square="true">
     <MudContainer MaxWidth="MaxWidth.Large">
@@ -10,7 +11,7 @@
                     <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px;">VARTA</MudText>
                 </div>
                 <MudText Typo="Typo.body2" Class="mud-text-secondary mb-4" Style="max-width: 300px;">
-                    Найкращий DayZ сервер для виживання. Стабільна економіка, активна адміністрація та унікальні ігрові механіки.
+                    @Localizer["Footer_Desc"]
                 </MudText>
                 
                 <div class="d-flex gap-2">
@@ -26,25 +27,25 @@
             </MudItem>
 
             <MudItem xs="6" md="4">
-                <MudText Typo="Typo.h6" Class="mb-4" Style="font-weight: 800; color: white;">НАВІГАЦІЯ</MudText>
+                <MudText Typo="Typo.h6" Class="mb-4" Style="font-weight: 800; color: white;">@Localizer["Footer_Nav_Title"]</MudText>
                 <div class="d-flex flex-column gap-2">
-                    <MudLink OnClick='() => NavManager.NavigateTo("/")' Color="Color.Inherit" Class="footer-link">Головна</MudLink>
-                    <MudLink OnClick='() => NavManager.NavigateTo("/servers")' Color="Color.Inherit" Class="footer-link">Сервери</MudLink>
-                    <MudLink OnClick='() => NavManager.NavigateTo("/store")' Color="Color.Inherit" Class="footer-link">Магазин</MudLink>
-                    <MudLink OnClick='() => NavManager.NavigateTo("/rules")' Color="Color.Inherit" Class="footer-link">Правила сервера</MudLink>
-                    <MudLink OnClick='() => NavManager.NavigateTo("/support")' Color="Color.Inherit" Class="footer-link">Підтримка</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/")' Color="Color.Inherit" Class="footer-link">@Localizer["Nav_Home"]</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/servers")' Color="Color.Inherit" Class="footer-link">@Localizer["Nav_Servers"]</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/store")' Color="Color.Inherit" Class="footer-link">@Localizer["Nav_Store"]</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/rules")' Color="Color.Inherit" Class="footer-link">@Localizer["Footer_Rules"]</MudLink>
+                    <MudLink OnClick='() => NavManager.NavigateTo("/support")' Color="Color.Inherit" Class="footer-link">@Localizer["Footer_Support"]</MudLink>
                 </div>
             </MudItem>
 
             <MudItem xs="6" md="4">
-                <MudText Typo="Typo.h6" Class="mb-4" Style="font-weight: 800; color: white;">КОНТАКТИ</MudText>
+                <MudText Typo="Typo.h6" Class="mb-4" Style="font-weight: 800; color: white;">@Localizer["Footer_Contacts_Title"]</MudText>
                 <div class="d-flex align-center mb-2">
                     <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" Color="Color.Warning" Class="mr-2"/>
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">varta.dayz@gmail.com</MudText>
                 </div>
                 <div class="d-flex align-center">
                     <MudIcon Icon="@Icons.Material.Filled.AccessTime" Size="Size.Small" Color="Color.Warning" Class="mr-2"/>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">Працюємо 24/7</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@Localizer["Footer_WorkHours"]</MudText>
                 </div>
              
             </MudItem>
@@ -54,10 +55,10 @@
 
         <div class="d-flex justify-space-between flex-wrap align-center">
             <MudText Typo="Typo.caption" Class="mud-text-secondary">
-                © @DateTime.Now.Year VARTA SERVER. Всі права захищено.
+                © @DateTime.Now.Year VARTA SERVER. @Localizer["Footer_Copyright"]
             </MudText>
             <MudText Typo="Typo.caption" Class="mud-text-secondary">
-                Створено з <MudIcon Icon="@Icons.Material.Filled.Favorite" Size="Size.Small" Color="Color.Error" Style="vertical-align: middle;"/> для дейзерів.
+                @string.Format(Localizer["Footer_CreatedWith"], "") <MudIcon Icon="@Icons.Material.Filled.Favorite" Size="Size.Small" Color="Color.Error" Style="vertical-align: middle;"/>
             </MudText>
         </div>
     </MudContainer>

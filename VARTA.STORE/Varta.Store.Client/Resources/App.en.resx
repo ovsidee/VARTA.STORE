@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Home_Title" xml:space="preserve">
+    <value>VARTA</value>
+  </data>
+  <data name="Home_HeroTitle" xml:space="preserve">
+    <value>VARTA SERVER</value>
+  </data>
+  <data name="Home_HeroSubtitle" xml:space="preserve">
+    <value>Your survival story begins here.</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Nav_Servers" xml:space="preserve">
+    <value>Servers</value>
+  </data>
+  <data name="Nav_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Nav_Rules" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="Nav_Store" xml:space="preserve">
+    <value>Store</value>
+  </data>
+  <data name="Nav_Admin" xml:space="preserve">
+    <value>ADMIN PANEL</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>PROFILE</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>LOGOUT</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>E-MAIL / STEAM</value>
+  </data>
+  <data name="Nav_Balance" xml:space="preserve">
+    <value>Balance</value>
+  </data>
+  <data name="Nav_MyProfile" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
+  <data name="Button_Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+   <data name="Button_Login" xml:space="preserve">
+    <value>LOGIN VIA STEAM</value>
+  </data>
+  <data name="Nav_Cart" xml:space="preserve">
+    <value>CART</value>
+  </data>
+  <data name="Feature_FastDelivery_Title" xml:space="preserve">
+    <value>FAST DELIVERY</value>
+  </data>
+  <data name="Feature_FastDelivery_Desc" xml:space="preserve">
+    <value>Automatic delivery system. Buy and receive in-game in seconds.</value>
+  </data>
+  <data name="Feature_FairPlay_Title" xml:space="preserve">
+    <value>FAIR PLAY</value>
+  </data>
+  <data name="Feature_FairPlay_Desc" xml:space="preserve">
+    <value>Active and understanding administration 24/7. Only skill matters.</value>
+  </data>
+  <data name="Feature_Stability_Title" xml:space="preserve">
+    <value>STABILITY</value>
+  </data>
+  <data name="Feature_Stability_Desc" xml:space="preserve">
+    <value>Dedicated server in Europe, good ping, no lags during PVP.</value>
+  </data>
+  <data name="Server_CopyIp" xml:space="preserve">
+    <value>Click to copy</value>
+  </data>
+  <data name="Error_LoadingServers" xml:space="preserve">
+    <value>Error loading servers</value>
+  </data>
+  <data name="Message_IpCopied" xml:space="preserve">
+    <value>IP {0} copied!</value>
+  </data>
+   <data name="Message_LoggedOut" xml:space="preserve">
+    <value>You have logged out</value>
+  </data>
+  <data name="Info_Title" xml:space="preserve">
+    <value>VARTA</value>
+  </data>
+  <data name="Info_Subtitle" xml:space="preserve">
+    <value>Project created by players for players. Here is what sets us apart.</value>
+  </data>
+  <data name="Info_Card1_Title" xml:space="preserve">
+    <value>Active Community</value>
+  </data>
+  <data name="Info_Card1_Desc" xml:space="preserve">
+    <value>Hundreds of players choose VARTA every day. Here you will find partners for raids, trading, and survival. Our community is not just a server, but a whole ecosystem.</value>
+  </data>
+  <data name="Info_Card2_Title" xml:space="preserve">
+    <value>Reliable Support</value>
+  </data>
+  <data name="Info_Card2_Desc" xml:space="preserve">
+    <value>Our admin team works 24/7. Any issue - from technical problems to game disputes - is resolved quickly and fairly via Discord or email.</value>
+  </data>
+  <data name="Info_Card3_Title" xml:space="preserve">
+    <value>Automated Payments</value>
+  </data>
+  <data name="Info_Card3_Desc" xml:space="preserve">
+    <value>Payment is instant and secure. After transaction confirmation, the item appears in your inventory automatically - no manual intervention, no delays.</value>
+  </data>
+  <data name="Info_Card4_Title" xml:space="preserve">
+    <value>Response Speed</value>
+  </data>
+  <data name="Info_Card4_Desc" xml:space="preserve">
+    <value>Every ticket, every message - we react promptly. Average admin response time is up to 30 minutes. Your comfort in the game is our main priority.</value>
+  </data>
+  <data name="Info_Card5_Title" xml:space="preserve">
+    <value>Innovative Solutions</value>
+  </data>
+  <data name="Info_Card5_Desc" xml:space="preserve">
+    <value>Custom delivery system, unique store, and Steam integration - we constantly implement new technologies to make your VARTA experience as convenient as possible.</value>
+  </data>
+  <data name="Info_Card6_Title" xml:space="preserve">
+    <value>Quality and Stability</value>
+  </data>
+  <data name="Info_Card6_Desc" xml:space="preserve">
+    <value>Dedicated server in Europe with 99.9% uptime. Regular updates, optimized loot, and stable ping - everything so that PVP and raids bring only pleasure.</value>
+  </data>
+  <data name="Servers_ClipboardSuccess" xml:space="preserve">
+    <value>IP copied to clipboard!</value>
+  </data>
+  <data name="Store_Title" xml:space="preserve">
+    <value>PRODUCT CATALOG</value>
+  </data>
+  <data name="Store_AllProducts" xml:space="preserve">
+    <value>ALL PRODUCTS</value>
+  </data>
+  <data name="Support_Title" xml:space="preserve">
+    <value>SUPPORT CENTER</value>
+  </data>
+  <data name="Support_Discord_Title" xml:space="preserve">
+    <value>DISCORD TICKET</value>
+  </data>
+  <data name="Support_Discord_Desc" xml:space="preserve">
+    <value>The fastest way to get help from admin. Create a ticket in #support channel.</value>
+  </data>
+  <data name="Support_Discord_Btn" xml:space="preserve">
+    <value>OPEN TICKET</value>
+  </data>
+  <data name="Support_Email_Title" xml:space="preserve">
+    <value>EMAIL INQUIRY</value>
+  </data>
+  <data name="Support_Email_Desc" xml:space="preserve">
+    <value>For cooperation, donations or ban appeals if Discord is unavailable.</value>
+  </data>
+  <data name="Support_Email_Btn" xml:space="preserve">
+    <value>SEND EMAIL</value>
+  </data>
+  <data name="Support_Email_Sub" xml:space="preserve">
+    <value>or write to:</value>
+  </data>
+  <data name="Support_FAQ_Title" xml:space="preserve">
+    <value>Frequently Asked Questions (FAQ)</value>
+  </data>
+  <data name="Support_FAQ_Q1" xml:space="preserve">
+    <value>How to receive purchased item?</value>
+  </data>
+  <data name="Support_FAQ_A1" xml:space="preserve">
+    <value>Make sure you are on the server. Open menu with "B" key and select the item you purchased.</value>
+  </data>
+  <data name="Support_FAQ_Q2" xml:space="preserve">
+    <value>I found a cheater, what to do?</value>
+  </data>
+  <data name="Support_FAQ_A2" xml:space="preserve">
+    <value>Record video proof and open a ticket in Discord. We will check logs.</value>
+  </data>
+  <data name="Support_FAQ_Q3" xml:space="preserve">
+    <value>When is server restart?</value>
+  </data>
+  <data name="Support_FAQ_A3" xml:space="preserve">
+    <value>Planned restarts happen every 12 hours: 00:00, 12:00.</value>
+  </data>
+  <data name="Support_FAQ_Q4" xml:space="preserve">
+    <value>How to donate?</value>
+  </data>
+  <data name="Support_FAQ_A4" xml:space="preserve">
+    <value>Go to "Store" page, select item and click "Buy".</value>
+  </data>
+  <data name="Rules_Title" xml:space="preserve">
+    <value>SERVER RULES</value>
+  </data>
+  <data name="Rules_Subtitle" xml:space="preserve">
+    <value>Ignorance of rules does not excuse you from responsibility.</value>
+  </data>
+  <data name="Rules_Alert_Title" xml:space="preserve">
+    <value>IMPORTANT: RECORD YOUR GAME!</value>
+  </data>
+  <data name="Rules_Alert_Body" xml:space="preserve">
+    <value>We care about fair play. We strongly advise recording your gameplay (kills, raids, disputes). This is your only defense against false accusations. Administration has the right to request video recording. Use NVIDIA Experience, AMD ReLive or OBS.</value>
+  </data>
+  <data name="Rules_Section_General" xml:space="preserve">
+    <value>1. GENERAL RULES</value>
+  </data>
+  <data name="Rules_Section_Construction" xml:space="preserve">
+    <value>2. CONSTRUCTION RULES</value>
+  </data>
+  <data name="Rules_Section_Raid" xml:space="preserve">
+    <value>3. RAID RULES</value>
+  </data>
+  <data name="Rules_Footer" xml:space="preserve">
+    <value>The server is private. Owner has the right to refuse service without explanation. By playing on the server, you automatically agree to these rules.</value>
+  </data>
+  <data name="Cart_Title" xml:space="preserve">
+    <value>CART</value>
+  </data>
+  <data name="Cart_Empty" xml:space="preserve">
+    <value>Your cart is empty.</value>
+  </data>
+  <data name="Cart_GoToStore" xml:space="preserve">
+    <value>Go to Store</value>
+  </data>
+  <data name="Cart_Header_Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="Cart_Header_Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Cart_Header_Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Cart_Header_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Cart_Total" xml:space="preserve">
+    <value>Total:</value>
+  </data>
+  <data name="Cart_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Cart_Checkout" xml:space="preserve">
+    <value>CHECKOUT</value>
+  </data>
+  <data name="Footer_Desc" xml:space="preserve">
+    <value>Best DayZ survival server. Stable economy, active administration and unique game mechanics.</value>
+  </data>
+  <data name="Footer_Nav_Title" xml:space="preserve">
+    <value>NAVIGATION</value>
+  </data>
+  <data name="Footer_Contacts_Title" xml:space="preserve">
+    <value>CONTACTS</value>
+  </data>
+  <data name="Footer_WorkHours" xml:space="preserve">
+    <value>Working 24/7</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>All rights reserved.</value>
+  </data>
+  <data name="Footer_CreatedWith" xml:space="preserve">
+    <value>Created with {0} for dayzers.</value>
+  </data>
+  <data name="Footer_Rules" xml:space="preserve">
+    <value>Server Rules</value>
+  </data>
+  <data name="Footer_Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="Admin_Title" xml:space="preserve">
+    <value>ADMIN DASHBOARD</value>
+  </data>
+  <data name="Admin_Products_Title" xml:space="preserve">
+    <value>PRODUCT MANAGEMENT</value>
+  </data>
+  <data name="Admin_Products_Desc" xml:space="preserve">
+    <value>Create, edit and delete products in the store. Manage product catalog, set prices and categories.</value>
+  </data>
+  <data name="Admin_Go_Btn" xml:space="preserve">
+    <value>GO TO</value>
+  </data>
+  <data name="Admin_Users_Title" xml:space="preserve">
+    <value>USERS</value>
+  </data>
+  <data name="Admin_Users_Desc" xml:space="preserve">
+    <value>View user information, balance, purchase history and transactions. Full control over user base.</value>
+  </data>
+  <data name="Admin_Servers_Title" xml:space="preserve">
+    <value>SERVERS</value>
+  </data>
+  <data name="Admin_Servers_Desc" xml:space="preserve">
+    <value>Manage game server list. Add new servers, update IP addresses and delete outdated ones.</value>
+  </data>
+  <data name="Profile_Error_Load" xml:space="preserve">
+    <value>Failed to load profile. Try again later.</value>
+  </data>
+  <data name="Profile_Balance" xml:space="preserve">
+    <value>Balance:</value>
+  </data>
+  <data name="Profile_TopUp_Title" xml:space="preserve">
+    <value>Balance Top Up</value>
+  </data>
+  <data name="Profile_TopUp_Label" xml:space="preserve">
+    <value>Amount (UAH)</value>
+  </data>
+  <data name="Profile_TopUp_Btn" xml:space="preserve">
+    <value>TOP UP VIA DONATIK</value>
+  </data>
+  <data name="Profile_TopUp_Info" xml:space="preserve">
+    <value>Balance is credited automatically within 1-2 minutes after payment.</value>
+  </data>
+  <data name="Profile_ContactSupport" xml:space="preserve">
+    <value>Contact Support</value>
+  </data>
+  <data name="Profile_Tab_History" xml:space="preserve">
+    <value>Purchase History</value>
+  </data>
+  <data name="Profile_History_Empty" xml:space="preserve">
+    <value>You haven't made any purchases yet.</value>
+  </data>
+  <data name="Profile_GoToStore" xml:space="preserve">
+    <value>Go to Store</value>
+  </data>
+  <data name="Profile_Order_Num" xml:space="preserve">
+    <value>Order #</value>
+  </data>
+  <data name="Profile_Tab_Transactions" xml:space="preserve">
+    <value>Transaction History</value>
+  </data>
+  <data name="Profile_Transactions_Empty" xml:space="preserve">
+    <value>No transactions.</value>
+  </data>
+  <data name="Profile_Header_ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Profile_Header_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Profile_Header_Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Profile_Header_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Punishment_Ban7Permanent" xml:space="preserve">
+    <value>(Ban: 7 days — permanent)</value>
+  </data>
+  <data name="Punishment_WarningBanPermanent" xml:space="preserve">
+    <value>(Warning — Permaban)</value>
+  </data>
+  <data name="Punishment_DeleteAllTransport" xml:space="preserve">
+    <value>(All transport deleted)</value>
+  </data>
+  <data name="Punishment_WarningBan24h" xml:space="preserve">
+    <value>(Warning — Ban 24h)</value>
+  </data>
+  <data name="Punishment_Ban1to7Days" xml:space="preserve">
+    <value>(Ban: 1 — 7 days)</value>
+  </data>
+  <data name="Punishment_Ban24h" xml:space="preserve">
+    <value>(Ban 24h)</value>
+  </data>
+  <data name="Punishment_Demolition" xml:space="preserve">
+    <value>(Demolition)</value>
+  </data>
+  <data name="Punishment_DemolitionNoWarning" xml:space="preserve">
+    <value>(Demolition without warning)</value>
+  </data>
+  <data name="Rule_Gen_1_1" xml:space="preserve">
+    <value>Using any third-party software or modifications (cheats, WH, ReShade, etc.) is prohibited. NVIDIA Experience is allowed.</value>
+  </data>
+  <data name="Rule_Gen_1_2" xml:space="preserve">
+    <value>Bug abuse is prohibited: moonwalk, raid holograms, looking through walls, blocking passages with tents.</value>
+  </data>
+  <data name="Rule_Gen_1_3" xml:space="preserve">
+    <value>Providing false information or misleading the administration is prohibited.</value>
+  </data>
+  <data name="Rule_Gen_1_4" xml:space="preserve">
+    <value>Transport limit: 5 units per base. Additional storage must be at least 150m away.</value>
+  </data>
+  <data name="Rule_Gen_1_5" xml:space="preserve">
+    <value>Stream sniping is prohibited.</value>
+  </data>
+  <data name="Rule_Gen_1_6" xml:space="preserve">
+    <value>Public or private negative statements about the administration are prohibited.</value>
+  </data>
+  <data name="Rule_Gen_1_7" xml:space="preserve">
+    <value>Interfering with or obstructing the work of the administration is prohibited.</value>
+  </data>
+  <data name="Rule_Gen_1_8" xml:space="preserve">
+    <value>Camping or killing players at their spawn points (spawn kill) is prohibited.</value>
+  </data>
+  <data name="Rule_Gen_1_9" xml:space="preserve">
+    <value>Multi-accounting is prohibited.</value>
+  </data>
+  <data name="Rule_Gen_1_9_Punishment" xml:space="preserve">
+    <value>(Twink ban permanent + main account up to 7 days)</value>
+  </data>
+  <data name="Rule_Gen_1_10" xml:space="preserve">
+    <value>Head admin has the right to intervene in gameplay and change punishments.</value>
+  </data>
+  <data name="Rule_Const_2_1" xml:space="preserve">
+    <value>Building on military bases, hospitals, heli crashes, water pumps is prohibited. (Exceptions: Prison Island, taverns, hunting cabins).</value>
+  </data>
+  <data name="Rule_Const_2_2" xml:space="preserve">
+    <value>Building within 200m of military bases (Tisy, NWAF, VMC etc. - red zones on map) is prohibited.</value>
+  </data>
+  <data name="Rule_Const_MapLink" xml:space="preserve">
+    <value>View map</value>
+  </data>
+  <data name="Rule_Const_2_3" xml:space="preserve">
+    <value>Placing items with collision on roads is prohibited.</value>
+  </data>
+  <data name="Rule_Const_2_4" xml:space="preserve">
+    <value>Building on roads (except dirt roads and dead ends) is prohibited.</value>
+  </data>
+  <data name="Rule_Const_2_5" xml:space="preserve">
+    <value>Maximum base height — 3 floors. All supports must touch the surface (except water). Building in the air is prohibited.</value>
+  </data>
+  <data name="Rule_Const_2_6" xml:space="preserve">
+    <value>Blocking static doors with textures is prohibited.</value>
+  </data>
+  <data name="Rule_Const_2_7" xml:space="preserve">
+    <value>Blocking passages with foundations, building "fence in fence", fan or cross-shaped is prohibited. Overlap allowed up to half.</value>
+  </data>
+  <data name="Rule_Const_2_8" xml:space="preserve">
+    <value>Rebuilding after raid: You can place 1 wall if 5 elements of enemy base were destroyed. Time for rebuilding — 1 hour. Base becomes yours if all locks are removed.</value>
+  </data>
+  <data name="Rule_Const_2_9" xml:space="preserve">
+    <value>Tents allowed to stack only: Car -> Military -> Small. Max 3 in one.</value>
+  </data>
+  <data name="Rule_Const_2_10" xml:space="preserve">
+    <value>Placing any markings that block ladders is prohibited.</value>
+  </data>
+  <data name="Rule_Raid_3_1" xml:space="preserve">
+    <value>Raiding by placing items in the air (barrels, towers, tents on top of each other) is prohibited. All supports must be on the ground.</value>
+  </data>
+  <data name="Rule_Raid_3_2" xml:space="preserve">
+    <value>Bug raiding (campfires, garden plots, car parts) is prohibited.</value>
+  </data>
+  <data name="Rule_Raid_3_3" xml:space="preserve">
+    <value>Logging out (Combat Log) in your base during a raid is prohibited.</value>
+  </data>
+  <data name="Rule_Raid_3_4" xml:space="preserve">
+    <value>Building or repairing base during active raid is prohibited. (Placing wires/locks is allowed).</value>
+  </data>
+  <data name="Rule_Raid_3_5" xml:space="preserve">
+    <value>You MUST have a video recording of the raid. Keep recording for 5 days (120 hours). Without video, administration may ban raid participants in disputed situations.</value>
+  </data>
+  <data name="Rule_Raid_3_5_Label" xml:space="preserve">
+    <value>MANDATORY:</value>
+  </data>
+  <data name="Profile_Donation_Warning" xml:space="preserve">
+    <value>Please do not change or fill in any information manually — the system does it automatically. Changing details may prevent your payment from being credited. All you need to do is pay with the option convenient for you. Sincerely, site developer and VARTA team :)</value>
+  </data>
+</root>

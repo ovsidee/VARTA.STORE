@@ -3,14 +3,16 @@
 @inject ISnackbar Snackbar
 @inject IJSRuntime JSRuntime
 @inject IServerTagService ServerTagService
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> Localizer
 
-<PageTitle>Сервери - VARTA</PageTitle>
+<PageTitle>@Localizer["Nav_Servers"] - VARTA</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16" Style="padding-top: 40px;">
 
     <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 animate-fade-in"
         Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
-        СЕРВЕРИ
+        @Localizer["Nav_Servers"]
     </MudText>
 
     @if (_isLoading)
@@ -27,7 +29,8 @@
     }
     else
     {
-        <MudGrid Justify="@(_servers != null && _servers.Count == 1 ? Justify.Center : Justify.FlexStart)" Class="animate-fade-in">
+        <MudGrid Justify="@(_servers != null && _servers.Count == 1 ? Justify.Center : Justify.FlexStart)"
+            Class="animate-fade-in">
             @if (_servers != null)
             {
                 @foreach (var server in _servers)
@@ -55,13 +58,13 @@
                                 <div class="d-flex justify-space-between align-center">
 
                                     <div @onclick="() => CopyToServerClipboard(server.IpAddress)" style="cursor: pointer;"
-                                        title="Click to copy IP">
+                                        title="@Localizer["Server_CopyIp"]">
                                         <MudText Typo="Typo.h5" Style="font-weight: 800; color: white;">
                                             @server.Name
                                         </MudText>
 
                                         <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
-                                            IP: @server.IpAddress (Натисни щоб скопіювати)
+                                            IP: @server.IpAddress (@Localizer["Server_CopyIp"])
                                         </MudText>
                                     </div>
 
@@ -141,6 +144,6 @@
         if (string.IsNullOrEmpty(ip)) return;
 
         await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ip);
-        Snackbar.Add("IP скопійовано в буфер обміну!", Severity.Success);
+        Snackbar.Add(Localizer["Servers_ClipboardSuccess"], Severity.Success);
     }
 }

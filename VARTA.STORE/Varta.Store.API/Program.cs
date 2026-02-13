@@ -37,7 +37,6 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        // add db (postgresql)
         builder.Services.AddDbContext<StoreDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
@@ -45,12 +44,9 @@ public class Program
         var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
 
-        // DI for services
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IAdminService, AdminService>();
 
-        // Donatik Service (Mock in Dev, Real in Prod)
-        // Check if we want to force Mock Mode via config (default to true in Development if not specified? No, let's be explicit)
         var useMock = builder.Configuration.GetValue<bool>("Donatik:UseMock");
 
         if (useMock)
@@ -62,10 +58,8 @@ public class Program
             builder.Services.AddHttpClient<IDonatikService, DonatikService>();
         }
 
-        // Add Background Worker for Donatik Sync
         builder.Services.AddHostedService<Varta.Store.API.Services.Background.DonatikSyncWorker>();
 
-        // add controllers
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -74,7 +68,6 @@ public class Program
 
         var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
-        // cors
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("StrictPolicy", policy =>
@@ -88,8 +81,7 @@ public class Program
                 }
                 else
                 {
-                    // Fallback for development if config is missing
-                    policy.SetIsOriginAllowed(origin => true) // Allow any origin
+                    policy.SetIsOriginAllowed(origin => true)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -99,11 +91,10 @@ public class Program
 
         builder.Services.AddAuthentication(options =>
             {
-                // for protecting API endpoints
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddCookie("Cookies") // Needed temporarily for the Steam handshake
+            .AddCookie("Cookies")
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
@@ -123,12 +114,7 @@ public class Program
             {
                 options.SignInScheme = "Cookies";
                 options.ApplicationKey = builder.Configuration["Authentication:Steam:ApplicationKey"];
-
-                // --- ДОДАЙТЕ ЦЕЙ РЯДОК ---
-                // Це змусить Steam повертати юзера на /api/signin-steam
-                // І Nginx перенаправить цей запит на бекенд!
                 options.CallbackPath = "/api/signin-steam";
-                // -------------------------
 
                 options.Events.OnAuthenticated = context =>
                 {
@@ -159,7 +145,7 @@ public class Program
                 {
                     try
                     {
-                        context.Database.Migrate(); // Uses migrations instead of EnsureCreated
+                        context.Database.Migrate();
                         logger.LogInformation("Database connected!");
                         break;
                     }

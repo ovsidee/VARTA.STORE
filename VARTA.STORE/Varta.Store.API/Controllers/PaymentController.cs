@@ -93,7 +93,7 @@ public class PaymentController : ControllerBase
         // 4. Check if already processed (Redundant, handled in step 3)
         // var alreadyProcessed = await _context.WalletTransactions...
 
-        // 5. Process Transaction
+
         var transaction = new WalletTransaction
         {
             AppUserId = user.Id,

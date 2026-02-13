@@ -22,7 +22,6 @@ public class DonatikService : IDonatikService
 
     public async Task<List<DonatikDonation>> GetRecentDonationsAsync(int limit = 500, string? filterName = null)
     {
-        // Try to get token from Env var first, then config
         var token = Environment.GetEnvironmentVariable("DONATIK_TOKEN")
                     ?? _configuration["Donatik:Token"];
 
@@ -32,12 +31,9 @@ public class DonatikService : IDonatikService
             throw new InvalidOperationException("Donatik API Token is missing or invalid in configuration. Please check 'DONATIK_TOKEN' environment variable or 'Donatik:Token' setting.");
         }
 
-        // Default to last 30 days if not specified (though method sig doesn't have dates yet, we can add them later or just hardcode for "Recent")
         var toDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
         var fromDate = DateTime.UtcNow.AddDays(-30).ToString("yyyy-MM-dd");
 
-        // URL construction with query params:
-        // http://api.donatik.io/donations?token=...&fromDate=...&toDate=...&page=1&perPage=500
         var builder = new UriBuilder("http://api.donatik.io/donations");
         var query = System.Web.HttpUtility.ParseQueryString(string.Empty);
         query["token"] = token;
@@ -64,8 +60,6 @@ public class DonatikService : IDonatikService
                 _logger.LogError($"[DonatikService] Failed. Status: {response.StatusCode}. Content: {content}");
                 response.EnsureSuccessStatusCode();
             }
-
-            // _logger.LogInformation($"[DonatikService] Response: {content}"); // Optional: log full response for debug
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var result = JsonSerializer.Deserialize<DonatikResponse>(content, options);

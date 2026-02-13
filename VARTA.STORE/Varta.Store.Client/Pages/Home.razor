@@ -5,25 +5,27 @@
 @using Microsoft.AspNetCore.Authorization
 @using Varta.Store.Shared
 @attribute [AllowAnonymous]
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> Localizer
 
-<PageTitle>VARTA - Головна</PageTitle>
+<PageTitle>@Localizer["Home_Title"] - @Localizer["Nav_Home"]</PageTitle>
 
 <div class="hero-container">
     <div class="hero-overlay"></div>
     <div class="hero-content d-flex flex-column justify-center align-center">
 
         <MudText Typo="Typo.h1" Class="hero-title mb-2 animate-fade-in">
-            VARTA SERVER
+            @Localizer["Home_HeroTitle"]
         </MudText>
 
         <MudText Typo="Typo.h5" Class="hero-subtitle mb-8 animate-slide-up">
-            Твоя історія виживання починається тут.
+            @Localizer["Home_HeroSubtitle"]
         </MudText>
 
         <div class="d-flex gap-4 animate-slide-up delay-200">
             <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Large" Class="px-10 py-3 hero-btn"
                 OnClick="@(() => NavManager.NavigateTo("/store"))">
-                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Class="mr-2" /> МАГАЗИН
+                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Class="mr-2" /> @Localizer["Nav_Store"]
             </MudButton>
 
             <MudButton Variant="Variant.Outlined" Color="Color.Inherit" Size="Size.Large"
@@ -40,9 +42,10 @@
             <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
                 <MudIcon Icon="@Icons.Material.Filled.Bolt" Size="Size.Large" Color="Color.Warning"
                     Class="mb-4 icon-glow" />
-                <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ШВИДКА ВИДАЧА</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">
+                    @Localizer["Feature_FastDelivery_Title"]</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
-                    Система видачі товарів. Купуй та отримуй в грі за секунди.
+                    @Localizer["Feature_FastDelivery_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -51,9 +54,10 @@
             <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
                 <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Success"
                     Class="mb-4 icon-glow" />
-                <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">ЧЕСНА ГРА</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">
+                    @Localizer["Feature_FairPlay_Title"]</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
-                    Активна та розуміюча адміністрація 24/7. В грі вирішує тільки скіл.
+                    @Localizer["Feature_FairPlay_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -62,9 +66,10 @@
             <MudPaper Elevation="25" Class="pa-8 d-flex flex-column align-center mud-theme-dark feature-card">
                 <MudIcon Icon="@Icons.Material.Filled.Public" Size="Size.Large" Color="Color.Info"
                     Class="mb-4 icon-glow" />
-                <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">СТАБІЛЬНІСТЬ</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight:bold">
+                    @Localizer["Feature_Stability_Title"]</MudText>
                 <MudText Typo="Typo.body2" Align="Align.Center" Class="mud-text-secondary mt-2">
-                    Виділений сервер у Європі, приємний пінг, жодних лагів під час ПВП.
+                    @Localizer["Feature_Stability_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -76,7 +81,7 @@
 
     <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8 animate-fade-in delay-500"
         Style="font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">
-        СЕРВЕРИ
+        @Localizer["Nav_Servers"]
     </MudText>
 
     <MudGrid Justify="@(_servers != null && _servers.Count == 1 ? Justify.Center : Justify.FlexStart)">
@@ -119,7 +124,7 @@
                                     </MudText>
 
                                     <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1 copy-hover">
-                                        IP: @server.IpAddress (Натисни щоб скопіювати)
+                                        IP: @server.IpAddress (@Localizer["Server_CopyIp"])
                                     </MudText>
                                 </div>
 
@@ -151,7 +156,7 @@
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Помилка завантаження серверів: {ex.Message}", Severity.Error);
+            Snackbar.Add($"{Localizer["Error_LoadingServers"]}: {ex.Message}", Severity.Error);
         }
         finally
         {
@@ -167,7 +172,7 @@
         await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ip);
 
         // Show success message
-        Snackbar.Add($"IP {ip} скопійовано!", Severity.Success);
+        Snackbar.Add(string.Format(Localizer["Message_IpCopied"], ip), Severity.Success);
     }
 }
 

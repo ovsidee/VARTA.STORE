@@ -1,16 +1,20 @@
 @page "/info"
 @using Microsoft.AspNetCore.Authorization
 @attribute [AllowAnonymous]
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> Localizer
 
-<PageTitle>Інфо - VARTA</PageTitle>
+<PageTitle>@Localizer["Nav_Info"] - VARTA</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16 animate-slide-up" Style="padding-top: 35px;">
 
-    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-2" Style="font-weight: 900; text-transform: uppercase; letter-spacing: 3px;">
-        VARTA
+    <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-2"
+        Style="font-weight: 900; text-transform: uppercase; letter-spacing: 3px;">
+        @Localizer["Info_Title"]
     </MudText>
-    <MudText Typo="Typo.body1" Align="Align.Center" Class="mud-text-secondary mb-10" Style="max-width: 550px; margin: 0 auto;">
-        Проєкт, створений гравцями для гравців. Ось що нас вирізняє.
+    <MudText Typo="Typo.body1" Align="Align.Center" Class="mud-text-secondary mb-10"
+        Style="max-width: 550px; margin: 0 auto;">
+        @Localizer["Info_Subtitle"]
     </MudText>
 
     <MudGrid Spacing="6" Class="justify-center">
@@ -22,10 +26,10 @@
                     <MudIcon Icon="@Icons.Material.Filled.Groups" Style="font-size: 2.2rem; color: white;" />
                 </div>
                 <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
-                    Активна спільнота
+                    @Localizer["Info_Card1_Title"]
                 </MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
-                    Сотні гравців щодня обирають VARTA. Тут ти знайдеш напарників для рейдів, торгівлі та спільного виживання. Наша спільнота — це не просто сервер, а ціла екосистема.
+                    @Localizer["Info_Card1_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -37,10 +41,10 @@
                     <MudIcon Icon="@Icons.Material.Filled.SupportAgent" Style="font-size: 2.2rem; color: white;" />
                 </div>
                 <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
-                    Надійна підтримка
+                    @Localizer["Info_Card2_Title"]
                 </MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
-                    Наша команда адміністраторів працює цілодобово. Будь-яке питання — від технічних проблем до ігрових суперечок — вирішується швидко та справедливо через Discord або пошту.
+                    @Localizer["Info_Card2_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -52,10 +56,10 @@
                     <MudIcon Icon="@Icons.Material.Filled.Payment" Style="font-size: 2.2rem; color: white;" />
                 </div>
                 <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
-                    Автоматизовані платежі
+                    @Localizer["Info_Card3_Title"]
                 </MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
-                    Оплата проходить миттєво та безпечно. Після підтвердження транзакції товар з'являється в твоєму інвентарі автоматично — жодного ручного втручання, жодних затримок.
+                    @Localizer["Info_Card3_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -67,10 +71,10 @@
                     <MudIcon Icon="@Icons.Material.Filled.Speed" Style="font-size: 2.2rem; color: white;" />
                 </div>
                 <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
-                    Швидкість реакції
+                    @Localizer["Info_Card4_Title"]
                 </MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
-                    Кожен тікет, кожне повідомлення — ми реагуємо оперативно. Середній час відповіді адміністрації — до 30 хвилин. Твій комфорт у грі — наш головний пріоритет.
+                    @Localizer["Info_Card4_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -82,10 +86,10 @@
                     <MudIcon Icon="@Icons.Material.Filled.Lightbulb" Style="font-size: 2.2rem; color: white;" />
                 </div>
                 <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
-                    Інноваційні рішення
+                    @Localizer["Info_Card5_Title"]
                 </MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
-                    Власна система видачі, унікальний магазин та інтеграція зі Steam — ми постійно впроваджуємо нові технології, щоб зробити твій досвід на VARTA максимально зручним.
+                    @Localizer["Info_Card5_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -97,10 +101,10 @@
                     <MudIcon Icon="@Icons.Material.Filled.Verified" Style="font-size: 2.2rem; color: white;" />
                 </div>
                 <MudText Typo="Typo.h5" Align="Align.Center" Style="font-weight: 800; color: white;" Class="mt-5 mb-3">
-                    Якість і стабільність
+                    @Localizer["Info_Card6_Title"]
                 </MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Style="color: #9e9eae; line-height: 1.7;">
-                    Виділений сервер у Європі з аптаймом 99.9%. Регулярні оновлення, оптимізований лут та стабільний пінг — все для того, щоб ПВП та рейди приносили лише задоволення.
+                    @Localizer["Info_Card6_Desc"]
                 </MudText>
             </MudPaper>
         </MudItem>
@@ -121,7 +125,7 @@
     .info-card:hover {
         transform: translateY(-5px);
         border-color: #ff9800;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     /* === ICON CIRCLES === */
@@ -139,12 +143,35 @@
         transform: scale(1.1);
     }
 
-    .info-icon-primary   { background: linear-gradient(135deg, #1565c0, #42a5f5); box-shadow: 0 4px 15px rgba(21, 101, 192, 0.35); }
-    .info-icon-success   { background: linear-gradient(135deg, #2e7d32, #66bb6a); box-shadow: 0 4px 15px rgba(46, 125, 50, 0.35); }
-    .info-icon-warning   { background: linear-gradient(135deg, #e65100, #ff9800); box-shadow: 0 4px 15px rgba(230, 81, 0, 0.35); }
-    .info-icon-info      { background: linear-gradient(135deg, #00838f, #26c6da); box-shadow: 0 4px 15px rgba(0, 131, 143, 0.35); }
-    .info-icon-secondary { background: linear-gradient(135deg, #6a1b9a, #ab47bc); box-shadow: 0 4px 15px rgba(106, 27, 154, 0.35); }
-    .info-icon-error     { background: linear-gradient(135deg, #b71c1c, #ef5350); box-shadow: 0 4px 15px rgba(183, 28, 28, 0.35); }
+    .info-icon-primary {
+        background: linear-gradient(135deg, #1565c0, #42a5f5);
+        box-shadow: 0 4px 15px rgba(21, 101, 192, 0.35);
+    }
+
+    .info-icon-success {
+        background: linear-gradient(135deg, #2e7d32, #66bb6a);
+        box-shadow: 0 4px 15px rgba(46, 125, 50, 0.35);
+    }
+
+    .info-icon-warning {
+        background: linear-gradient(135deg, #e65100, #ff9800);
+        box-shadow: 0 4px 15px rgba(230, 81, 0, 0.35);
+    }
+
+    .info-icon-info {
+        background: linear-gradient(135deg, #00838f, #26c6da);
+        box-shadow: 0 4px 15px rgba(0, 131, 143, 0.35);
+    }
+
+    .info-icon-secondary {
+        background: linear-gradient(135deg, #6a1b9a, #ab47bc);
+        box-shadow: 0 4px 15px rgba(106, 27, 154, 0.35);
+    }
+
+    .info-icon-error {
+        background: linear-gradient(135deg, #b71c1c, #ef5350);
+        box-shadow: 0 4px 15px rgba(183, 28, 28, 0.35);
+    }
 
     /* === ANIMATIONS === */
     .animate-slide-up {
@@ -152,7 +179,14 @@
     }
 
     @@keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>

@@ -9,6 +9,8 @@
 @inject HttpClient Http
 @inject ICartService CartService
 @using Varta.Store.Client.Services
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> Localizer
 
 <MudThemeProvider IsDarkMode="true" />
 <MudDialogProvider />
@@ -16,32 +18,37 @@
 <MudPopoverProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="0" Fixed="true" Class="blur-navbar px-8" Style="z-index: 2000;">
+    <MudAppBar Elevation="0" Fixed="true" Class="blur-navbar px-8" Style="z-index: 1100;">
         <MudIcon Icon="@Icons.Material.Filled.Shield" Color="Color.Warning" Size="Size.Large" Class="mr-2" />
         <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px; cursor: pointer; margin-right: 60px;"
-            @onclick='() => NavManager.NavigateTo("/")'>
-            VARTA
+        @onclick='() => NavManager.NavigateTo("/")'>
+            @Localizer["Home_Title"]
         </MudText>
 
         <MudHidden Breakpoint="Breakpoint.MdAndDown">
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
                 OnClick='() => NavManager.NavigateTo("/")'>
-                ГОЛОВНА
+                @Localizer["Nav_Home"]
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
                 OnClick='() => NavManager.NavigateTo("/info")'>
-                ІНФО
+                @Localizer["Nav_Info"]
+            </MudButton>
+
+            <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
+                OnClick='() => NavManager.NavigateTo("/rules")'>
+                @Localizer["Nav_Rules"]
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
                 OnClick='() => NavManager.NavigateTo("/servers")'>
-                СЕРВЕРИ
+                @Localizer["Nav_Servers"]
             </MudButton>
 
             <MudButton Variant="Variant.Text" Color="Color.Inherit" Class="nav-link mx-2"
                 OnClick='() => NavManager.NavigateTo("/store")'>
-                МАГАЗИН
+                @Localizer["Nav_Store"]
             </MudButton>
 
             <MudSpacer />
@@ -49,9 +56,14 @@
             <AuthorizeView Roles="Admin">
                 <MudButton Variant="Variant.Text" Color="Color.Warning" Class="nav-link mx-2"
                     OnClick='() => NavManager.NavigateTo("/admin")'>
-                    АДМІН ПАНЕЛЬ
+                    @Localizer["Nav_Admin"]
                 </MudButton>
             </AuthorizeView>
+
+            <!-- Culture Selector -->
+            <div class="mx-2">
+                <CultureSelector />
+            </div>
 
             <MudBadge Content="_cartCount" Color="Color.Error" Overlap="true" Class="mx-2" Visible="@(_cartCount > 0)">
                 <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Inherit"
@@ -64,17 +76,18 @@
                     <div class="d-flex align-center gap-4 ml-4">
                         @* 1. Balance Display *@
                         <div class="d-flex flex-column align-end">
-                            <MudText Typo="Typo.caption" Style="color: #9e9eae; line-height: 1;">Баланс</MudText>
+                            <MudText Typo="Typo.caption" Style="color: #9e9eae; line-height: 1;">
+                                @Localizer["Nav_Balance"]</MudText>
                             <MudText Typo="Typo.body1" Color="Color.Warning" Style="font-weight: 900;">
                                 @BalanceService.CurrentBalance.ToString("F2") ₴
                             </MudText>
                         </div>
 
                         @* 2. User Avatar (clickable to go to profile) *@
-                        <MudTooltip Text="Мій Профіль">
+                        <MudTooltip Text="@Localizer["Nav_MyProfile"]">
                             <MudBadge Overlap="true" Color="Color.Success" Dot="true" Bordered="true">
                                 <MudAvatar Style="border: 2px solid #ff9800; cursor: pointer;"
-                                    @onclick='() => NavManager.NavigateTo("/profile")'>
+                                @onclick='() => NavManager.NavigateTo("/profile")'>
                                     <MudImage Src="@auth.User.FindFirst("AvatarUrl")?.Value" Alt="Avatar" />
                                 </MudAvatar>
                             </MudBadge>
@@ -84,20 +97,23 @@
                         <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="Logout"
                             StartIcon="@Icons.Material.Filled.Logout"
                             Style="text-transform: uppercase; font-weight: bold;">
-                            Вийти
+                            @Localizer["Button_Logout"]
                         </MudButton>
                     </div>
                 </Authorized>
                 <NotAuthorized>
                     <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small"
                         Class="ml-6 px-4 rounded-pill" StartIcon="@Icons.Custom.Brands.Steam"
-                        Href="@($"{Http.BaseAddress}api/auth/login")"> LOGIN VIA STEAM
+                        Href="@($"{Http.BaseAddress}api/auth/login")"> @Localizer["Button_Login"]
                     </MudButton>
                 </NotAuthorized>
             </AuthorizeView>
         </MudHidden>
 
         <MudHidden Breakpoint="Breakpoint.LgAndUp">
+            <div class="mx-2">
+                <CultureSelector />
+            </div>
             <MudBadge Content="_cartCount" Color="Color.Error" Overlap="true" Class="mx-2" Visible="@(_cartCount > 0)">
                 <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Inherit" Edge="Edge.End"
                     OnClick='() => NavManager.NavigateTo("/cart")' />
@@ -110,35 +126,39 @@
     <MudDrawer @bind-Open="@_drawerOpen" Anchor="Anchor.Right" Elevation="2" Variant="@DrawerVariant.Temporary"
         Class="mud-theme-dark" Style="background-color: #1e1e2d;">
         <MudDrawerHeader Class="d-flex align-center justify-space-between px-4 py-4">
-            <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px;">VARTA</MudText>
+            <MudText Typo="Typo.h5" Style="font-weight: 900; letter-spacing: 2px;">@Localizer["Home_Title"]</MudText>
             <MudIconButton Icon="@Icons.Material.Filled.Close" Color="Color.Inherit"
                 OnClick="@((e) => DrawerToggle())" />
         </MudDrawerHeader>
         <MudNavMenu Class="pt-4">
-            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">ГОЛОВНА</MudNavLink>
-            <MudNavLink Href="/info" Icon="@Icons.Material.Filled.Info">ІНФО</MudNavLink>
-            <MudNavLink Href="/servers" Icon="@Icons.Material.Filled.Dns">СЕРВЕРИ</MudNavLink>
-            <MudNavLink Href="/store" Icon="@Icons.Material.Filled.Store">МАГАЗИН</MudNavLink>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@Localizer["Nav_Home"]
+            </MudNavLink>
+            <MudNavLink Href="/info" Icon="@Icons.Material.Filled.Info">@Localizer["Nav_Info"]</MudNavLink>
+            <MudNavLink Href="/rules" Icon="@Icons.Material.Filled.Gavel">@Localizer["Nav_Rules"]</MudNavLink>
+            <MudNavLink Href="/servers" Icon="@Icons.Material.Filled.Dns">@Localizer["Nav_Servers"]</MudNavLink>
+            <MudNavLink Href="/store" Icon="@Icons.Material.Filled.Store">@Localizer["Nav_Store"]</MudNavLink>
             <MudNavLink Href="/cart" Icon="@Icons.Material.Filled.ShoppingCart">
-                КОШИК @(_cartCount > 0 ? $"({_cartCount})" : "")
+                @Localizer["Nav_Cart"] @(_cartCount > 0 ? $"({_cartCount})" : "")
             </MudNavLink>
 
             <AuthorizeView Roles="Admin">
                 <MudNavLink Href="/admin" Icon="@Icons.Material.Filled.AdminPanelSettings" IconColor="Color.Warning">
-                    АДМІН ПАНЕЛЬ</MudNavLink>
+                    @Localizer["Nav_Admin"]</MudNavLink>
             </AuthorizeView>
 
             <MudDivider Class="my-4" />
 
             <AuthorizeView>
                 <Authorized>
-                    <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">ПРОФІЛЬ</MudNavLink>
-                    <MudNavLink OnClick="Logout" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">ВИЙТИ
+                    <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">@Localizer["Nav_Profile"]
+                    </MudNavLink>
+                    <MudNavLink OnClick="Logout" Icon="@Icons.Material.Filled.Logout" IconColor="Color.Error">
+                        @Localizer["Nav_Logout"]
                     </MudNavLink>
                 </Authorized>
                 <NotAuthorized>
-                    <MudNavLink Href="api/auth/login" Icon="@Icons.Custom.Brands.Steam" IconColor="Color.Info">E-MAIL /
-                        STEAM</MudNavLink>
+                    <MudNavLink Href="api/auth/login" Icon="@Icons.Custom.Brands.Steam" IconColor="Color.Info">
+                        @Localizer["Nav_Login"]</MudNavLink>
                 </NotAuthorized>
             </AuthorizeView>
         </MudNavMenu>
@@ -240,7 +260,7 @@
             customProvider.NotifyUserLogout();
         }
 
-        Snackbar.Add("Ви вийшли з аккаунту", Severity.Info);
+        Snackbar.Add(Localizer["Message_LoggedOut"], Severity.Info);
         NavManager.NavigateTo("/", true);
     }
 }

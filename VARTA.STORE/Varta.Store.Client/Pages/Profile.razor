@@ -7,7 +7,8 @@
 @inject IBalanceService BalanceService
 @inject NavigationManager NavManager
 @inject ISnackbar Snackbar
-@inject HttpClient Http
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> Localizer
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 pt-8 mb-16">
     @if (_loading)
@@ -16,7 +17,7 @@
     }
     else if (_profile == null)
     {
-        <MudAlert Severity="Severity.Error">Не вдалося завантажити профіль. Спробуйте пізніше.</MudAlert>
+        <MudAlert Severity="Severity.Error">@Localizer["Profile_Error_Load"]</MudAlert>
     }
     else
     {
@@ -34,27 +35,31 @@
                         <MudDivider Class="my-2" Style="width: 100%;" />
                         
                         <div class="d-flex justify-space-between w-100 px-4 mt-2">
-                            <MudText>Баланс:</MudText>
+                            <MudText>@Localizer["Profile_Balance"]</MudText>
                             <MudText Color="Color.Success" Style="font-weight: bold;">@_profile.Balance.ToString("F2") ₴</MudText>
                         </div>
 
                         <MudDivider Class="my-4" Style="width: 100%;" />
 
                         <!-- TOP UP SECTION -->
-                        <MudText Typo="Typo.h6" Class="mb-2">Поповнення Балансу</MudText>
-                        <MudNumericField @bind-Value="_topUpAmount" Label="Сума (UAH)" Variant="Variant.Outlined" Min="10" Max="10000" Class="mb-2" />
+                        <MudText Typo="Typo.h6" Class="mb-2">@Localizer["Profile_TopUp_Title"]</MudText>
+                        <MudNumericField @bind-Value="_topUpAmount" Label="@Localizer["Profile_TopUp_Label"]" Variant="Variant.Outlined" Min="10" Max="10000" Class="mb-2" />
                         
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mb-2" 
                                    OnClick="OpenDonatik" StartIcon="@Icons.Material.Filled.Payment">
-                            ПОПОВНИТИ ЧЕРЕЗ DONATIK
+                            @Localizer["Profile_TopUp_Btn"]
                         </MudButton>
 
                         <MudAlert Severity="Severity.Info" Class="mt-2" Dense="true">
-                            Баланс зараховується автоматично протягом 1-2 хвилин після оплати.
+                            @Localizer["Profile_TopUp_Info"]
+                        </MudAlert>
+
+                         <MudAlert Severity="Severity.Warning" Class="mt-4" Dense="false" Variant="Variant.Filled">
+                            @Localizer["Profile_Donation_Warning"]
                         </MudAlert>
                         
                         <MudButton Variant="Variant.Text" Color="Color.Info" Class="mt-4" Href="/support">
-                            Contact Support
+                            @Localizer["Profile_ContactSupport"]
                         </MudButton>
 
                     </MudCardContent>
@@ -65,11 +70,11 @@
             <MudItem xs="12" md="8">
                 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
                     <!-- Purchase History Tab -->
-                    <MudTabPanel Text="Історія Покупок">
+                    <MudTabPanel Text="@Localizer["Profile_Tab_History"]">
                          @if (_profile.Orders == null || !_profile.Orders.Any())
                         {
-                            <MudText Typo="Typo.body1">Ви ще не робили покупок.</MudText>
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick='() => NavManager.NavigateTo("/store")' Class="mt-2">Перейти до магазину</MudButton>
+                            <MudText Typo="Typo.body1">@Localizer["Profile_History_Empty"]</MudText>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick='() => NavManager.NavigateTo("/store")' Class="mt-2">@Localizer["Profile_GoToStore"]</MudButton>
                         }
                         else
                         {
@@ -80,7 +85,7 @@
                                         <TitleContent>
                                             <div class="d-flex justify-space-between align-center w-100 mr-4">
                                                 <div class="d-flex flex-column">
-                                                    <MudText Typo="Typo.subtitle1">Замовлення #@order.Id</MudText>
+                                                    <MudText Typo="Typo.subtitle1">@Localizer["Profile_Order_Num"]@order.Id</MudText>
                                                     <MudText Typo="Typo.caption">@order.DateCreated.ToLocalTime().ToString("g")</MudText>
                                                 </div>
                                                 <div class="d-flex flex-column align-end">
@@ -116,25 +121,25 @@
                     </MudTabPanel>
                     
                     <!-- Transaction History Tab -->
-                    <MudTabPanel Text="Історія Транзакцій">
+                    <MudTabPanel Text="@Localizer["Profile_Tab_Transactions"]">
                         @if (_profile.Transactions == null || !_profile.Transactions.Any())
                         {
-                            <MudText>Немає транзакцій.</MudText>
+                            <MudText>@Localizer["Profile_Transactions_Empty"]</MudText>
                         }
                         else
                         {
                             <MudTable Items="_profile.Transactions" Hover="true" Dense="true">
                                 <HeaderContent>
-                                    <MudTh>ID</MudTh>
-                                    <MudTh>Дата</MudTh>
-                                    <MudTh>Сума</MudTh>
-                                    <MudTh>Статус</MudTh>
+                                    <MudTh>@Localizer["Profile_Header_ID"]</MudTh>
+                                    <MudTh>@Localizer["Profile_Header_Date"]</MudTh>
+                                    <MudTh>@Localizer["Profile_Header_Amount"]</MudTh>
+                                    <MudTh>@Localizer["Profile_Header_Status"]</MudTh>
                                 </HeaderContent>
                                 <RowTemplate>
-                                    <MudTd DataLabel="ID">@context.Id</MudTd>
-                                    <MudTd DataLabel="Дата">@context.Date.ToLocalTime().ToString("g")</MudTd>
-                                    <MudTd DataLabel="Сума" Style="color: #4caf50; font-weight: bold;">+@context.Amount.ToString("F2") ₴</MudTd>
-                                    <MudTd DataLabel="Статус">@context.Status</MudTd>
+                                    <MudTd DataLabel="@Localizer["Profile_Header_ID"]">@context.Id</MudTd>
+                                    <MudTd DataLabel="@Localizer["Profile_Header_Date"]">@context.Date.ToLocalTime().ToString("g")</MudTd>
+                                    <MudTd DataLabel="@Localizer["Profile_Header_Amount"]" Style="color: #4caf50; font-weight: bold;">+@context.Amount.ToString("F2") ₴</MudTd>
+                                    <MudTd DataLabel="@Localizer["Profile_Header_Status"]">@context.Status</MudTd>
                                 </RowTemplate>
                             </MudTable>
                         }

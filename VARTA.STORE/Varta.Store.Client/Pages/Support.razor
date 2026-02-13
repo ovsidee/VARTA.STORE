@@ -2,42 +2,47 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [AllowAnonymous]
 
-<PageTitle>Підтримка - VARTA</PageTitle>
+@inject IStringLocalizer<App> Localizer
+
+<PageTitle>@Localizer["Support_Title"] - VARTA</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16 animate-slide-up" Style="padding-top: 35px;">
-    
+
     <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-8" Style="font-weight: 900; text-transform: uppercase;">
-        ЦЕНТР ПІДТРИМКИ
+        @Localizer["Support_Title"]
     </MudText>
 
     <MudGrid Class="justify-center">
-        
+
         <MudItem xs="12" md="5">
             <MudPaper Class="pa-8 d-flex flex-column align-center mud-theme-dark support-card" Elevation="4">
-                <MudIcon Icon="@Icons.Custom.Brands.Discord" Size="Size.Large" Color="Color.Primary" Class="mb-4" Style="font-size: 4rem;"/>
-                <MudText Typo="Typo.h5" Style="font-weight:bold">DISCORD ТІКЕТ</MudText>
+                <MudIcon Icon="@Icons.Custom.Brands.Discord" Size="Size.Large" Color="Color.Primary" Class="mb-4"
+                    Style="font-size: 4rem;" />
+                <MudText Typo="Typo.h5" Style="font-weight:bold">@Localizer["Support_Discord_Title"]</MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Class="mud-text-secondary mt-2 mb-6">
-                    Найшвидший спосіб отримати допомогу від адміністратора. Створи тікет у каналі #support.
+                    @Localizer["Support_Discord_Desc"]
                 </MudText>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" 
-                           Href="https://discord.gg/mkQbaxmuUS" Target="_blank" FullWidth="true">
-                    ВІДКРИТИ ТІКЕТ
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large"
+                    Href="https://discord.gg/mkQbaxmuUS" Target="_blank" FullWidth="true">
+                    @Localizer["Support_Discord_Btn"]
                 </MudButton>
             </MudPaper>
         </MudItem>
 
         <MudItem xs="12" md="5">
             <MudPaper Class="pa-8 d-flex flex-column align-center mud-theme-dark support-card" Elevation="4">
-                <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Large" Color="Color.Warning" Class="mb-4" Style="font-size: 4rem;"/>
-                <MudText Typo="Typo.h5" Style="font-weight:bold">EMAIL ЗАПИТ</MudText>
+                <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Large" Color="Color.Warning" Class="mb-4"
+                    Style="font-size: 4rem;" />
+                <MudText Typo="Typo.h5" Style="font-weight:bold">@Localizer["Support_Email_Title"]</MudText>
                 <MudText Typo="Typo.body1" Align="Align.Center" Class="mud-text-secondary mt-2 mb-6">
-                    Для питань співпраці, донатів або оскарження бану, якщо Discord недоступний.
+                    @Localizer["Support_Email_Desc"]
                 </MudText>
-                <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Large" 
-                           Href="mailto:varta.dayz@gmail.com" FullWidth="true" Class="mb-2">
-                    НАПИСАТИ ЛИСТА
+                <MudButton Variant="Variant.Outlined" Color="Color.Warning" Size="Size.Large"
+                    Href="mailto:varta.dayz@gmail.com" FullWidth="true" Class="mb-2">
+                    @Localizer["Support_Email_Btn"]
                 </MudButton>
-                <MudText Typo="Typo.caption" Color="Color.Secondary">або пишіть на: varta.dayz@gmail.com</MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">@Localizer["Support_Email_Sub"]
+                    varta.dayz@gmail.com</MudText>
             </MudPaper>
         </MudItem>
 
@@ -45,21 +50,21 @@
 
     <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-16">
         <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-6" Style="font-weight: 800;">
-            Часті запитання (FAQ)
+            @Localizer["Support_FAQ_Title"]
         </MudText>
 
         <MudExpansionPanels MultiExpansion="false" Class="faq-accordion">
-            <MudExpansionPanel Text="Як отримати куплений товар?">
-                Переконайтеся, що ви на сервері. Зайдіть в меню клавішою "B" (англійська) та виберіть товар котрий Ви придбали
+            <MudExpansionPanel Text="@Localizer["Support_FAQ_Q1"]">
+                @Localizer["Support_FAQ_A1"]
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Я знайшов чітера, що робити?">
-                Запишіть відеодоказ та відкрийте тікет у Discord. Ми перевіримо логи.
+            <MudExpansionPanel Text="@Localizer["Support_FAQ_Q2"]">
+                @Localizer["Support_FAQ_A2"]
             </MudExpansionPanel>
-            <MudExpansionPanel Text="Коли рестарт сервера?">
-                Планові рестарти відбуваються кожні 12 годин: 00:00, 12:00.
+            <MudExpansionPanel Text="@Localizer["Support_FAQ_Q3"]">
+                @Localizer["Support_FAQ_A3"]
             </MudExpansionPanel>
-             <MudExpansionPanel Text="Як задонатити?">
-                Перейдіть на сторінку "Магазин", оберіть товар та натисніть "Купити".
+            <MudExpansionPanel Text="@Localizer["Support_FAQ_Q4"]">
+                @Localizer["Support_FAQ_A4"]
             </MudExpansionPanel>
         </MudExpansionPanels>
     </MudContainer>
@@ -73,27 +78,36 @@
         transition: transform 0.3s ease, border-color 0.3s ease;
         height: 100%;
     }
-    
+
     .support-card:hover {
         transform: translateY(-5px);
         border-color: #ff9800;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .faq-accordion .mud-expand-panel {
         background-color: transparent;
         border-bottom: 1px solid #333;
     }
-    
+
     .faq-accordion .mud-expand-panel:before {
-        display: none; /* Removes default separators */
+        display: none;
+        /* Removes default separators */
     }
 
     .animate-slide-up {
         animation: slideUp 0.8s ease-out;
     }
+
     @@keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>

@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Home_Title" xml:space="preserve">
+    <value>VARTA</value>
+  </data>
+  <data name="Home_HeroTitle" xml:space="preserve">
+    <value>VARTA SERVER</value>
+  </data>
+  <data name="Home_HeroSubtitle" xml:space="preserve">
+    <value>Твоя історія виживання починається тут.</value>
+  </data>
+  <data name="Nav_Home" xml:space="preserve">
+    <value>Головна</value>
+  </data>
+  <data name="Nav_Servers" xml:space="preserve">
+    <value>Сервери</value>
+  </data>
+  <data name="Nav_Info" xml:space="preserve">
+    <value>Інфо</value>
+  </data>
+  <data name="Nav_Rules" xml:space="preserve">
+    <value>Правила</value>
+  </data>
+  <data name="Nav_Store" xml:space="preserve">
+    <value>Магазин</value>
+  </data>
+  <data name="Nav_Admin" xml:space="preserve">
+    <value>АДМІН ПАНЕЛЬ</value>
+  </data>
+  <data name="Nav_Profile" xml:space="preserve">
+    <value>ПРОФІЛЬ</value>
+  </data>
+  <data name="Nav_Logout" xml:space="preserve">
+    <value>ВИЙТИ</value>
+  </data>
+  <data name="Nav_Login" xml:space="preserve">
+    <value>E-MAIL / STEAM</value>
+  </data>
+  <data name="Nav_Balance" xml:space="preserve">
+    <value>Баланс</value>
+  </data>
+  <data name="Nav_MyProfile" xml:space="preserve">
+    <value>Мій Профіль</value>
+  </data>
+  <data name="Button_Logout" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+   <data name="Button_Login" xml:space="preserve">
+    <value>LOGIN VIA STEAM</value>
+  </data>
+  <data name="Nav_Cart" xml:space="preserve">
+    <value>КОШИК</value>
+  </data>
+  <data name="Feature_FastDelivery_Title" xml:space="preserve">
+    <value>ШВИДКА ВИДАЧА</value>
+  </data>
+  <data name="Feature_FastDelivery_Desc" xml:space="preserve">
+    <value>Система видачі товарів. Купуй та отримуй в грі за секунди.</value>
+  </data>
+  <data name="Feature_FairPlay_Title" xml:space="preserve">
+    <value>ЧЕСНА ГРА</value>
+  </data>
+  <data name="Feature_FairPlay_Desc" xml:space="preserve">
+    <value>Активна та розуміюча адміністрація 24/7. В грі вирішує тільки скіл.</value>
+  </data>
+  <data name="Feature_Stability_Title" xml:space="preserve">
+    <value>СТАБІЛЬНІСТЬ</value>
+  </data>
+  <data name="Feature_Stability_Desc" xml:space="preserve">
+    <value>Виділений сервер у Європі, приємний пінг, жодних лагів під час ПВП.</value>
+  </data>
+  <data name="Server_CopyIp" xml:space="preserve">
+    <value>Натисни щоб скопіювати</value>
+  </data>
+  <data name="Error_LoadingServers" xml:space="preserve">
+    <value>Помилка завантаження серверів</value>
+  </data>
+  <data name="Message_IpCopied" xml:space="preserve">
+    <value>IP {0} скопійовано!</value>
+  </data>
+   <data name="Message_LoggedOut" xml:space="preserve">
+    <value>Ви вийшли з аккаунту</value>
+  </data>
+  <data name="Info_Title" xml:space="preserve">
+    <value>VARTA</value>
+  </data>
+  <data name="Info_Subtitle" xml:space="preserve">
+    <value>Проєкт, створений гравцями для гравців. Ось що нас вирізняє.</value>
+  </data>
+  <data name="Info_Card1_Title" xml:space="preserve">
+    <value>Активна спільнота</value>
+  </data>
+  <data name="Info_Card1_Desc" xml:space="preserve">
+    <value>Сотні гравців щодня обирають VARTA. Тут ти знайдеш напарників для рейдів, торгівлі та спільного виживання. Наша спільнота — це не просто сервер, а ціла екосистема.</value>
+  </data>
+  <data name="Info_Card2_Title" xml:space="preserve">
+    <value>Надійна підтримка</value>
+  </data>
+  <data name="Info_Card2_Desc" xml:space="preserve">
+    <value>Наша команда адміністраторів працює цілодобово. Будь-яке питання — від технічних проблем до ігрових суперечок — вирішується швидко та справедливо через Discord або пошту.</value>
+  </data>
+  <data name="Info_Card3_Title" xml:space="preserve">
+    <value>Автоматизовані платежі</value>
+  </data>
+  <data name="Info_Card3_Desc" xml:space="preserve">
+    <value>Оплата проходить миттєво та безпечно. Після підтвердження транзакції товар з'являється в твоєму інвентарі автоматично — жодного ручного втручання, жодних затримок.</value>
+  </data>
+  <data name="Info_Card4_Title" xml:space="preserve">
+    <value>Швидкість реакції</value>
+  </data>
+  <data name="Info_Card4_Desc" xml:space="preserve">
+    <value>Кожен тікет, кожне повідомлення — ми реагуємо оперативно. Середній час відповіді адміністрації — до 30 хвилин. Твій комфорт у грі — наш головний пріоритет.</value>
+  </data>
+  <data name="Info_Card5_Title" xml:space="preserve">
+    <value>Інноваційні рішення</value>
+  </data>
+  <data name="Info_Card5_Desc" xml:space="preserve">
+    <value>Власна система видачі, унікальний магазин та інтеграція зі Steam — ми постійно впроваджуємо нові технології, щоб зробити твій досвід на VARTA максимально зручним.</value>
+  </data>
+  <data name="Info_Card6_Title" xml:space="preserve">
+    <value>Якість і стабільність</value>
+  </data>
+  <data name="Info_Card6_Desc" xml:space="preserve">
+    <value>Виділений сервер у Європі з аптаймом 99.9%. Регулярні оновлення, оптимізований лут та стабільний пінг — все для того, щоб ПВП та рейди приносили лише задоволення.</value>
+  </data>
+  <data name="Servers_ClipboardSuccess" xml:space="preserve">
+    <value>IP скопійовано в буфер обміну!</value>
+  </data>
+  <data name="Store_Title" xml:space="preserve">
+    <value>КАТАЛОГ ТОВАРІВ</value>
+  </data>
+  <data name="Store_AllProducts" xml:space="preserve">
+    <value>ВСІ ТОВАРИ</value>
+  </data>
+  <data name="Support_Title" xml:space="preserve">
+    <value>ЦЕНТР ПІДТРИМКИ</value>
+  </data>
+  <data name="Support_Discord_Title" xml:space="preserve">
+    <value>DISCORD ТІКЕТ</value>
+  </data>
+  <data name="Support_Discord_Desc" xml:space="preserve">
+    <value>Найшвидший спосіб отримати допомогу від адміністратора. Створи тікет у каналі #support.</value>
+  </data>
+  <data name="Support_Discord_Btn" xml:space="preserve">
+    <value>ВІДКРИТИ ТІКЕТ</value>
+  </data>
+  <data name="Support_Email_Title" xml:space="preserve">
+    <value>EMAIL ЗАПИТ</value>
+  </data>
+  <data name="Support_Email_Desc" xml:space="preserve">
+    <value>Для питань співпраці, донатів або оскарження бану, якщо Discord недоступний.</value>
+  </data>
+  <data name="Support_Email_Btn" xml:space="preserve">
+    <value>НАПИСАТИ ЛИСТА</value>
+  </data>
+  <data name="Support_Email_Sub" xml:space="preserve">
+    <value>або пишіть на:</value>
+  </data>
+  <data name="Support_FAQ_Title" xml:space="preserve">
+    <value>Часті запитання (FAQ)</value>
+  </data>
+  <data name="Support_FAQ_Q1" xml:space="preserve">
+    <value>Як отримати куплений товар?</value>
+  </data>
+  <data name="Support_FAQ_A1" xml:space="preserve">
+    <value>Переконайтеся, що ви на сервері. Зайдіть в меню клавішою "B" (англійська) та виберіть товар котрий Ви придбали</value>
+  </data>
+  <data name="Support_FAQ_Q2" xml:space="preserve">
+    <value>Я знайшов чітера, що робити?</value>
+  </data>
+  <data name="Support_FAQ_A2" xml:space="preserve">
+    <value>Запишіть відеодоказ та відкрийте тікет у Discord. Ми перевіримо логи.</value>
+  </data>
+  <data name="Support_FAQ_Q3" xml:space="preserve">
+    <value>Коли рестарт сервера?</value>
+  </data>
+  <data name="Support_FAQ_A3" xml:space="preserve">
+    <value>Планові рестарти відбуваються кожні 12 годин: 00:00, 12:00.</value>
+  </data>
+  <data name="Support_FAQ_Q4" xml:space="preserve">
+    <value>Як задонатити?</value>
+  </data>
+  <data name="Support_FAQ_A4" xml:space="preserve">
+    <value>Перейдіть на сторінку "Магазин", оберіть товар та натисніть "Купити".</value>
+  </data>
+  <data name="Rules_Title" xml:space="preserve">
+    <value>ПРАВИЛА СЕРВЕРА</value>
+  </data>
+  <data name="Rules_Subtitle" xml:space="preserve">
+    <value>Незнання правил не звільняє від відповідальності.</value>
+  </data>
+  <data name="Rules_Alert_Title" xml:space="preserve">
+    <value>ВАЖЛИВО: ЗАПИСУЙТЕ ГРУ!</value>
+  </data>
+  <data name="Rules_Alert_Body" xml:space="preserve">
+    <value>Ми дбаємо про чесну гру. Наполегливо радимо записувати відео ігрового процесу (вбивства, рейди, спірні моменти). Це ваш єдиний захист від неправдивих звинувачень. Адміністрація має право запросити відеозапис. Використовуйте NVIDIA Experience, AMD ReLive або OBS.</value>
+  </data>
+  <data name="Rules_Section_General" xml:space="preserve">
+    <value>1. ЗАГАЛЬНІ ПРАВИЛА</value>
+  </data>
+  <data name="Rules_Section_Construction" xml:space="preserve">
+    <value>2. ПРАВИЛА БУДІВНИЦТВА</value>
+  </data>
+  <data name="Rules_Section_Raid" xml:space="preserve">
+    <value>3. ПРАВИЛА РЕЙДУ</value>
+  </data>
+  <data name="Rules_Footer" xml:space="preserve">
+    <value>Сервер є приватним. Власник має право відмовити у грі без пояснення причин. Граючи на сервері, ви автоматично погоджуєтесь з цими правилами.</value>
+  </data>
+  <data name="Cart_Title" xml:space="preserve">
+    <value>КОШИК</value>
+  </data>
+  <data name="Cart_Empty" xml:space="preserve">
+    <value>Ваш кошик порожній.</value>
+  </data>
+  <data name="Cart_GoToStore" xml:space="preserve">
+    <value>Перейти до магазину</value>
+  </data>
+  <data name="Cart_Header_Product" xml:space="preserve">
+    <value>Товар</value>
+  </data>
+  <data name="Cart_Header_Price" xml:space="preserve">
+    <value>Ціна</value>
+  </data>
+  <data name="Cart_Header_Quantity" xml:space="preserve">
+    <value>Кількість</value>
+  </data>
+  <data name="Cart_Header_Total" xml:space="preserve">
+    <value>Сума</value>
+  </data>
+  <data name="Cart_Total" xml:space="preserve">
+    <value>Всього:</value>
+  </data>
+  <data name="Cart_Clear" xml:space="preserve">
+    <value>Очистити</value>
+  </data>
+  <data name="Cart_Checkout" xml:space="preserve">
+    <value>ОФОРМИТИ ЗАМОВЛЕННЯ</value>
+  </data>
+  <data name="Footer_Desc" xml:space="preserve">
+    <value>Найкращий DayZ сервер для виживання. Стабільна економіка, активна адміністрація та унікальні ігрові механіки.</value>
+  </data>
+  <data name="Footer_Nav_Title" xml:space="preserve">
+    <value>НАВІГАЦІЯ</value>
+  </data>
+  <data name="Footer_Contacts_Title" xml:space="preserve">
+    <value>КОНТАКТИ</value>
+  </data>
+  <data name="Footer_WorkHours" xml:space="preserve">
+    <value>Працюємо 24/7</value>
+  </data>
+  <data name="Footer_Copyright" xml:space="preserve">
+    <value>Всі права захищено.</value>
+  </data>
+  <data name="Footer_CreatedWith" xml:space="preserve">
+    <value>Створено з {0} для дейзерів.</value>
+  </data>
+  <data name="Footer_Rules" xml:space="preserve">
+    <value>Правила сервера</value>
+  </data>
+  <data name="Footer_Support" xml:space="preserve">
+    <value>Підтримка</value>
+  </data>
+  <data name="Admin_Title" xml:space="preserve">
+    <value>АДМІНІСТРАТИВНА ПАНЕЛЬ</value>
+  </data>
+  <data name="Admin_Products_Title" xml:space="preserve">
+    <value>УПРАВЛІННЯ ПРОДУКТАМИ</value>
+  </data>
+  <data name="Admin_Products_Desc" xml:space="preserve">
+    <value>Створювати, редагувати та видаляти продукти в магазині. Керуйте каталогом товарів, встановлюйте ціни та категорії.</value>
+  </data>
+  <data name="Admin_Go_Btn" xml:space="preserve">
+    <value>ПЕРЕЙТИ</value>
+  </data>
+  <data name="Admin_Users_Title" xml:space="preserve">
+    <value>КОРИСТУВАЧІ</value>
+  </data>
+  <data name="Admin_Users_Desc" xml:space="preserve">
+    <value>Переглядати інформацію про користувачів, їх баланс, історію покупок та транзакції. Повний контроль над базою користувачів.</value>
+  </data>
+  <data name="Admin_Servers_Title" xml:space="preserve">
+    <value>СЕРВЕРИ</value>
+  </data>
+  <data name="Admin_Servers_Desc" xml:space="preserve">
+    <value>Керувати списком ігрових серверів. Додавайте нові сервери, оновлюйте IP-адреси та видаляйте неактуальні.</value>
+  </data>
+  <data name="Profile_Error_Load" xml:space="preserve">
+    <value>Не вдалося завантажити профіль. Спробуйте пізніше.</value>
+  </data>
+  <data name="Profile_Balance" xml:space="preserve">
+    <value>Баланс:</value>
+  </data>
+  <data name="Profile_TopUp_Title" xml:space="preserve">
+    <value>Поповнення Балансу</value>
+  </data>
+  <data name="Profile_TopUp_Label" xml:space="preserve">
+    <value>Сума (UAH)</value>
+  </data>
+  <data name="Profile_TopUp_Btn" xml:space="preserve">
+    <value>ПОПОВНИТИ ЧЕРЕЗ DONATIK</value>
+  </data>
+  <data name="Profile_TopUp_Info" xml:space="preserve">
+    <value>Баланс зараховується автоматично протягом 1-2 хвилин після оплати.</value>
+  </data>
+  <data name="Profile_ContactSupport" xml:space="preserve">
+    <value>Написати в Підтримку</value>
+  </data>
+  <data name="Profile_Tab_History" xml:space="preserve">
+    <value>Історія Покупок</value>
+  </data>
+  <data name="Profile_History_Empty" xml:space="preserve">
+    <value>Ви ще не робили покупок.</value>
+  </data>
+  <data name="Profile_GoToStore" xml:space="preserve">
+    <value>Перейти до магазину</value>
+  </data>
+  <data name="Profile_Order_Num" xml:space="preserve">
+    <value>Замовлення #</value>
+  </data>
+  <data name="Profile_Tab_Transactions" xml:space="preserve">
+    <value>Історія Транзакцій</value>
+  </data>
+  <data name="Profile_Transactions_Empty" xml:space="preserve">
+    <value>Немає транзакцій.</value>
+  </data>
+  <data name="Profile_Header_ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Profile_Header_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Profile_Header_Amount" xml:space="preserve">
+    <value>Сума</value>
+  </data>
+  <data name="Profile_Header_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Punishment_Ban7Permanent" xml:space="preserve">
+    <value>(Бан: 7 днів — назавжди)</value>
+  </data>
+  <data name="Punishment_WarningBanPermanent" xml:space="preserve">
+    <value>(Попередження — Бан назавжди)</value>
+  </data>
+  <data name="Punishment_DeleteAllTransport" xml:space="preserve">
+    <value>(Видалення всього транспорту)</value>
+  </data>
+  <data name="Punishment_WarningBan24h" xml:space="preserve">
+    <value>(Попередження — Бан 24 год)</value>
+  </data>
+  <data name="Punishment_Ban1to7Days" xml:space="preserve">
+    <value>(Бан: 1 — 7 днів)</value>
+  </data>
+  <data name="Punishment_Ban24h" xml:space="preserve">
+    <value>(Бан 24 год)</value>
+  </data>
+  <data name="Punishment_Demolition" xml:space="preserve">
+    <value>(Знесення)</value>
+  </data>
+  <data name="Punishment_DemolitionNoWarning" xml:space="preserve">
+    <value>(Знесення без попередження)</value>
+  </data>
+  <data name="Rule_Gen_1_1" xml:space="preserve">
+    <value>Забороняється використання будь-яких сторонніх програм або модифікацій (чіти, WH, ReShade тощо). NVIDIA Experience дозволено.</value>
+  </data>
+  <data name="Rule_Gen_1_2" xml:space="preserve">
+    <value>Заборонено багоюз: moonwalk, голограми для рейдів, підглядання крізь стіни, блокування проходів наметами.</value>
+  </data>
+  <data name="Rule_Gen_1_3" xml:space="preserve">
+    <value>Надання неправдивої інформації або введення в оману адміністрації заборонене.</value>
+  </data>
+  <data name="Rule_Gen_1_4" xml:space="preserve">
+    <value>Ліміт транспорту: 5 одиниць на базу. Додаткове місце зберігання має бути не ближче 150м.</value>
+  </data>
+  <data name="Rule_Gen_1_5" xml:space="preserve">
+    <value>Стрім-снайпінг заборонений.</value>
+  </data>
+  <data name="Rule_Gen_1_6" xml:space="preserve">
+    <value>Заборонено публічно або приватно висловлюватись про адміністрацію в негативному ключі.</value>
+  </data>
+  <data name="Rule_Gen_1_7" xml:space="preserve">
+    <value>Втручання або перешкоджання роботі адміністрації заборонене.</value>
+  </data>
+  <data name="Rule_Gen_1_8" xml:space="preserve">
+    <value>Заборонено кемпінг або вбивство гравців у місцях їх появи (спавн-кіл).</value>
+  </data>
+  <data name="Rule_Gen_1_9" xml:space="preserve">
+    <value>Мультиакаунтинг заборонений.</value>
+  </data>
+  <data name="Rule_Gen_1_9_Punishment" xml:space="preserve">
+    <value>(Бан твінка назавжди + основи до 7 днів)</value>
+  </data>
+  <data name="Rule_Gen_1_10" xml:space="preserve">
+    <value>Головний адміністратор має право втручатися в ігровий процес та змінювати покарання.</value>
+  </data>
+  <data name="Rule_Const_2_1" xml:space="preserve">
+    <value>Заборонено забудовувати військові бази, лікарні, хелікраші, колонки. (Винятки: Prison Island, трактири, мисливські будиночки).</value>
+  </data>
+  <data name="Rule_Const_2_2" xml:space="preserve">
+    <value>Заборонено будувати в радіусі 200м від військових баз (Тіси, СЗ, VMC тощо - червоні зони на карті).</value>
+  </data>
+  <data name="Rule_Const_MapLink" xml:space="preserve">
+    <value>Дивитись карту</value>
+  </data>
+  <data name="Rule_Const_2_3" xml:space="preserve">
+    <value>Заборонено розміщення предметів з колізією на дорогах.</value>
+  </data>
+  <data name="Rule_Const_2_4" xml:space="preserve">
+    <value>Заборонено будівництво на дорогах (крім ґрунтових та глухих кутів).</value>
+  </data>
+  <data name="Rule_Const_2_5" xml:space="preserve">
+    <value>Максимальна висота бази — 3 поверхи. Всі опори повинні торкатися поверхні (крім води). Будівництво в повітрі заборонено.</value>
+  </data>
+  <data name="Rule_Const_2_6" xml:space="preserve">
+    <value>Заборонено блокувати статичні двері текстурами.</value>
+  </data>
+  <data name="Rule_Const_2_7" xml:space="preserve">
+    <value>Заборонено перекривати прохід фундаментом, будувати "паркан у паркані", віялом або хрестоподібно. Нахльост дозволений до половини.</value>
+  </data>
+  <data name="Rule_Const_2_8" xml:space="preserve">
+    <value>Забудова після рейду: Можна поставити 1 свою стіну, якщо знищили 5 елементів ворожої бази. Час на забудову — 1 година. База стає вашою, якщо знято всі замки.</value>
+  </data>
+  <data name="Rule_Const_2_9" xml:space="preserve">
+    <value>Намети дозволено стакати тільки: Автомобільний -> Військовий -> Малий. Максимум 3 в одному.</value>
+  </data>
+  <data name="Rule_Const_2_10" xml:space="preserve">
+    <value>Заборонено розміщувати будь-які розмітки, що блокують сходи.</value>
+  </data>
+  <data name="Rule_Raid_3_1" xml:space="preserve">
+    <value>Заборонено рейдити за допомогою розміщення предметів у повітрі (бочки, вежі, намети одна на одній). Всі опори мають стояти на землі.</value>
+  </data>
+  <data name="Rule_Raid_3_2" xml:space="preserve">
+    <value>Заборонено рейдити багом (багаття, грядки, частини авто).</value>
+  </data>
+  <data name="Rule_Raid_3_3" xml:space="preserve">
+    <value>Заборонено виходити з сервера (Combat Log) на своїй базі під час рейду.</value>
+  </data>
+  <data name="Rule_Raid_3_4" xml:space="preserve">
+    <value>Заборонено будувати або лагодити базу під час активного рейду. (Вішати дроти/замки дозволено).</value>
+  </data>
+  <data name="Rule_Raid_3_5" xml:space="preserve">
+    <value>Ви повинні мати відеозапис рейду. Зберігати запис 5 днів (120 годин). Без відео адміністрація може заблокувати учасників рейду у спірних ситуаціях.</value>
+  </data>
+  <data name="Rule_Raid_3_5_Label" xml:space="preserve">
+    <value>ОБОВ'ЯЗКОВО:</value>
+  </data>
+  <data name="Profile_Donation_Warning" xml:space="preserve">
+    <value>Будь ласка, нічого не змінюйте та не заповнюйте вручну — система зробить це автоматично. Зміна даних може призвести до того, що оплата не зарахується. Все що вам потрібно зробити - це оплатити зручним для вас варіантом. З повагою, розробник сайта та команда VARTA :)</value>
+  </data>
+</root>

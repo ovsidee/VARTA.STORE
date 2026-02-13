@@ -3,14 +3,16 @@
 @inject IProductService ProductService
 @using Microsoft.AspNetCore.Authorization
 @attribute [AllowAnonymous]
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<App> Localizer
 
-<PageTitle>Магазин - VARTA</PageTitle>
+<PageTitle>@Localizer["Nav_Store"] - VARTA</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-16 mb-16 pt-4">
 
     <MudText Typo="Typo.h3" Align="Align.Center" Class="mb-6 animate-fade-in"
         Style="font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 2px;">
-        КАТАЛОГ ТОВАРІВ
+        @Localizer["Store_Title"]
     </MudText>
 
     @if (_isLoading)
@@ -29,7 +31,7 @@
         <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="mt-8" Color="Color.Transparent"
             SliderColor="Color.Warning" Centered="true" Class="modern-tabs animate-fade-in">
 
-            <MudTabPanel Text="ВСІ ТОВАРИ">
+            <MudTabPanel Text="@Localizer["Store_AllProducts"]">
                 <MudGrid Class="mt-4">
                     @foreach (var product in _products)
                     {
