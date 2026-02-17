@@ -1,4 +1,4 @@
-﻿# Stage 1: Build the C# Blazor code
+﻿# Build the C# Blazor code
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
@@ -12,12 +12,12 @@ COPY . .
 WORKDIR "/src/Varta.Store.Client"
 RUN dotnet publish -c Release -o /app/publish
 
-# Stage 2: Serve with Nginx
+#Serve with Nginx
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 # Remove default nginx static assets
 RUN rm -rf ./*
-# Copy the built Blazor files from Stage 1
+# Copy Blazor files
 COPY --from=build /app/publish/wwwroot .
-# Copy our custom nginx config
+# Copy custom nginx config
 COPY Varta.Store.Client/nginx.conf /etc/nginx/nginx.conf

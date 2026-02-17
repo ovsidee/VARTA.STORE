@@ -31,11 +31,10 @@ services:
       Jwt__Issuer: "VartaStore"
       Jwt__Audience: "VartaClient"
       
-      # == УНІВЕРСАЛЬНА ЗМІННА ==
       AppUrl: ${PUBLIC_URL}
       AllowedOrigins__0: ${PUBLIC_URL}
       
-      # Donatik Configuration
+      # Donatik
       Donatik__Token: ${DONATIK_TOKEN}
       Donatik__UseMock: "false" 
       
@@ -55,8 +54,6 @@ services:
     container_name: varta_client
     restart: always
     ports:
-      # Локально: 7120
-      # На проді поміняєте на "80:80" або "443:443"
       - "7120:80"
     depends_on:
       - api
