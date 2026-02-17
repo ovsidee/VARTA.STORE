@@ -10,9 +10,23 @@ public class ApiKeyAuthAttribute : Attribute, IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        if (!context.HttpContext.Request.Headers.TryGetValue(ApiKeyHeaderName, out var potentialApiKey))
+        string potentialApiKey = null;
+
+        // 1. Try to get from Header
+        if (context.HttpContext.Request.Headers.TryGetValue(ApiKeyHeaderName, out var headerApiKey))
         {
-            context.Result = new UnauthorizedObjectResult("API Key is missing. Provide it via the 'X-Api-Key' header.");
+            potentialApiKey = headerApiKey;
+        }
+
+        // 2. If not in header, try Query Parameter (DayZ friendly)
+        if (string.IsNullOrEmpty(potentialApiKey) && context.HttpContext.Request.Query.ContainsKey("apiKey"))
+        {
+            potentialApiKey = context.HttpContext.Request.Query["apiKey"];
+        }
+
+        if (string.IsNullOrEmpty(potentialApiKey))
+        {
+            context.Result = new UnauthorizedObjectResult("API Key is missing. Provide it via 'X-Api-Key' header or 'apiKey' query parameter.");
             return;
         }
 
