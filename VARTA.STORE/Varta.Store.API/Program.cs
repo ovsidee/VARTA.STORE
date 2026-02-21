@@ -37,8 +37,13 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
+        // DEBUG: Print Connection String (masked)
+        var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+        var maskedConnStr = System.Text.RegularExpressions.Regex.Replace(connStr ?? "NULL", "Password=[^;]*", "Password=***");
+        Console.WriteLine($"[DEBUG] RAW CONNECTION STRING: {maskedConnStr}");
+
         builder.Services.AddDbContext<StoreDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+            options.UseNpgsql(connStr)
         );
 
         var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing");
